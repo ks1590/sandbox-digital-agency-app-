@@ -42,3 +42,6 @@ next-env.d.ts
 
 #design-example
 design-example
+
+#agent
+.agents

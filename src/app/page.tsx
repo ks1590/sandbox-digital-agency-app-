@@ -1,4 +1,6 @@
 import SortableTable from "./components/SortableTable";
+import Tab from "./components/Tab";
+import type { TabItem } from "./components/Tab";
 
 export default function Home() {
   return (
@@ -37,6 +39,171 @@ export default function Home() {
             デジタル庁デザインシステムに準拠したテーブルの実装例です。
           </p>
         </div>
+
+        {/* タブコンポーネント */}
+        <section className="mb-12" id="tab-section">
+          <h3
+            className="text-xl font-bold text-gray-900 mb-1"
+            id="medical-info-heading"
+          >
+            医療情報
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            タブで情報を切り替えて表示するパターン
+          </p>
+          <Tab
+            headingId="medical-info-heading"
+            items={[
+              {
+                label: "傷病",
+                id: "tab-disease",
+                content: (
+                  <div className="overflow-x-auto rounded-lg border border-solid-gray-420">
+                    <table className="w-full text-std-16N-170">
+                      <thead>
+                        <tr className="border-b border-black bg-solid-gray-100">
+                          <th className="px-4 py-5 text-start align-top" scope="col">傷病名</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">診断日</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">診療科</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">主治医</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">状態</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">2型糖尿病</td>
+                          <td className="px-4 py-5 align-top">2024/03/15</td>
+                          <td className="px-4 py-5 align-top">内科</td>
+                          <td className="px-4 py-5 align-top">田中 太郎</td>
+                          <td className="px-4 py-5 align-top">治療中</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">高血圧症</td>
+                          <td className="px-4 py-5 align-top">2023/08/22</td>
+                          <td className="px-4 py-5 align-top">循環器内科</td>
+                          <td className="px-4 py-5 align-top">鈴木 花子</td>
+                          <td className="px-4 py-5 align-top">治療中</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">腰椎椎間板ヘルニア</td>
+                          <td className="px-4 py-5 align-top">2025/01/10</td>
+                          <td className="px-4 py-5 align-top">整形外科</td>
+                          <td className="px-4 py-5 align-top">佐藤 健一</td>
+                          <td className="px-4 py-5 align-top">経過観察</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">急性気管支炎</td>
+                          <td className="px-4 py-5 align-top">2025/11/05</td>
+                          <td className="px-4 py-5 align-top">呼吸器内科</td>
+                          <td className="px-4 py-5 align-top">山本 美咲</td>
+                          <td className="px-4 py-5 align-top">治癒</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ),
+              },
+              {
+                label: "アレルギー",
+                id: "tab-allergy",
+                content: (
+                  <div className="overflow-x-auto rounded-lg border border-solid-gray-420">
+                    <table className="w-full text-std-16N-170">
+                      <thead>
+                        <tr className="border-b border-black bg-solid-gray-100">
+                          <th className="px-4 py-5 text-start align-top" scope="col">アレルゲン</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">分類</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">重症度</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">症状</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">確認日</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">ペニシリン</td>
+                          <td className="px-4 py-5 align-top">薬剤</td>
+                          <td className="px-4 py-5 align-top">重度</td>
+                          <td className="px-4 py-5 align-top">アナフィラキシー</td>
+                          <td className="px-4 py-5 align-top">2020/05/12</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">スギ花粉</td>
+                          <td className="px-4 py-5 align-top">環境</td>
+                          <td className="px-4 py-5 align-top">中度</td>
+                          <td className="px-4 py-5 align-top">鼻炎・結膜炎</td>
+                          <td className="px-4 py-5 align-top">2019/03/20</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">エビ</td>
+                          <td className="px-4 py-5 align-top">食物</td>
+                          <td className="px-4 py-5 align-top">軽度</td>
+                          <td className="px-4 py-5 align-top">蕁麻疹</td>
+                          <td className="px-4 py-5 align-top">2022/08/15</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ),
+              },
+              {
+                label: "検査",
+                id: "tab-examination",
+                content: (
+                  <div className="overflow-x-auto rounded-lg border border-solid-gray-420">
+                    <table className="w-full text-std-16N-170">
+                      <thead>
+                        <tr className="border-b border-black bg-solid-gray-100">
+                          <th className="px-4 py-5 text-start align-top" scope="col">検査名</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">実施日</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">結果</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">基準値</th>
+                          <th className="px-4 py-5 text-start align-top" scope="col">判定</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">HbA1c</td>
+                          <td className="px-4 py-5 align-top">2026/06/01</td>
+                          <td className="px-4 py-5 align-top">6.8%</td>
+                          <td className="px-4 py-5 align-top">4.6〜6.2%</td>
+                          <td className="px-4 py-5 align-top">高値</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">血圧測定</td>
+                          <td className="px-4 py-5 align-top">2026/06/01</td>
+                          <td className="px-4 py-5 align-top">138/88 mmHg</td>
+                          <td className="px-4 py-5 align-top">130/85 mmHg未満</td>
+                          <td className="px-4 py-5 align-top">やや高値</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">総コレステロール</td>
+                          <td className="px-4 py-5 align-top">2026/05/15</td>
+                          <td className="px-4 py-5 align-top">210 mg/dL</td>
+                          <td className="px-4 py-5 align-top">150〜219 mg/dL</td>
+                          <td className="px-4 py-5 align-top">正常</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">胸部X線</td>
+                          <td className="px-4 py-5 align-top">2026/04/10</td>
+                          <td className="px-4 py-5 align-top">異常なし</td>
+                          <td className="px-4 py-5 align-top">—</td>
+                          <td className="px-4 py-5 align-top">正常</td>
+                        </tr>
+                        <tr className="border-b border-solid-gray-420">
+                          <td className="px-4 py-5 align-top">尿検査</td>
+                          <td className="px-4 py-5 align-top">2026/06/01</td>
+                          <td className="px-4 py-5 align-top">蛋白(−)、糖(−)</td>
+                          <td className="px-4 py-5 align-top">(−)</td>
+                          <td className="px-4 py-5 align-top">正常</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ),
+              },
+            ] satisfies TabItem[]}
+          />
+        </section>
 
         {/* セクション1: 基本テーブル（1行目が見出しセル） */}
         <section className="mb-12" id="basic-table">
