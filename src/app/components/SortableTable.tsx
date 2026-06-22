@@ -32,14 +32,26 @@ function SortIcon({ sort }: { sort: Sort }) {
 }
 
 /** カラム定義 */
-interface Column {
+export interface Column {
   key: string;
   label: string;
+  format?: (value: string | number) => React.ReactNode;
 }
 
 /** サンプルデータの行型定義 */
-interface RowData {
+export interface RowData {
   [key: string]: string | number;
+}
+
+export interface ColumnGroup {
+  label: string;
+  colSpan: number;
+}
+
+interface SortableTableProps {
+  groups?: ColumnGroup[];
+  columns: Column[];
+  data: RowData[];
 }
 
 /**
@@ -49,62 +61,7 @@ interface RowData {
  * Next.js App Router 向けに Client Component として実装。
  * 実際にデータのソートが動作するよう拡張。
  */
-export default function SortableTable() {
-  /** カラム定義 */
-  const columns: Column[] = [
-    { key: "name", label: "プロジェクト名" },
-    { key: "ministry", label: "担当府省庁" },
-    { key: "budget", label: "予算額（百万円）" },
-    { key: "startDate", label: "開始日" },
-    { key: "progress", label: "進捗率（%）" },
-  ];
-
-  /** サンプルデータ */
-  const initialData: RowData[] = [
-    {
-      name: "マイナンバーカード普及促進",
-      ministry: "デジタル庁",
-      budget: 12500,
-      startDate: "2025/04/01",
-      progress: 78,
-    },
-    {
-      name: "ガバメントクラウド移行",
-      ministry: "デジタル庁",
-      budget: 8900,
-      startDate: "2024/10/01",
-      progress: 45,
-    },
-    {
-      name: "自治体システム標準化",
-      ministry: "総務省",
-      budget: 23000,
-      startDate: "2024/04/01",
-      progress: 62,
-    },
-    {
-      name: "e-Tax機能拡充",
-      ministry: "国税庁",
-      budget: 3200,
-      startDate: "2025/01/15",
-      progress: 91,
-    },
-    {
-      name: "デジタル教科書導入",
-      ministry: "文部科学省",
-      budget: 15600,
-      startDate: "2025/04/01",
-      progress: 33,
-    },
-    {
-      name: "オープンデータ基盤整備",
-      ministry: "デジタル庁",
-      budget: 4800,
-      startDate: "2024/07/01",
-      progress: 85,
-    },
-  ];
-
+export default function SortableTable({ groups, columns, data }: SortableTableProps) {
   /** ソート状態管理（key: カラムインデックス） */
   const [sortState, setSortState] = useState<{
     columnIndex: number | null;
@@ -128,10 +85,10 @@ export default function SortableTable() {
   /** ソート済みデータ */
   const sortedData = useMemo(() => {
     if (sortState.columnIndex === null || sortState.direction === undefined)
-      return initialData;
+      return data;
 
     const key = columns[sortState.columnIndex].key;
-    const sorted = [...initialData].sort((a, b) => {
+    const sorted = [...data].sort((a, b) => {
       const valA = a[key];
       const valB = b[key];
 
@@ -145,7 +102,7 @@ export default function SortableTable() {
       sorted.reverse();
     }
     return sorted;
-  }, [sortState]);
+  }, [sortState, data, columns]);
 
   /** カラムのソート状態を取得 */
   const getSortForColumn = (index: number): Sort => {
@@ -153,31 +110,29 @@ export default function SortableTable() {
     return undefined;
   };
 
-  /** 数値フォーマット */
-  const formatValue = (key: string, value: string | number) => {
-    if (key === "budget" && typeof value === "number") {
-      return value.toLocaleString("ja-JP");
-    }
-    if (key === "progress" && typeof value === "number") {
-      return `${value}%`;
-    }
-    return String(value);
-  };
-
   return (
-    <div className="overflow-x-auto rounded-lg">
-      <table className="w-full table-fixed border border-solid-gray-420 text-std-16N-170">
-        <colgroup>
-          {columns.map((col) => (
-            <col key={col.key} className="border-r border-solid-gray-420" />
-          ))}
-        </colgroup>
+    <div className="overflow-x-auto">
+      <table className="w-full table-fixed border border-solid-gray-420 text-std-16N-170 bg-white">
         <thead>
-          <tr className="border-b border-black divide-x divide-solid-gray-536 bg-solid-gray-100">
+          {groups && groups.length > 0 && (
+            <tr className="bg-solid-gray-100">
+              {groups.map((group, i) => (
+                <th
+                  key={i}
+                  className="border-b border-r border-solid-gray-500 px-4 py-5 text-start align-top last:border-r-0"
+                  colSpan={group.colSpan}
+                  scope="col"
+                >
+                  {group.label}
+                </th>
+              ))}
+            </tr>
+          )}
+          <tr className="border-b border-black bg-solid-gray-100">
             {columns.map((col, i) => (
               <th
                 key={col.key}
-                className="px-4 py-3 text-start align-top"
+                className="border-r border-solid-gray-500 px-4 py-3 text-start align-top last:border-r-0"
                 scope="col"
                 aria-sort={getSortForColumn(i) || "none"}
               >
@@ -194,21 +149,20 @@ export default function SortableTable() {
                       </span>
                     </button>
                   </div>
-
                 </div>
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {sortedData.map((row) => (
+          {sortedData.map((row, rowIndex) => (
             <tr
-              key={String(row.name)}
-              className="border-b border-solid-gray-500 hover:bg-key-50 transition-colors"
+              key={rowIndex}
+              className="border-b border-solid-gray-500 hover:bg-key-50 transition-colors last:border-b-0"
             >
               {columns.map((col) => (
-                <td key={col.key} className="px-4 py-5 align-top">
-                  {formatValue(col.key, row[col.key])}
+                <td key={col.key} className="border-r border-solid-gray-420 px-4 py-5 align-top last:border-r-0">
+                  {col.format ? col.format(row[col.key]) : String(row[col.key])}
                 </td>
               ))}
             </tr>
