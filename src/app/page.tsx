@@ -21,6 +21,16 @@ const diseaseData: RowData[] = [
   { name: "高血圧症", date: "2023/08/22", department: "循環器内科", doctor: "鈴木 花子", status: "治療中" },
   { name: "腰椎椎間板ヘルニア", date: "2025/01/10", department: "整形外科", doctor: "佐藤 健一", status: "経過観察" },
   { name: "急性気管支炎", date: "2025/11/05", department: "呼吸器内科", doctor: "山本 美咲", status: "治癒" },
+  { name: "脂質異常症", date: "2023/09/10", department: "内科", doctor: "田中 太郎", status: "治療中" },
+  { name: "白内障", date: "2024/05/20", department: "眼科", doctor: "小林 隆", status: "手術予定" },
+  { name: "変形性膝関節症", date: "2022/11/12", department: "整形外科", doctor: "佐藤 健一", status: "治療中" },
+  { name: "逆流性食道炎", date: "2025/02/18", department: "消化器内科", doctor: "伊藤 恵", status: "経過観察" },
+  { name: "睡眠時無呼吸症候群", date: "2024/07/03", department: "呼吸器内科", doctor: "山本 美咲", status: "治療中" },
+  { name: "慢性胃炎", date: "2023/12/01", department: "消化器内科", doctor: "伊藤 恵", status: "経過観察" },
+  { name: "アレルギー性鼻炎", date: "2021/04/15", department: "耳鼻咽喉科", doctor: "加藤 健太", status: "治療中" },
+  { name: "痛風", date: "2024/10/08", department: "内科", doctor: "田中 太郎", status: "経過観察" },
+  { name: "メニエール病", date: "2025/08/22", department: "耳鼻咽喉科", doctor: "加藤 健太", status: "治癒" },
+  { name: "手根管症候群", date: "2026/01/30", department: "整形外科", doctor: "佐藤 健一", status: "経過観察" },
 ];
 
 const allergyGroups: ColumnGroup[] = [

@@ -1,6 +1,14 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import {
+  Pagination,
+  PaginationCurrent,
+  PaginationFirst,
+  PaginationLast,
+  PaginationNext,
+  PaginationPrev,
+} from "./Pagination";
 
 /** ソート方向の型定義 */
 type Sort = "ascending" | "descending" | undefined;
@@ -110,65 +118,124 @@ export default function SortableTable({ groups, columns, data }: SortableTablePr
     return undefined;
   };
 
+  /** ページネーション状態管理 */
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const maxPage = Math.max(1, Math.ceil(data.length / itemsPerPage));
+
+  // データが減って現在のページが存在しなくなった場合の対応
+  if (currentPage > maxPage && maxPage > 0) {
+    setCurrentPage(maxPage);
+  }
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return sortedData.slice(start, start + itemsPerPage);
+  }, [sortedData, currentPage, itemsPerPage]);
+
+  const handlePageChange = (e: React.MouseEvent, page: number) => {
+    e.preventDefault();
+    if (page >= 1 && page <= maxPage) {
+      setCurrentPage(page);
+    }
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full table-fixed border border-solid-gray-420 text-std-16N-170 bg-white">
-        <thead>
-          {groups && groups.length > 0 && (
-            <tr className="bg-solid-gray-100">
-              {groups.map((group, i) => (
+    <div className="flex flex-col gap-4">
+      <div className="overflow-x-auto">
+        <table className="w-full table-fixed border border-solid-gray-420 text-std-16N-170 bg-white">
+          <thead>
+            {groups && groups.length > 0 && (
+              <tr className="bg-solid-gray-100">
+                {groups.map((group, i) => (
+                  <th
+                    key={i}
+                    className="border-b border-r border-solid-gray-500 px-4 py-5 text-start align-top last:border-r-0"
+                    colSpan={group.colSpan}
+                    scope="col"
+                  >
+                    {group.label}
+                  </th>
+                ))}
+              </tr>
+            )}
+            <tr className="border-b border-black bg-solid-gray-100">
+              {columns.map((col, i) => (
                 <th
-                  key={i}
-                  className="border-b border-r border-solid-gray-500 px-4 py-5 text-start align-top last:border-r-0"
-                  colSpan={group.colSpan}
+                  key={col.key}
+                  className="border-r border-solid-gray-500 px-4 py-3 text-start align-top last:border-r-0"
                   scope="col"
+                  aria-sort={getSortForColumn(i) || "none"}
                 >
-                  {group.label}
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start py-2">
+                      <button
+                        className="inline-flex items-start gap-x-1 text-start underline underline-offset-[calc(3/16*1rem)] hover:decoration-[calc(3/16*1rem)] focus-visible:rounded-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[calc(2/16*1rem)] focus-visible:bg-yellow-300 focus-visible:ring-[calc(2/16*1rem)] focus-visible:ring-yellow-300"
+                        type="button"
+                        onClick={() => {
+                          handleSortClick(i);
+                          setCurrentPage(1); // ソート時に1ページ目に戻す
+                        }}
+                      >
+                        {col.label}
+                        <span className="pt-0.5">
+                          <SortIcon sort={getSortForColumn(i)} />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
                 </th>
               ))}
             </tr>
-          )}
-          <tr className="border-b border-black bg-solid-gray-100">
-            {columns.map((col, i) => (
-              <th
-                key={col.key}
-                className="border-r border-solid-gray-500 px-4 py-3 text-start align-top last:border-r-0"
-                scope="col"
-                aria-sort={getSortForColumn(i) || "none"}
+          </thead>
+          <tbody>
+            {paginatedData.map((row, rowIndex) => (
+              <tr
+                key={rowIndex}
+                className="border-b border-solid-gray-500 hover:bg-key-50 transition-colors last:border-b-0"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start py-2">
-                    <button
-                      className="inline-flex items-start gap-x-1 text-start underline underline-offset-[calc(3/16*1rem)] hover:decoration-[calc(3/16*1rem)] focus-visible:rounded-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[calc(2/16*1rem)] focus-visible:bg-yellow-300 focus-visible:ring-[calc(2/16*1rem)] focus-visible:ring-yellow-300"
-                      type="button"
-                      onClick={() => handleSortClick(i)}
-                    >
-                      {col.label}
-                      <span className="pt-0.5">
-                        <SortIcon sort={getSortForColumn(i)} />
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </th>
+                {columns.map((col) => (
+                  <td key={col.key} className="border-r border-solid-gray-420 px-4 py-5 align-top last:border-r-0">
+                    {col.format ? col.format(row[col.key]) : String(row[col.key])}
+                  </td>
+                ))}
+              </tr>
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          {sortedData.map((row, rowIndex) => (
-            <tr
-              key={rowIndex}
-              className="border-b border-solid-gray-500 hover:bg-key-50 transition-colors last:border-b-0"
-            >
-              {columns.map((col) => (
-                <td key={col.key} className="border-r border-solid-gray-420 px-4 py-5 align-top last:border-r-0">
-                  {col.format ? col.format(row[col.key]) : String(row[col.key])}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
+
+      {maxPage > 1 && (
+        <div className="flex justify-end mt-2">
+          <Pagination>
+            <PaginationFirst
+              href="#"
+              onClick={(e) => handlePageChange(e, 1)}
+              aria-disabled={currentPage === 1}
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+            />
+            <PaginationPrev
+              href="#"
+              onClick={(e) => handlePageChange(e, currentPage - 1)}
+              aria-disabled={currentPage === 1}
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+            />
+            <PaginationCurrent current={currentPage} max={maxPage} />
+            <PaginationNext
+              href="#"
+              onClick={(e) => handlePageChange(e, currentPage + 1)}
+              aria-disabled={currentPage === maxPage}
+              className={currentPage === maxPage ? "pointer-events-none opacity-50" : ""}
+            />
+            <PaginationLast
+              href="#"
+              onClick={(e) => handlePageChange(e, maxPage)}
+              aria-disabled={currentPage === maxPage}
+              className={currentPage === maxPage ? "pointer-events-none opacity-50" : ""}
+            />
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }
