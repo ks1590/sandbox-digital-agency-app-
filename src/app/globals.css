@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* デジタル庁デザインシステム ベーススタイル */
+:root {
+  --background: #ffffff;
+  --foreground: #1a1a1c;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
