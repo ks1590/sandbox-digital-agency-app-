@@ -6,9 +6,311 @@
 :root {
   --background: #ffffff;
   --foreground: #1a1a1c;
+  --color-primary: #0017C1;
+  --color-border: #0017C1;
+  --color-text-secondary: #626264;
+  --color-bg-section: #F8F8FB;
+  --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* ========================================
+   ポータルヘッダー
+   ======================================== */
+.portal-header {
+  border-bottom: 3px solid var(--color-primary);
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.portal-header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+}
+
+.portal-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.portal-header__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.portal-header__subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  margin-top: 1px;
+}
+
+/* ========================================
+   ポータルメインコンテンツ
+   ======================================== */
+.portal-main {
+  flex: 1;
+}
+
+/* ========================================
+   ヒーローセクション
+   ======================================== */
+.portal-hero {
+  background: linear-gradient(135deg, #0017C1 0%, #0033E6 40%, #2952FF 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.portal-hero__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 24px 72px;
+  position: relative;
+  z-index: 1;
+}
+
+.portal-hero__content {
+  max-width: 640px;
+}
+
+.portal-hero__heading {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+}
+
+.portal-hero__text {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+
+/* ========================================
+   リンクカードセクション
+   ======================================== */
+.portal-cards-section {
+  background: #ffffff;
+  padding: 64px 0 80px;
+}
+
+.portal-cards-section__inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.portal-cards-section__header {
+  margin-bottom: 32px;
+}
+
+.portal-cards-section__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: 0.02em;
+  position: relative;
+  padding-bottom: 12px;
+  margin-bottom: 8px;
+}
+
+.portal-cards-section__title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+.portal-cards-section__subtitle {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* カード縦積みレイアウト */
+.portal-cards-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+/* ========================================
+   リンクカードコンポーネント（シンプル版）
+   デジタル庁「新着・更新」カードを参考
+   ======================================== */
+.link-card {
+  display: block;
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #D9D9DB;
+  border-radius: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  outline: 3px solid transparent;
+  outline-offset: -1px;
+  transition:
+    outline-color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.link-card:hover {
+  border-color: var(--color-primary);
+  outline-color: var(--color-primary);
+}
+
+.link-card:focus-visible {
+  border-color: var(--color-primary);
+  outline: 4px solid #1a1a1c;
+  outline-offset: 2px;
+}
+
+/* カード本体 */
+.link-card__body {
+  display: flex;
+  align-items: center;
+  padding: 20px 28px;
+  gap: 16px;
+}
+
+/* テキスト領域 */
+.link-card__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.link-card__title {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--foreground);
+  line-height: 1.6;
+  text-decoration: underline;
+  text-decoration-color: var(--color-primary);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-thickness var(--transition-base);
+}
+
+.link-card:hover .link-card__title {
+  text-decoration-thickness: 3px;
+}
+
+/* 矢印アイコン */
+.link-card__arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  transition:
+    background var(--transition-base),
+    color var(--transition-base);
+}
+
+.link-card:hover .link-card__arrow {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+/* ========================================
+   ポータルフッター
+   ======================================== */
+.portal-footer {
+  border-top: 1px solid #D9D9DB;
+  background: #ffffff;
+}
+
+.portal-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.portal-footer__text {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ========================================
+   レスポンシブ対応
+   ======================================== */
+@media (max-width: 640px) {
+  .portal-header__inner {
+    padding: 12px 16px;
+  }
+
+  .portal-header__title {
+    font-size: 1.0625rem;
+  }
+
+  .portal-header__logo svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .portal-hero__inner {
+    padding: 40px 16px 48px;
+  }
+
+  .portal-hero__heading {
+    font-size: 1.5rem;
+  }
+
+  .portal-hero__text {
+    font-size: 0.9375rem;
+  }
+
+  .portal-cards-section {
+    padding: 40px 0 56px;
+  }
+
+  .portal-cards-section__inner {
+    padding: 0 16px;
+  }
+
+  .portal-cards-stack {
+    flex-direction: column;
+  }
+
+  .link-card {
+    border-radius: 20px;
+  }
+
+  .link-card__body {
+    padding: 16px 20px;
+  }
 }

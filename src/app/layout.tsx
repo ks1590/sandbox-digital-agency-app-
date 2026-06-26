@@ -10,9 +10,9 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "デジタル庁デザインシステム サンプルアプリ",
+  title: "データマネジメントポータル",
   description:
-    "デジタル庁デザインシステムを活用した Next.js サンプルアプリケーション",
+    "データの抽出状況確認、メタデータ参照、データプロファイル分析を一元的に行えるポータルサイト",
 };
 
 export default function RootLayout({
