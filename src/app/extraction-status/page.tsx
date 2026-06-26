@@ -108,73 +108,69 @@ export default function ExtractionStatusPage() {
         </div>
       </header>
 
-      {/* メインコンテンツ */}
-      <main className="mx-auto max-w-7xl w-full px-4 py-8 sm:px-6 lg:px-8 flex-1">
-        {/* パンくずリスト */}
-        <nav className="mb-6 text-sm text-gray-500" aria-label="パンくずリスト">
-          <ol className="flex items-center gap-1">
-            <li>
-              <Link href="/" className="text-blue-1000 underline underline-offset-2 hover:decoration-2">
-                ポータル
-              </Link>
-            </li>
-            <li aria-hidden="true" className="mx-1">›</li>
-            <li aria-current="page">抽出状況参照</li>
-          </ol>
-        </nav>
+      {/* メインコンテンツ（薄い青背景） */}
+      <main className="page-bg flex-1">
+        <div className="page-container">
+          {/* 白いコンテンツコンテナ */}
+          <div className="content-card">
+            {/* パンくずリスト */}
+            <nav className="mb-6 text-sm text-gray-500" aria-label="パンくずリスト">
+              <ol className="flex items-center gap-1">
+                <li>
+                  <Link href="/" className="text-blue-1000 underline underline-offset-2 hover:decoration-2">
+                    ポータル
+                  </Link>
+                </li>
+                <li aria-hidden="true" className="mx-1">›</li>
+                <li aria-current="page">抽出状況参照</li>
+              </ol>
+            </nav>
 
-        {/* ページタイトル */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            抽出状況参照
-          </h2>
-          <p className="text-std-16N-170 text-gray-600">
-            データソースからの抽出処理の実行状況を確認できます。
-          </p>
+            {/* ページタイトル */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                抽出状況参照
+              </h2>
+              <p className="text-std-16N-170 text-gray-600">
+                データソースからの抽出処理の実行状況を確認できます。
+              </p>
+            </div>
+
+            {/* タブ＋テーブル */}
+            <section className="mb-12" id="tab-section">
+              <h3
+                className="text-xl font-bold text-gray-900 mb-1"
+                id="medical-info-heading"
+              >
+                医療情報
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                タブで情報を切り替えて表示するパターン
+              </p>
+              <Tab
+                headingId="medical-info-heading"
+                items={[
+                  {
+                    label: "傷病",
+                    id: "tab-disease",
+                    content: <SortableTable groups={diseaseGroups} columns={diseaseColumns} data={diseaseData} />,
+                  },
+                  {
+                    label: "アレルギー",
+                    id: "tab-allergy",
+                    content: <SortableTable groups={allergyGroups} columns={allergyColumns} data={allergyData} />,
+                  },
+                  {
+                    label: "検査",
+                    id: "tab-examination",
+                    content: <SortableTable groups={examGroups} columns={examColumns} data={examData} />,
+                  },
+                ]}
+              />
+            </section>
+          </div>
         </div>
-
-        {/* タブ＋テーブル */}
-        <section className="mb-12" id="tab-section">
-          <h3
-            className="text-xl font-bold text-gray-900 mb-1"
-            id="medical-info-heading"
-          >
-            医療情報
-          </h3>
-          <p className="text-sm text-gray-500 mb-4">
-            タブで情報を切り替えて表示するパターン
-          </p>
-          <Tab
-            headingId="medical-info-heading"
-            items={[
-              {
-                label: "傷病",
-                id: "tab-disease",
-                content: <SortableTable groups={diseaseGroups} columns={diseaseColumns} data={diseaseData} />,
-              },
-              {
-                label: "アレルギー",
-                id: "tab-allergy",
-                content: <SortableTable groups={allergyGroups} columns={allergyColumns} data={allergyData} />,
-              },
-              {
-                label: "検査",
-                id: "tab-examination",
-                content: <SortableTable groups={examGroups} columns={examColumns} data={examData} />,
-              },
-            ]}
-          />
-        </section>
       </main>
-
-      {/* フッター */}
-      <footer className="portal-footer" id="portal-footer">
-        <div className="portal-footer__inner">
-          <p className="portal-footer__text">
-            データマネジメントポータル
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

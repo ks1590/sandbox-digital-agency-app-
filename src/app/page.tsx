@@ -85,15 +85,6 @@ export default function PortalPage() {
           </div>
         </section>
       </main>
-
-      {/* フッター */}
-      <footer className="portal-footer" id="portal-footer">
-        <div className="portal-footer__inner">
-          <p className="portal-footer__text">
-            データマネジメントポータル
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

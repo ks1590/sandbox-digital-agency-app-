@@ -65,6 +65,27 @@ body {
 }
 
 /* ========================================
+   共通ページコンテナ（サブページ用）
+   外側：薄い青背景 / 内側：白いカード
+   ======================================== */
+.page-bg {
+  background: #EEF1F8;
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.content-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 40px 48px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* ========================================
    ヒーローセクション
    ======================================== */
 .portal-hero {
@@ -245,27 +266,6 @@ body {
 }
 
 /* ========================================
-   ポータルフッター
-   ======================================== */
-.portal-footer {
-  border-top: 1px solid #D9D9DB;
-  background: #ffffff;
-}
-
-.portal-footer__inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.portal-footer__text {
-  font-size: 0.8125rem;
-  color: var(--color-text-secondary);
-  text-align: center;
-  letter-spacing: 0.02em;
-}
-
-/* ========================================
    レスポンシブ対応
    ======================================== */
 @media (max-width: 640px) {
@@ -304,6 +304,14 @@ body {
 
   .portal-cards-stack {
     flex-direction: column;
+  }
+
+  .page-container {
+    padding: 20px 16px;
+  }
+
+  .content-card {
+    padding: 24px 20px;
   }
 
   .link-card {
