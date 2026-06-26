@@ -40,18 +40,7 @@ export default function MetadataPage() {
         <div className="page-container">
           {/* 白いコンテンツコンテナ */}
           <div className="content-card">
-            {/* パンくずリスト */}
-            <nav className="mb-6 text-sm text-gray-500" aria-label="パンくずリスト">
-              <ol className="flex items-center gap-1">
-                <li>
-                  <Link href="/" className="text-blue-1000 underline underline-offset-2 hover:decoration-2">
-                    ポータル
-                  </Link>
-                </li>
-                <li aria-hidden="true" className="mx-1">›</li>
-                <li aria-current="page">メタデータ参照</li>
-              </ol>
-            </nav>
+
 
             {/* ページタイトル */}
             <div className="mb-6">
