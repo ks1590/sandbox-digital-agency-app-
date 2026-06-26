@@ -1,0 +1,144 @@
+"use client";
+
+import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
+
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // 外側クリックでメニューを閉じる処理
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  return (
+    <header className="portal-header" id="portal-header">
+      <div className="portal-header__inner relative">
+        <div className="portal-header__logo">
+          <Link href="/" className="flex items-center gap-[14px]">
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 36 36"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle cx="18" cy="18" r="18" fill="#0017C1" />
+              <path
+                d="M18 7C11.925 7 7 11.925 7 18s4.925 11 11 11 11-4.925 11-11S24.075 7 18 7zm0 20c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z"
+                fill="white"
+              />
+              <circle cx="18" cy="18" r="3.5" fill="white" />
+            </svg>
+            <div>
+              <h1 className="portal-header__title">データマネジメントポータル</h1>
+              <p className="portal-header__subtitle">Data Management Portal</p>
+            </div>
+          </Link>
+        </div>
+
+        {/* ハンバーガーメニュー */}
+        <div ref={menuRef}>
+          <button
+            type="button"
+            className="flex w-fit touch-manipulation items-center gap-x-1 rounded-[6px] px-3 pb-1.5 pt-1 text-base text-gray-900 hover:bg-gray-100 hover:underline hover:underline-offset-[3px] focus-visible:bg-yellow-300 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-[2px] focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300 bg-white border border-gray-400"
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <>
+                <svg
+                  aria-hidden={true}
+                  className="mt-0.5 flex-none"
+                  fill="none"
+                  height="24"
+                  viewBox="0 0 120 120"
+                  width="24"
+                >
+                  <path
+                    d="M32 95L25 88L53 60L25 32L32 25L60 53L88 25L95 32L67 60L95 88L88 95L60 67L32 95Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                閉じる
+              </>
+            ) : (
+              <>
+                <svg
+                  aria-hidden={true}
+                  className="mt-0.5 flex-none"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                >
+                  <path
+                    clipRule="evenodd"
+                    d="M3 18V16H21V18H3ZM3 13V11H21V13H3ZM3 8V6H21V8H3Z"
+                    fill="currentColor"
+                    fillRule="evenodd"
+                  />
+                </svg>
+                メニュー
+              </>
+            )}
+          </button>
+
+          {/* メニューパネル */}
+          {isMenuOpen && (
+            <div className="absolute right-6 top-full mt-2 w-64 bg-white border border-gray-400 shadow-lg rounded-md z-50 overflow-hidden">
+              <ul className="flex flex-col">
+                <li>
+                  <Link
+                    href="/"
+                    className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    ポータル (TOP)
+                  </Link>
+                </li>
+                <li className="border-t border-gray-200">
+                  <Link
+                    href="/extraction-status"
+                    className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    抽出状況参照
+                  </Link>
+                </li>
+                <li className="border-t border-gray-200">
+                  <Link
+                    href="/metadata"
+                    className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    メタデータ参照
+                  </Link>
+                </li>
+                <li className="border-t border-gray-200">
+                  <Link
+                    href="/data-profile"
+                    className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    データプロファイル参照
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}

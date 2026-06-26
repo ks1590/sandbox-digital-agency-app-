@@ -33,6 +33,9 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .portal-header__logo {

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Tab from "../components/Tab";
+import Header from "../components/Header";
 
 /**
  * メタデータ参照画面
@@ -10,30 +11,7 @@ export default function MetadataPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* ヘッダー */}
-      <header className="portal-header" id="portal-header">
-        <div className="portal-header__inner">
-          <div className="portal-header__logo">
-            <svg
-              width="36"
-              height="36"
-              viewBox="0 0 36 36"
-              fill="none"
-              aria-hidden="true"
-            >
-              <circle cx="18" cy="18" r="18" fill="#0017C1" />
-              <path
-                d="M18 7C11.925 7 7 11.925 7 18s4.925 11 11 11 11-4.925 11-11S24.075 7 18 7zm0 20c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z"
-                fill="white"
-              />
-              <circle cx="18" cy="18" r="3.5" fill="white" />
-            </svg>
-            <div>
-              <h1 className="portal-header__title">データマネジメントポータル</h1>
-              <p className="portal-header__subtitle">Data Management Portal</p>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">
