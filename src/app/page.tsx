@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import Header from './components/Header';
 import LinkCard from './components/LinkCard';
 
@@ -7,11 +8,14 @@ import LinkCard from './components/LinkCard';
  * データマネジメントシステムのメインエントリーポイント。
  * 3つの主要機能画面へのリンクカードを提供する。
  */
-export default function PortalPage() {
+export default async function PortalPage() {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("login-user-id")?.value;
+
   return (
     <div className='min-h-screen bg-white flex flex-col'>
       {/* ヘッダー */}
-      <Header />
+      <Header userId={userId} />
 
       {/* メインコンテンツ */}
       <main className='portal-main' id='mainContainer'>

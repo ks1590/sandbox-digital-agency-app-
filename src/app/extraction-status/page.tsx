@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import Header from "../components/Header";
 import SortableTable from "../components/SortableTable";
 import type { Column, RowData, ColumnGroup } from "../components/SortableTable";
@@ -80,11 +81,14 @@ const examData: RowData[] = [
   { name: "尿検査", date: "2026/06/01", result: "蛋白(−)、糖(−)", reference: "(−)", judgment: "正常" },
 ];
 
-export default function ExtractionStatusPage() {
+export default async function ExtractionStatusPage() {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("login-user-id")?.value;
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* ヘッダー */}
-      <Header />
+      <Header userId={userId} />
 
       {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">

@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
 import Tab from "../components/Tab";
 import Header from "../components/Header";
@@ -7,11 +8,14 @@ import Header from "../components/Header";
  *
  * 各種データ種別ごとのメタデータ（概要、ER図、テーブル定義など）を参照する画面。
  */
-export default function MetadataPage() {
+export default async function MetadataPage() {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("login-user-id")?.value;
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* ヘッダー */}
-      <Header />
+      <Header userId={userId} />
 
       {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">
