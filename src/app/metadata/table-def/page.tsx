@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
-import Header from "../../components/Header";
-import Tab from "../../components/Tab";
-import SortableTable from "../../components/SortableTable";
-import type { Column, RowData } from "../../components/SortableTable";
+import Header from "../../../components/layout/Header";
+import Tab from "../../../components/ui/Tab";
+import SortableTable from "../../../components/ui/SortableTable";
+import type { Column, RowData } from "../../../components/ui/SortableTable";
 
 /** テーブルのカラム定義 */
 const tableColumns: Column[] = [

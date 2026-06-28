@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import SortableTable from "../components/SortableTable";
-import type { Column, RowData, ColumnGroup } from "../components/SortableTable";
-import Tab from "../components/Tab";
+import SortableTable from "../../components/ui/SortableTable";
+import type { Column, RowData, ColumnGroup } from "../../components/ui/SortableTable";
+import Tab from "../../components/ui/Tab";
 
 export default function DataProfileContent() {
   // -------------------------

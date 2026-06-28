@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
-import Tab from "../components/Tab";
-import Header from "../components/Header";
-import LinkCard from "../components/LinkCard";
+import Tab from "../../components/ui/Tab";
+import Header from "../../components/layout/Header";
+import LinkCard from "../../components/ui/LinkCard";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

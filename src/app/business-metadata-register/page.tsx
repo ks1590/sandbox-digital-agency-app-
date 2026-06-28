@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useState, useEffect, useId } from "react";
-import Header from "../components/Header";
-import Tab from "../components/Tab";
-import { NotificationBanner } from "../components/NotificationBanner/NotificationBanner";
-import { NotificationBannerBody } from "../components/NotificationBanner/parts/Body";
+import Header from "../../components/layout/Header";
+import Tab from "../../components/ui/Tab";
+import { NotificationBanner } from "../../components/layout/NotificationBanner/NotificationBanner";
+import { NotificationBannerBody } from "../../components/layout/NotificationBanner/parts/Body";
 
 // --- FileUpload系コンポーネント・フックのインポート ---
 import {
@@ -20,15 +20,15 @@ import {
   FileUploadInput,
   FileUploadViewportOverlay,
   FileUploadViewportOverlayMessage,
-} from "../components/FileUpload/FileUpload";
-import { useFileUpload } from "../components/FileUpload/hooks/useFileUpload";
-import { fileUploadDefaultMessages } from "../components/FileUpload/messages";
-import { formatSize } from "../components/FileUpload/utils";
-import { Button } from "../components/Button";
-import { Checkbox } from "../components/Checkbox";
-import { Label } from "../components/Label";
-import { RequirementBadge } from "../components/RequirementBadge";
-import { SupportText } from "../components/SupportText";
+} from "../../components/form/FileUpload/FileUpload";
+import { useFileUpload } from "../../components/form/FileUpload/hooks/useFileUpload";
+import { fileUploadDefaultMessages } from "../../components/form/FileUpload/messages";
+import { formatSize } from "../../components/form/FileUpload/utils";
+import { Button } from "../../components/ui/Button";
+import { Checkbox } from "../../components/ui/Checkbox";
+import { Label } from "../../components/ui/Label";
+import { RequirementBadge } from "../../components/ui/RequirementBadge";
+import { SupportText } from "../../components/ui/SupportText";
 
 /** クライアントサイドでのCookie取得（簡易実装） */
 function getCookie(name: string) {

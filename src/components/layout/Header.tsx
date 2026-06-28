@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
-import { logout } from '../actions/auth';
+import { logout } from '../../actions/auth';
 
 export default function Header({ userId }: { userId?: string }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

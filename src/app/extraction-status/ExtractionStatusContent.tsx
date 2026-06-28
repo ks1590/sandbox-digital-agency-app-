@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import SortableTable from '../components/SortableTable';
-import type { Column, RowData, ColumnGroup } from '../components/SortableTable';
-import { Button } from '../components/Button';
+import SortableTable from "../../components/ui/SortableTable";
+import type { Column, RowData, ColumnGroup } from "../../components/ui/SortableTable";
+import { Button } from "../../components/ui/Button";
 import {
   ModalDialog,
   ModalDialogContent,
@@ -11,12 +11,12 @@ import {
   ModalDialogHeading,
   ModalDialogBody,
   ModalDialogActions,
-} from '../components/ModalDialog';
+} from "../../components/ui/ModalDialog";
 import {
   DatePicker,
   DatePickerYear,
   DatePickerMonth,
-} from '../components/DatePicker';
+} from "../../components/form/DatePicker";
 import data from './data.json';
 
 export default function ExtractionStatusContent() {

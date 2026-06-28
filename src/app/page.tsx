@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
-import Header from "./components/Header";
-import LinkCard from "./components/LinkCard";
+import Header from "../components/layout/Header";
+import LinkCard from "../components/ui/LinkCard";
 
 /**
  * ポータルTOP画面
