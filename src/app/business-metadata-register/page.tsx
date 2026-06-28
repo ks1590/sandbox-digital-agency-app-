@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState, useEffect, useId } from "react";
 import Header from "../components/Header";
 import Tab from "../components/Tab";
+import { NotificationBanner } from "../components/NotificationBanner/NotificationBanner";
+import { NotificationBannerBody } from "../components/NotificationBanner/parts/Body";
 
 // --- FileUpload系コンポーネント・フックのインポート ---
 import {
@@ -41,6 +43,7 @@ function getCookie(name: string) {
  */
 export default function BusinessMetadataRegisterPage() {
   const [userId, setUserId] = useState<string | undefined>();
+  const [notification, setNotification] = useState<{ type: "success" | "error"; title: string; message: string } | null>(null);
 
   useEffect(() => {
     setUserId(getCookie("login-user-id"));
@@ -48,7 +51,21 @@ export default function BusinessMetadataRegisterPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("ビジネスメタデータを更新しました（ダミーアクション）");
+    setNotification({
+      type: "success",
+      title: "ビジネスメタデータを更新しました",
+      message: "入力された情報が正しく保存されました。",
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleErrorSubmit = () => {
+    setNotification({
+      type: "error",
+      title: "操作を完了できませんでした",
+      message: "入力内容に誤りがあります。エラーメッセージを確認してください。",
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const inputClass =
@@ -488,9 +505,27 @@ export default function BusinessMetadataRegisterPage() {
       {/* ヘッダー */}
       <Header userId={userId} />
 
+      {/* インラインバナー表示（ヘッダー直下） */}
+      {notification && (
+        <div className="w-full bg-white border-b border-gray-200">
+          <div className="page-container py-4">
+            <NotificationBanner
+              bannerStyle="standard"
+              type={notification.type}
+              headingLevel="h3"
+              title={notification.title}
+            >
+              <NotificationBannerBody>
+                {notification.message}
+              </NotificationBannerBody>
+            </NotificationBanner>
+          </div>
+        </div>
+      )}
+
       {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">
-        <div className="page-container">
+        <div className="page-container pt-8">
           {/* ページタイトル */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
@@ -544,12 +579,21 @@ export default function BusinessMetadataRegisterPage() {
               >
                 戻る
               </Link>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-[#0017C1] px-4 py-3 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
-              >
-                更新
-              </button>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={handleErrorSubmit}
+                  className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-white border border-gray-400 px-4 py-3 text-base font-bold text-error-1 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300"
+                >
+                  エラーテスト
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-[#0017C1] px-4 py-3 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300"
+                >
+                  更新
+                </button>
+              </div>
             </div>
           </form>
         </div>
