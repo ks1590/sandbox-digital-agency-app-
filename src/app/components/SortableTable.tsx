@@ -155,7 +155,7 @@ export default function SortableTable({
   return (
     <div className="flex flex-col gap-4">
       <div className="overflow-x-auto">
-        <table className="w-full table-fixed border border-solid-gray-420 text-std-16N-170 bg-white">
+        <table className="w-full table-auto border border-solid-gray-420 text-std-16N-170 bg-white">
           <thead>
             {groups && groups.length > 0 && (
               <tr className="bg-solid-gray-100">
@@ -213,7 +213,7 @@ export default function SortableTable({
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className="border-r border-solid-gray-420 px-4 py-3 align-top last:border-r-0"
+                    className="border-r border-solid-gray-420 px-4 py-3 align-top last:border-r-0 whitespace-nowrap"
                   >
                     {col.format
                       ? col.format(row[col.key])

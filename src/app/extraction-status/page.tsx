@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
-import Header from "../components/Header";
-import ExtractionStatusContent from "./ExtractionStatusContent";
+import { cookies } from 'next/headers';
+import Header from '../components/Header';
+import ExtractionStatusContent from './ExtractionStatusContent';
 
 /**
  * 抽出状況参照画面
@@ -9,24 +9,21 @@ import ExtractionStatusContent from "./ExtractionStatusContent";
  */
 export default async function ExtractionStatusPage() {
   const cookieStore = await cookies();
-  const userId = cookieStore.get("login-user-id")?.value;
+  const userId = cookieStore.get('login-user-id')?.value;
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className='min-h-screen bg-white flex flex-col'>
       {/* ヘッダー */}
       <Header userId={userId} />
 
       {/* メインコンテンツ（薄い青背景） */}
-      <main className="page-bg flex-1">
-        <div className="page-container">
+      <main className='page-bg flex-1'>
+        <div className='page-container'>
           {/* ページタイトル */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <div className='mb-8'>
+            <h2 className='text-2xl font-bold text-gray-900 mb-2'>
               抽出状況参照
             </h2>
-            <p className="text-std-16N-170 text-gray-600">
-              データソースからの抽出処理の実行状況を確認できます。
-            </p>
           </div>
 
           <ExtractionStatusContent />
