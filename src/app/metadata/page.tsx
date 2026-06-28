@@ -2,15 +2,27 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import Tab from "../components/Tab";
 import Header from "../components/Header";
+import LinkCard from "../components/LinkCard";
+
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
 /**
  * メタデータ参照画面
  *
  * 各種データ種別ごとのメタデータ（概要、ER図、テーブル定義など）を参照する画面。
  */
-export default async function MetadataPage() {
+export default async function MetadataPage({ searchParams }: Props) {
   const cookieStore = await cookies();
   const userId = cookieStore.get("login-user-id")?.value;
+
+  const params = await searchParams;
+  const tabParam = typeof params.tab === "string" ? params.tab : "overview";
+
+  let defaultIndex = 0;
+  if (tabParam === "er") defaultIndex = 1;
+  else if (tabParam === "table-def") defaultIndex = 2;
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -69,6 +81,7 @@ export default async function MetadataPage() {
             <div className="mb-12">
               <Tab
                 headingId="metadata-tabs-heading"
+                defaultIndex={defaultIndex}
                 items={[
                   {
                     label: "概要",
@@ -88,8 +101,10 @@ export default async function MetadataPage() {
                     label: "テーブル定義",
                     id: "tab-table-def",
                     content: (
-                      <div className="p-8 text-center text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
-                        テーブル定義が表示されます
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+                        <LinkCard href="/metadata/table-def?tab=disease" title="傷病" />
+                        <LinkCard href="/metadata/table-def?tab=allergy" title="アレルギー" />
+                        <LinkCard href="/metadata/table-def?tab=examination" title="検査" />
                       </div>
                     ),
                   },

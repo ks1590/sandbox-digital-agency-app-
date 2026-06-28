@@ -60,6 +60,7 @@ interface SortableTableProps {
   groups?: ColumnGroup[];
   columns: Column[];
   data: RowData[];
+  sortable?: boolean;
 }
 
 /**
@@ -69,7 +70,7 @@ interface SortableTableProps {
  * Next.js App Router 向けに Client Component として実装。
  * 実際にデータのソートが動作するよう拡張。
  */
-export default function SortableTable({ groups, columns, data }: SortableTableProps) {
+export default function SortableTable({ groups, columns, data, sortable = true }: SortableTableProps) {
   /** ソート状態管理（key: カラムインデックス） */
   const [sortState, setSortState] = useState<{
     columnIndex: number | null;
@@ -78,6 +79,7 @@ export default function SortableTable({ groups, columns, data }: SortableTablePr
 
   /** ソートボタンクリック時の処理 */
   const handleSortClick = (columnIndex: number) => {
+    if (!sortable) return;
     setSortState((prev) => {
       if (prev.columnIndex === columnIndex) {
         return {
@@ -92,7 +94,7 @@ export default function SortableTable({ groups, columns, data }: SortableTablePr
 
   /** ソート済みデータ */
   const sortedData = useMemo(() => {
-    if (sortState.columnIndex === null || sortState.direction === undefined)
+    if (!sortable || sortState.columnIndex === null || sortState.direction === undefined)
       return data;
 
     const key = columns[sortState.columnIndex].key;
@@ -110,10 +112,11 @@ export default function SortableTable({ groups, columns, data }: SortableTablePr
       sorted.reverse();
     }
     return sorted;
-  }, [sortState, data, columns]);
+  }, [sortable, sortState, data, columns]);
 
   /** カラムのソート状態を取得 */
   const getSortForColumn = (index: number): Sort => {
+    if (!sortable) return undefined;
     if (sortState.columnIndex === index) return sortState.direction;
     return undefined;
   };
@@ -169,19 +172,23 @@ export default function SortableTable({ groups, columns, data }: SortableTablePr
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start py-2">
-                      <button
-                        className="inline-flex items-start gap-x-1 text-start underline underline-offset-[calc(3/16*1rem)] hover:decoration-[calc(3/16*1rem)] focus-visible:rounded-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[calc(2/16*1rem)] focus-visible:bg-yellow-300 focus-visible:ring-[calc(2/16*1rem)] focus-visible:ring-yellow-300"
-                        type="button"
-                        onClick={() => {
-                          handleSortClick(i);
-                          setCurrentPage(1); // ソート時に1ページ目に戻す
-                        }}
-                      >
-                        {col.label}
-                        <span className="pt-0.5">
-                          <SortIcon sort={getSortForColumn(i)} />
-                        </span>
-                      </button>
+                      {sortable ? (
+                        <button
+                          className="inline-flex items-start gap-x-1 text-start underline underline-offset-[calc(3/16*1rem)] hover:decoration-[calc(3/16*1rem)] focus-visible:rounded-4 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[calc(2/16*1rem)] focus-visible:bg-yellow-300 focus-visible:ring-[calc(2/16*1rem)] focus-visible:ring-yellow-300"
+                          type="button"
+                          onClick={() => {
+                            handleSortClick(i);
+                            setCurrentPage(1); // ソート時に1ページ目に戻す
+                          }}
+                        >
+                          {col.label}
+                          <span className="pt-0.5">
+                            <SortIcon sort={getSortForColumn(i)} />
+                          </span>
+                        </button>
+                      ) : (
+                        <span className="font-bold">{col.label}</span>
+                      )}
                     </div>
                   </div>
                 </th>
