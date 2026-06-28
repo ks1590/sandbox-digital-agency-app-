@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
+import { logout } from "../actions/auth";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -133,6 +134,18 @@ export default function Header() {
                   >
                     データプロファイル参照
                   </Link>
+                </li>
+                <li className="border-t border-gray-200 bg-gray-50">
+                  <button
+                    type="button"
+                    className="w-full text-left block px-4 py-3 hover:bg-gray-200 hover:underline hover:underline-offset-2 text-red-600 font-bold"
+                    onClick={async () => {
+                      setIsMenuOpen(false);
+                      await logout();
+                    }}
+                  >
+                    ログアウト
+                  </button>
                 </li>
               </ul>
             </div>
