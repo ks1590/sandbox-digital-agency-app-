@@ -70,7 +70,12 @@ interface SortableTableProps {
  * Next.js App Router 向けに Client Component として実装。
  * 実際にデータのソートが動作するよう拡張。
  */
-export default function SortableTable({ groups, columns, data, sortable = true }: SortableTableProps) {
+export default function SortableTable({
+  groups,
+  columns,
+  data,
+  sortable = true,
+}: SortableTableProps) {
   /** ソート状態管理（key: カラムインデックス） */
   const [sortState, setSortState] = useState<{
     columnIndex: number | null;
@@ -94,7 +99,11 @@ export default function SortableTable({ groups, columns, data, sortable = true }
 
   /** ソート済みデータ */
   const sortedData = useMemo(() => {
-    if (!sortable || sortState.columnIndex === null || sortState.direction === undefined)
+    if (
+      !sortable ||
+      sortState.columnIndex === null ||
+      sortState.direction === undefined
+    )
       return data;
 
     const key = columns[sortState.columnIndex].key;
@@ -202,8 +211,13 @@ export default function SortableTable({ groups, columns, data, sortable = true }
                 className="border-b border-solid-gray-500 hover:bg-key-50 transition-colors last:border-b-0"
               >
                 {columns.map((col) => (
-                  <td key={col.key} className="border-r border-solid-gray-420 px-4 py-5 align-top last:border-r-0">
-                    {col.format ? col.format(row[col.key]) : String(row[col.key])}
+                  <td
+                    key={col.key}
+                    className="border-r border-solid-gray-420 px-4 py-5 align-top last:border-r-0"
+                  >
+                    {col.format
+                      ? col.format(row[col.key])
+                      : String(row[col.key])}
                   </td>
                 ))}
               </tr>
@@ -219,26 +233,34 @@ export default function SortableTable({ groups, columns, data, sortable = true }
               href="#"
               onClick={(e) => handlePageChange(e, 1)}
               aria-disabled={currentPage === 1}
-              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              className={
+                currentPage === 1 ? "pointer-events-none opacity-50" : ""
+              }
             />
             <PaginationPrev
               href="#"
               onClick={(e) => handlePageChange(e, currentPage - 1)}
               aria-disabled={currentPage === 1}
-              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              className={
+                currentPage === 1 ? "pointer-events-none opacity-50" : ""
+              }
             />
             <PaginationCurrent current={currentPage} max={maxPage} />
             <PaginationNext
               href="#"
               onClick={(e) => handlePageChange(e, currentPage + 1)}
               aria-disabled={currentPage === maxPage}
-              className={currentPage === maxPage ? "pointer-events-none opacity-50" : ""}
+              className={
+                currentPage === maxPage ? "pointer-events-none opacity-50" : ""
+              }
             />
             <PaginationLast
               href="#"
               onClick={(e) => handlePageChange(e, maxPage)}
               aria-disabled={currentPage === maxPage}
-              className={currentPage === maxPage ? "pointer-events-none opacity-50" : ""}
+              className={
+                currentPage === maxPage ? "pointer-events-none opacity-50" : ""
+              }
             />
           </Pagination>
         </div>

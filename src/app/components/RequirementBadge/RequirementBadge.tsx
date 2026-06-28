@@ -1,6 +1,6 @@
-import type { ComponentProps } from 'react';
+import type { ComponentProps } from "react";
 
-export type RequirementBadgeProps = ComponentProps<'span'> & {
+export type RequirementBadgeProps = ComponentProps<"span"> & {
   isOptional?: boolean;
 };
 
@@ -12,7 +12,7 @@ export const RequirementBadge = (props: RequirementBadgeProps) => {
       className={`
         ml-2 inline-block text-oln-16N-100 text-red-800
         data-[is-optional]:text-solid-gray-800
-        ${className ?? ''}
+        ${className ?? ""}
       `}
       data-is-optional={isOptional || undefined}
       {...rest}

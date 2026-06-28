@@ -14,10 +14,7 @@ export type LinkCardProps = {
  * デジタル庁サイトの「新着・更新」カードを参考にした
  * シンプルなナビゲーション用リンクカード。
  */
-export default function LinkCard({
-  title,
-  href,
-}: LinkCardProps) {
+export default function LinkCard({ title, href }: LinkCardProps) {
   return (
     <Link
       href={href}

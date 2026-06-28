@@ -31,7 +31,7 @@ import { SupportText } from "../components/SupportText";
 /** クライアントサイドでのCookie取得（簡易実装） */
 function getCookie(name: string) {
   if (typeof document === "undefined") return undefined;
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
   if (match) return match[2];
   return undefined;
 }
@@ -51,8 +51,10 @@ export default function BusinessMetadataRegisterPage() {
     alert("ビジネスメタデータを更新しました（ダミーアクション）");
   };
 
-  const inputClass = "block w-full rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base text-gray-900 hover:border-black focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300";
-  const textareaClass = "block w-full min-h-[120px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base text-gray-900 hover:border-black focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300";
+  const inputClass =
+    "block w-full rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base text-gray-900 hover:border-black focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300";
+  const textareaClass =
+    "block w-full min-h-[120px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base text-gray-900 hover:border-black focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300";
   const labelClass = "block text-sm font-bold text-gray-900 mb-2";
 
   // --- FileUpload (ER図アップロード) の設定 ---
@@ -118,7 +120,12 @@ export default function BusinessMetadataRegisterPage() {
           <br />
           1ファイルまで選択可能。1ファイルあたり5MB（5,242,880バイト）まで
         </SupportText>
-        <FileUpload className="mt-2" maxFiles={1} hasError={hasError} droppable={true}>
+        <FileUpload
+          className="mt-2"
+          maxFiles={1}
+          hasError={hasError}
+          droppable={true}
+        >
           <FileUploadInput
             id={inputId}
             name="er-diagram-upload"
@@ -153,11 +160,17 @@ export default function BusinessMetadataRegisterPage() {
                 >
                   ファイルを選択
                 </Button>
-                <p className="w-0 grow min-w-[12em] text-gray-700">または、このエリア内にドラッグ＆ドロップ</p>
+                <p className="w-0 grow min-w-[12em] text-gray-700">
+                  または、このエリア内にドラッグ＆ドロップ
+                </p>
               </div>
               {files.length > 0 && (
-                <p id={`summary-${selectionSummarySuffix}`} className="mt-2 text-sm text-gray-700">
-                  選択中：{files.length}個、{formatSize(totalSize)}（{totalSize.toLocaleString()}バイト）
+                <p
+                  id={`summary-${selectionSummarySuffix}`}
+                  className="mt-2 text-sm text-gray-700"
+                >
+                  選択中：{files.length}個、{formatSize(totalSize)}（
+                  {totalSize.toLocaleString()}バイト）
                 </p>
               )}
               {errors.length > 0 && (
@@ -171,7 +184,9 @@ export default function BusinessMetadataRegisterPage() {
                 <Checkbox
                   size="md"
                   checked={isExpandedDropArea}
-                  onChange={(e) => handleExpandedDropAreaChange(e.target.checked)}
+                  onChange={(e) =>
+                    handleExpandedDropAreaChange(e.target.checked)
+                  }
                 >
                   ドラッグ＆ドロップの範囲をこのブラウザウィンドウ全体に広げる
                 </Checkbox>
@@ -183,16 +198,28 @@ export default function BusinessMetadataRegisterPage() {
                 {files.map((file, index) => {
                   const hasFileError = file.errors && file.errors.length > 0;
                   return (
-                    <FileUploadFileItem key={file.id} data-id={file.id} hasError={hasFileError}>
+                    <FileUploadFileItem
+                      key={file.id}
+                      data-id={file.id}
+                      hasError={hasFileError}
+                    >
                       <FileUploadFileMarker />
                       <FileUploadFileInfo>
                         <p>
-                          <FileUploadFileName id={`${file.id}-name`}>{file.name}</FileUploadFileName>
+                          <FileUploadFileName id={`${file.id}-name`}>
+                            {file.name}
+                          </FileUploadFileName>
                           <FileUploadFileMeta>
-                            <span>{formatSize(file.size)}</span>（<span>{file.size.toLocaleString()}</span>バイト）
+                            <span>{formatSize(file.size)}</span>（
+                            <span>{file.size.toLocaleString()}</span>バイト）
                           </FileUploadFileMeta>
                         </p>
-                        {hasFileError && file.errors?.map((error) => <p key={error} className="text-error-1 text-sm">＊{error}</p>)}
+                        {hasFileError &&
+                          file.errors?.map((error) => (
+                            <p key={error} className="text-error-1 text-sm">
+                              ＊{error}
+                            </p>
+                          ))}
                       </FileUploadFileInfo>
                       <Button
                         id={`${file.id}-remove`}
@@ -232,7 +259,11 @@ export default function BusinessMetadataRegisterPage() {
       {previewUrl && (
         <div className="mt-6 border border-gray-300 rounded-lg p-4 bg-gray-50 flex justify-center items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={previewUrl} alt="ER図プレビュー" className="max-w-full h-auto object-contain max-h-[600px] border border-gray-200" />
+          <img
+            src={previewUrl}
+            alt="ER図プレビュー"
+            className="max-w-full h-auto object-contain max-h-[600px] border border-gray-200"
+          />
         </div>
       )}
     </div>
@@ -275,7 +306,9 @@ export default function BusinessMetadataRegisterPage() {
       {/* 概要 */}
       <section>
         <h3 className="text-xl font-bold mb-4">概要</h3>
-        <label htmlFor="overviewText" className="sr-only">概要の説明</label>
+        <label htmlFor="overviewText" className="sr-only">
+          概要の説明
+        </label>
         <textarea
           id="overviewText"
           className={textareaClass}
@@ -288,12 +321,26 @@ export default function BusinessMetadataRegisterPage() {
         <h3 className="text-xl font-bold mb-4">収集期間</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
           <div>
-            <label htmlFor="startYear" className={labelClass}>収集開始年度</label>
-            <input type="text" id="startYear" className={inputClass} defaultValue="2020年" />
+            <label htmlFor="startYear" className={labelClass}>
+              収集開始年度
+            </label>
+            <input
+              type="text"
+              id="startYear"
+              className={inputClass}
+              defaultValue="2020年"
+            />
           </div>
           <div>
-            <label htmlFor="latestYear" className={labelClass}>最新の提供可能年度</label>
-            <input type="text" id="latestYear" className={inputClass} defaultValue="2026年" />
+            <label htmlFor="latestYear" className={labelClass}>
+              最新の提供可能年度
+            </label>
+            <input
+              type="text"
+              id="latestYear"
+              className={inputClass}
+              defaultValue="2026年"
+            />
           </div>
         </div>
       </section>
@@ -305,25 +352,49 @@ export default function BusinessMetadataRegisterPage() {
           <table className="w-full min-w-[600px] border-collapse text-sm border border-gray-300">
             <thead>
               <tr className="bg-gray-100 border-b-2 border-gray-300">
-                <th className="py-3 px-4 text-left font-bold text-gray-900 border-r border-gray-300 w-1/2">対象項目</th>
-                <th className="py-3 px-4 text-left font-bold text-gray-900 w-1/2">頻度</th>
+                <th className="py-3 px-4 text-left font-bold text-gray-900 border-r border-gray-300 w-1/2">
+                  対象項目
+                </th>
+                <th className="py-3 px-4 text-left font-bold text-gray-900 w-1/2">
+                  頻度
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b border-gray-200">
                 <td className="py-3 px-4 border-r border-gray-200">
-                  <input type="text" aria-label="対象項目1" className={inputClass} defaultValue="項目名A" />
+                  <input
+                    type="text"
+                    aria-label="対象項目1"
+                    className={inputClass}
+                    defaultValue="項目名A"
+                  />
                 </td>
                 <td className="py-3 px-4">
-                  <input type="text" aria-label="頻度1" className={inputClass} defaultValue="年次" />
+                  <input
+                    type="text"
+                    aria-label="頻度1"
+                    className={inputClass}
+                    defaultValue="年次"
+                  />
                 </td>
               </tr>
               <tr className="border-b border-gray-200">
                 <td className="py-3 px-4 border-r border-gray-200">
-                  <input type="text" aria-label="対象項目2" className={inputClass} defaultValue="項目名B" />
+                  <input
+                    type="text"
+                    aria-label="対象項目2"
+                    className={inputClass}
+                    defaultValue="項目名B"
+                  />
                 </td>
                 <td className="py-3 px-4">
-                  <input type="text" aria-label="頻度2" className={inputClass} defaultValue="月次" />
+                  <input
+                    type="text"
+                    aria-label="頻度2"
+                    className={inputClass}
+                    defaultValue="月次"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -337,30 +408,60 @@ export default function BusinessMetadataRegisterPage() {
         <div className="space-y-8">
           {/* テーブルアイテム 1 */}
           <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
-            <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">〇〇テーブル</h4>
+            <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">
+              〇〇テーブル
+            </h4>
             <div className="space-y-6">
               <div>
-                <label htmlFor="table1Overview" className={labelClass}>概要</label>
-                <textarea id="table1Overview" className={textareaClass} defaultValue="テーブル概要の説明..." />
+                <label htmlFor="table1Overview" className={labelClass}>
+                  概要
+                </label>
+                <textarea
+                  id="table1Overview"
+                  className={textareaClass}
+                  defaultValue="テーブル概要の説明..."
+                />
               </div>
               <div>
-                <label htmlFor="table1Unit" className={labelClass}>格納単位</label>
-                <input type="text" id="table1Unit" className={inputClass} defaultValue="レセプト" />
+                <label htmlFor="table1Unit" className={labelClass}>
+                  格納単位
+                </label>
+                <input
+                  type="text"
+                  id="table1Unit"
+                  className={inputClass}
+                  defaultValue="レセプト"
+                />
               </div>
             </div>
           </div>
 
           {/* テーブルアイテム 2 */}
           <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
-            <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">△△テーブル</h4>
+            <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">
+              △△テーブル
+            </h4>
             <div className="space-y-6">
               <div>
-                <label htmlFor="table2Overview" className={labelClass}>概要</label>
-                <textarea id="table2Overview" className={textareaClass} defaultValue="テーブル概要の説明..." />
+                <label htmlFor="table2Overview" className={labelClass}>
+                  概要
+                </label>
+                <textarea
+                  id="table2Overview"
+                  className={textareaClass}
+                  defaultValue="テーブル概要の説明..."
+                />
               </div>
               <div>
-                <label htmlFor="table2Unit" className={labelClass}>格納単位</label>
-                <input type="text" id="table2Unit" className={inputClass} defaultValue="レセプト" />
+                <label htmlFor="table2Unit" className={labelClass}>
+                  格納単位
+                </label>
+                <input
+                  type="text"
+                  id="table2Unit"
+                  className={inputClass}
+                  defaultValue="レセプト"
+                />
               </div>
             </div>
           </div>
@@ -370,7 +471,9 @@ export default function BusinessMetadataRegisterPage() {
       {/* 留意事項 */}
       <section>
         <h3 className="text-xl font-bold mb-4">留意事項</h3>
-        <label htmlFor="notesText" className="sr-only">留意事項</label>
+        <label htmlFor="notesText" className="sr-only">
+          留意事項
+        </label>
         <textarea
           id="notesText"
           className={textareaClass}
@@ -388,72 +491,67 @@ export default function BusinessMetadataRegisterPage() {
       {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">
         <div className="page-container">
-          <div className="content-card">
+          {/* ページタイトル */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">
+              ビジネスメタデータ登録
+            </h2>
+          </div>
 
-            {/* ページタイトル */}
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">
-                ビジネスメタデータ登録
-              </h2>
-            </div>
+          {/* 青い下線（区切り） */}
+          <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
-            {/* 青い下線（区切り） */}
-            <hr className="border-t-[3px] border-[#0017C1] mb-8" />
-
-            {/* 
+          {/* 
               フォーム全体でTabを囲むことで、
               どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
             */}
-            <form onSubmit={handleSubmit} className="text-gray-900">
-              
-              {/* タブ領域 */}
-              <div className="mb-12">
-                <Tab
-                  headingId="register-tabs-heading"
-                  items={[
-                    {
-                      label: "概要",
-                      id: "tab-overview",
-                      content: overviewContent,
-                    },
-                    {
-                      label: "ER図",
-                      id: "tab-er",
-                      content: erDiagramContent,
-                    },
-                    {
-                      label: "テーブル定義",
-                      id: "tab-table-def",
-                      content: (
-                        <div className="py-6">
-                          <p className="text-gray-700 p-8 text-center border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                            ※後ほど実装予定
-                          </p>
-                        </div>
-                      ),
-                    },
-                  ]}
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="text-gray-900">
+            {/* タブ領域 */}
+            <div className="mb-12">
+              <Tab
+                headingId="register-tabs-heading"
+                items={[
+                  {
+                    label: "概要",
+                    id: "tab-overview",
+                    content: overviewContent,
+                  },
+                  {
+                    label: "ER図",
+                    id: "tab-er",
+                    content: erDiagramContent,
+                  },
+                  {
+                    label: "テーブル定義",
+                    id: "tab-table-def",
+                    content: (
+                      <div className="py-6">
+                        <p className="text-gray-700 p-8 text-center border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                          ※後ほど実装予定
+                        </p>
+                      </div>
+                    ),
+                  },
+                ]}
+              />
+            </div>
 
-              {/* ボタンエリア */}
-              <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
-                <Link
-                  href="/"
-                  className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
-                >
-                  戻る
-                </Link>
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-[#0017C1] px-4 py-3 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
-                >
-                  更新
-                </button>
-              </div>
-
-            </form>
-          </div>
+            {/* ボタンエリア */}
+            <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
+              >
+                戻る
+              </Link>
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-[#0017C1] px-4 py-3 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
+              >
+                更新
+              </button>
+            </div>
+          </form>
         </div>
       </main>
     </div>

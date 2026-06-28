@@ -21,7 +21,9 @@ export default function LoginPage() {
             <circle cx="18" cy="18" r="3.5" fill="white" />
           </svg>
           <div>
-            <h1 className="text-xl font-bold text-gray-900 leading-tight">データマネジメントポータル</h1>
+            <h1 className="text-xl font-bold text-gray-900 leading-tight">
+              データマネジメントポータル
+            </h1>
             <p className="text-xs text-gray-500">Data Management Portal</p>
           </div>
         </div>
@@ -29,13 +31,18 @@ export default function LoginPage() {
 
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="bg-white rounded-[12px] shadow-sm p-10 w-full max-w-md border border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">ログイン</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+            ログイン
+          </h2>
 
           <form action={login} className="space-y-6">
             {/* ログインID */}
             <div className="flex flex-col gap-2">
               <label htmlFor="loginId" className="font-bold text-gray-900">
-                ログインID<span className="ml-2 text-xs font-normal text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded">※必須</span>
+                ログインID
+                <span className="ml-2 text-xs font-normal text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded">
+                  ※必須
+                </span>
               </label>
               <input
                 id="loginId"
@@ -50,7 +57,10 @@ export default function LoginPage() {
             {/* パスワード */}
             <div className="flex flex-col gap-2">
               <label htmlFor="password" className="font-bold text-gray-900">
-                パスワード<span className="ml-2 text-xs font-normal text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded">※必須</span>
+                パスワード
+                <span className="ml-2 text-xs font-normal text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded">
+                  ※必須
+                </span>
               </label>
               <input
                 id="password"

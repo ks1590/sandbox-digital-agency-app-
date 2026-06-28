@@ -17,27 +17,118 @@ const tableColumns: Column[] = [
 
 /** ダミーデータ：傷病テーブル */
 const diseaseData: RowData[] = [
-  { no: 1, logicalName: "患者ID", physicalName: "patient_id", dataType: "VARCHAR(255)", required: "必須", sample: "P0000001" },
-  { no: 2, logicalName: "傷病名", physicalName: "disease_name", dataType: "VARCHAR(255)", required: "必須", sample: "インフルエンザ" },
-  { no: 3, logicalName: "診断日", physicalName: "diagnosis_date", dataType: "DATE", required: "任意", sample: "2023-01-15" },
-  { no: 4, logicalName: "転帰", physicalName: "outcome", dataType: "VARCHAR(50)", required: "任意", sample: "治癒" },
+  {
+    no: 1,
+    logicalName: "患者ID",
+    physicalName: "patient_id",
+    dataType: "VARCHAR(255)",
+    required: "必須",
+    sample: "P0000001",
+  },
+  {
+    no: 2,
+    logicalName: "傷病名",
+    physicalName: "disease_name",
+    dataType: "VARCHAR(255)",
+    required: "必須",
+    sample: "インフルエンザ",
+  },
+  {
+    no: 3,
+    logicalName: "診断日",
+    physicalName: "diagnosis_date",
+    dataType: "DATE",
+    required: "任意",
+    sample: "2023-01-15",
+  },
+  {
+    no: 4,
+    logicalName: "転帰",
+    physicalName: "outcome",
+    dataType: "VARCHAR(50)",
+    required: "任意",
+    sample: "治癒",
+  },
 ];
 
 /** ダミーデータ：アレルギーテーブル */
 const allergyData: RowData[] = [
-  { no: 1, logicalName: "患者ID", physicalName: "patient_id", dataType: "VARCHAR(255)", required: "必須", sample: "P0000001" },
-  { no: 2, logicalName: "アレルゲン", physicalName: "allergen", dataType: "VARCHAR(255)", required: "必須", sample: "ペニシリン" },
-  { no: 3, logicalName: "重症度", physicalName: "severity", dataType: "VARCHAR(50)", required: "任意", sample: "重度" },
-  { no: 4, logicalName: "発現日", physicalName: "onset_date", dataType: "DATE", required: "任意", sample: "2010-05-10" },
+  {
+    no: 1,
+    logicalName: "患者ID",
+    physicalName: "patient_id",
+    dataType: "VARCHAR(255)",
+    required: "必須",
+    sample: "P0000001",
+  },
+  {
+    no: 2,
+    logicalName: "アレルゲン",
+    physicalName: "allergen",
+    dataType: "VARCHAR(255)",
+    required: "必須",
+    sample: "ペニシリン",
+  },
+  {
+    no: 3,
+    logicalName: "重症度",
+    physicalName: "severity",
+    dataType: "VARCHAR(50)",
+    required: "任意",
+    sample: "重度",
+  },
+  {
+    no: 4,
+    logicalName: "発現日",
+    physicalName: "onset_date",
+    dataType: "DATE",
+    required: "任意",
+    sample: "2010-05-10",
+  },
 ];
 
 /** ダミーデータ：検査テーブル */
 const examData: RowData[] = [
-  { no: 1, logicalName: "患者ID", physicalName: "patient_id", dataType: "VARCHAR(255)", required: "必須", sample: "P0000001" },
-  { no: 2, logicalName: "検査日", physicalName: "exam_date", dataType: "DATE", required: "必須", sample: "2023-10-01" },
-  { no: 3, logicalName: "検査項目", physicalName: "exam_item", dataType: "VARCHAR(255)", required: "必須", sample: "HbA1c" },
-  { no: 4, logicalName: "検査値", physicalName: "exam_value", dataType: "DECIMAL(10,2)", required: "任意", sample: "5.8" },
-  { no: 5, logicalName: "単位", physicalName: "unit", dataType: "VARCHAR(50)", required: "任意", sample: "%" },
+  {
+    no: 1,
+    logicalName: "患者ID",
+    physicalName: "patient_id",
+    dataType: "VARCHAR(255)",
+    required: "必須",
+    sample: "P0000001",
+  },
+  {
+    no: 2,
+    logicalName: "検査日",
+    physicalName: "exam_date",
+    dataType: "DATE",
+    required: "必須",
+    sample: "2023-10-01",
+  },
+  {
+    no: 3,
+    logicalName: "検査項目",
+    physicalName: "exam_item",
+    dataType: "VARCHAR(255)",
+    required: "必須",
+    sample: "HbA1c",
+  },
+  {
+    no: 4,
+    logicalName: "検査値",
+    physicalName: "exam_value",
+    dataType: "DECIMAL(10,2)",
+    required: "任意",
+    sample: "5.8",
+  },
+  {
+    no: 5,
+    logicalName: "単位",
+    physicalName: "unit",
+    dataType: "VARCHAR(50)",
+    required: "任意",
+    sample: "%",
+  },
 ];
 
 type Props = {
@@ -66,64 +157,73 @@ export default async function TableDefPage({ searchParams }: Props) {
       {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">
         <div className="page-container">
-          <div className="content-card">
+          {/* ページタイトル */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">
+              テーブル定義詳細
+            </h2>
+          </div>
 
-            {/* ページタイトル */}
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">
-                テーブル定義詳細
-              </h2>
-            </div>
+          {/* 青い下線（区切り） */}
+          <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
-            {/* 青い下線（区切り） */}
-            <hr className="border-t-[3px] border-[#0017C1] mb-8" />
+          {/* タブ領域 */}
+          <div className="mb-12">
+            <Tab
+              headingId="table-def-tabs-heading"
+              defaultIndex={defaultIndex}
+              items={[
+                {
+                  label: "傷病",
+                  id: "tab-disease",
+                  content: (
+                    <div className="py-6">
+                      <SortableTable
+                        columns={tableColumns}
+                        data={diseaseData}
+                        sortable={false}
+                      />
+                    </div>
+                  ),
+                },
+                {
+                  label: "アレルギー",
+                  id: "tab-allergy",
+                  content: (
+                    <div className="py-6">
+                      <SortableTable
+                        columns={tableColumns}
+                        data={allergyData}
+                        sortable={false}
+                      />
+                    </div>
+                  ),
+                },
+                {
+                  label: "検査",
+                  id: "tab-examination",
+                  content: (
+                    <div className="py-6">
+                      <SortableTable
+                        columns={tableColumns}
+                        data={examData}
+                        sortable={false}
+                      />
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
 
-            {/* タブ領域 */}
-            <div className="mb-12">
-              <Tab
-                headingId="table-def-tabs-heading"
-                defaultIndex={defaultIndex}
-                items={[
-                  {
-                    label: "傷病",
-                    id: "tab-disease",
-                    content: (
-                      <div className="py-6">
-                        <SortableTable columns={tableColumns} data={diseaseData} sortable={false} />
-                      </div>
-                    ),
-                  },
-                  {
-                    label: "アレルギー",
-                    id: "tab-allergy",
-                    content: (
-                      <div className="py-6">
-                        <SortableTable columns={tableColumns} data={allergyData} sortable={false} />
-                      </div>
-                    ),
-                  },
-                  {
-                    label: "検査",
-                    id: "tab-examination",
-                    content: (
-                      <div className="py-6">
-                        <SortableTable columns={tableColumns} data={examData} sortable={false} />
-                      </div>
-                    ),
-                  },
-                ]}
-              />
-            </div>
-
-            {/* 戻るボタン */}
-            <div className="mt-8">
-              <Link
-                href="/metadata?tab=table-def"
-                className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300"
-              >
-                戻る
-              </Link>
-            </div>
+          {/* 戻るボタン */}
+          <div className="mt-8">
+            <Link
+              href="/metadata?tab=table-def"
+              className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300"
+            >
+              戻る
+            </Link>
           </div>
         </div>
       </main>

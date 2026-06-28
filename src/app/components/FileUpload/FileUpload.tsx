@@ -1,14 +1,21 @@
-import { type ComponentProps, forwardRef } from 'react';
-import { createPortal } from 'react-dom';
+import { type ComponentProps, forwardRef } from "react";
+import { createPortal } from "react-dom";
 
-export type FileUploadProps = ComponentProps<'div'> & {
+export type FileUploadProps = ComponentProps<"div"> & {
   maxFiles?: number;
   hasError?: boolean;
   droppable?: boolean;
 };
 
 export const FileUpload = (props: FileUploadProps) => {
-  const { children, className, maxFiles = 1, hasError = false, droppable = false, ...rest } = props;
+  const {
+    children,
+    className,
+    maxFiles = 1,
+    hasError = false,
+    droppable = false,
+    ...rest
+  } = props;
 
   const isMultiple = maxFiles > 1;
 
@@ -17,11 +24,11 @@ export const FileUpload = (props: FileUploadProps) => {
       className={`
         group/file-upload
         text-solid-gray-800 text-std-16N-170 [overflow-wrap:anywhere]
-        ${className ?? ''}
+        ${className ?? ""}
       `}
-      data-multiple={isMultiple ? 'true' : 'false'}
-      data-has-error={hasError ? 'true' : undefined}
-      data-droppable={droppable ? 'true' : undefined}
+      data-multiple={isMultiple ? "true" : "false"}
+      data-has-error={hasError ? "true" : undefined}
+      data-droppable={droppable ? "true" : undefined}
       {...rest}
     >
       {children}
@@ -29,25 +36,28 @@ export const FileUpload = (props: FileUploadProps) => {
   );
 };
 
-export type FileUploadInputProps = Omit<ComponentProps<'input'>, 'type'>;
+export type FileUploadInputProps = Omit<ComponentProps<"input">, "type">;
 
-export const FileUploadInput = forwardRef<HTMLInputElement, FileUploadInputProps>((props, ref) => {
+export const FileUploadInput = forwardRef<
+  HTMLInputElement,
+  FileUploadInputProps
+>((props, ref) => {
   const { className, ...rest } = props;
 
   return (
     <input
       ref={ref}
-      type='file'
+      type="file"
       className={`
         hidden
-        ${className ?? ''}
+        ${className ?? ""}
       `}
       {...rest}
     />
   );
 });
 
-export type FileUploadDropAreaProps = ComponentProps<'div'> & {
+export type FileUploadDropAreaProps = ComponentProps<"div"> & {
   isDragOver?: boolean;
 };
 
@@ -61,9 +71,9 @@ export const FileUploadDropArea = (props: FileUploadDropAreaProps) => {
         rounded-8 p-8 border border-solid-gray-536 bg-solid-gray-50
         group-data-[has-error=true]/file-upload:border-error-1
         data-[dragover=true]:outline data-[dragover=true]:outline-4 data-[dragover=true]:outline-success-1 data-[dragover=true]:-outline-offset-4 data-[dragover=true]:bg-green-50
-        ${className ?? ''}
+        ${className ?? ""}
       `}
-      data-dragover={isDragOver ? 'true' : undefined}
+      data-dragover={isDragOver ? "true" : undefined}
       {...rest}
     >
       {children}
@@ -71,7 +81,7 @@ export const FileUploadDropArea = (props: FileUploadDropAreaProps) => {
   );
 };
 
-export type FileUploadFileListProps = ComponentProps<'ul'>;
+export type FileUploadFileListProps = ComponentProps<"ul">;
 
 export const FileUploadFileList = (props: FileUploadFileListProps) => {
   const { children, className, ...rest } = props;
@@ -80,7 +90,7 @@ export const FileUploadFileList = (props: FileUploadFileListProps) => {
     <ul
       className={`
         mt-4 p-0 list-none [counter-reset:file-item]
-        ${className ?? ''}
+        ${className ?? ""}
       `}
       {...rest}
     >
@@ -89,7 +99,7 @@ export const FileUploadFileList = (props: FileUploadFileListProps) => {
   );
 };
 
-export type FileUploadFileItemProps = ComponentProps<'li'> & {
+export type FileUploadFileItemProps = ComponentProps<"li"> & {
   hasError?: boolean;
 };
 
@@ -102,9 +112,9 @@ export const FileUploadFileItem = (props: FileUploadFileItemProps) => {
         group/file-item
         flex items-baseline [counter-increment:file-item]
         [&+&]:mt-1
-        ${className ?? ''}
+        ${className ?? ""}
       `}
-      data-error={hasError ? 'true' : undefined}
+      data-error={hasError ? "true" : undefined}
       {...rest}
     >
       {children}
@@ -112,7 +122,7 @@ export const FileUploadFileItem = (props: FileUploadFileItemProps) => {
   );
 };
 
-export type FileUploadFileMarkerProps = ComponentProps<'div'>;
+export type FileUploadFileMarkerProps = ComponentProps<"div">;
 
 export const FileUploadFileMarker = (props: FileUploadFileMarkerProps) => {
   const { className, ...rest } = props;
@@ -126,14 +136,14 @@ export const FileUploadFileMarker = (props: FileUploadFileMarkerProps) => {
         group-data-[multiple=false]/file-upload:flex group-data-[multiple=false]/file-upload:self-start group-data-[multiple=false]/file-upload:justify-center group-data-[multiple=false]/file-upload:items-center group-data-[multiple=false]/file-upload:w-6 group-data-[multiple=false]/file-upload:h-[calc(30/16*1rem)]
         group-data-[multiple=false]/file-upload:before:w-1.5 group-data-[multiple=false]/file-upload:before:h-1.5 group-data-[multiple=false]/file-upload:before:rounded-full group-data-[multiple=false]/file-upload:before:bg-current group-data-[multiple=false]/file-upload:before:content-['']
         group-data-[multiple=false]/file-upload:forced-colors:before:bg-[CanvasText]
-        ${className ?? ''}
+        ${className ?? ""}
       `}
       {...rest}
     />
   );
 };
 
-export type FileUploadFileInfoProps = ComponentProps<'div'>;
+export type FileUploadFileInfoProps = ComponentProps<"div">;
 
 export const FileUploadFileInfo = (props: FileUploadFileInfoProps) => {
   const { children, className, ...rest } = props;
@@ -143,7 +153,7 @@ export const FileUploadFileInfo = (props: FileUploadFileInfoProps) => {
       className={`
         flex-1 min-w-0
         group-data-[error=true]/file-item:border-l-4 group-data-[error=true]/file-item:border-error-1 group-data-[error=true]/file-item:pl-2 group-data-[error=true]/file-item:text-error-1
-        ${className ?? ''}
+        ${className ?? ""}
       `}
       {...rest}
     >
@@ -152,19 +162,19 @@ export const FileUploadFileInfo = (props: FileUploadFileInfoProps) => {
   );
 };
 
-export type FileUploadFileNameProps = ComponentProps<'span'>;
+export type FileUploadFileNameProps = ComponentProps<"span">;
 
 export const FileUploadFileName = (props: FileUploadFileNameProps) => {
   const { children, className, ...rest } = props;
 
   return (
-    <span className={`mr-4 font-bold ${className ?? ''}`} {...rest}>
+    <span className={`mr-4 font-bold ${className ?? ""}`} {...rest}>
       {children}
     </span>
   );
 };
 
-export type FileUploadFileMetaProps = ComponentProps<'span'>;
+export type FileUploadFileMetaProps = ComponentProps<"span">;
 
 export const FileUploadFileMeta = (props: FileUploadFileMetaProps) => {
   const { children, className, ...rest } = props;
@@ -174,7 +184,7 @@ export const FileUploadFileMeta = (props: FileUploadFileMetaProps) => {
       className={`
         text-solid-gray-600
         group-data-[error=true]/file-item:text-inherit
-        ${className ?? ''}
+        ${className ?? ""}
       `}
       {...rest}
     >
@@ -183,12 +193,14 @@ export const FileUploadFileMeta = (props: FileUploadFileMetaProps) => {
   );
 };
 
-export type FileUploadViewportOverlayProps = ComponentProps<'div'>;
+export type FileUploadViewportOverlayProps = ComponentProps<"div">;
 
-export const FileUploadViewportOverlay = (props: FileUploadViewportOverlayProps) => {
+export const FileUploadViewportOverlay = (
+  props: FileUploadViewportOverlayProps,
+) => {
   const { children, className, ...rest } = props;
 
-  if (typeof document === 'undefined') {
+  if (typeof document === "undefined") {
     return null;
   }
 
@@ -196,7 +208,7 @@ export const FileUploadViewportOverlay = (props: FileUploadViewportOverlayProps)
     <div
       className={`
         fixed inset-0 z-[9999] border-4 border-success-1 bg-green-50
-        ${className ?? ''}
+        ${className ?? ""}
       `}
       {...rest}
     >
@@ -206,9 +218,11 @@ export const FileUploadViewportOverlay = (props: FileUploadViewportOverlayProps)
   );
 };
 
-export type FileUploadViewportOverlayMessageProps = ComponentProps<'div'>;
+export type FileUploadViewportOverlayMessageProps = ComponentProps<"div">;
 
-export const FileUploadViewportOverlayMessage = (props: FileUploadViewportOverlayMessageProps) => {
+export const FileUploadViewportOverlayMessage = (
+  props: FileUploadViewportOverlayMessageProps,
+) => {
   const { children, className, ...rest } = props;
 
   return (
@@ -216,7 +230,7 @@ export const FileUploadViewportOverlayMessage = (props: FileUploadViewportOverla
       className={`
         flex justify-center content-center flex-wrap box-border w-full h-full p-[calc(2rem-4px)]
         text-[clamp(calc(18/16*1rem),0.75rem+1.875vw,calc(48/16*1rem))] font-bold pointer-events-none
-        ${className ?? ''}
+        ${className ?? ""}
       `}
       {...rest}
     >

@@ -1,4 +1,10 @@
-import { Children, cloneElement, type HTMLAttributes, isValidElement, type ReactNode } from 'react';
+import {
+  Children,
+  cloneElement,
+  type HTMLAttributes,
+  isValidElement,
+  type ReactNode,
+} from "react";
 
 type SlotProps = HTMLAttributes<HTMLElement> & {
   children?: ReactNode;
@@ -13,7 +19,7 @@ export const Slot = (props: SlotProps) => {
     return cloneElement(children, {
       ...rest,
       ...(children.props as any),
-      className: `${rest.className ?? ''} ${(children.props as any).className ?? ''}`,
+      className: `${rest.className ?? ""} ${(children.props as any).className ?? ""}`,
     });
   }
 

@@ -43,7 +43,9 @@ export default function Header({ userId }: { userId?: string }) {
               <circle cx="18" cy="18" r="3.5" fill="white" />
             </svg>
             <div>
-              <h1 className="portal-header__title">データマネジメントポータル</h1>
+              <h1 className="portal-header__title">
+                データマネジメントポータル
+              </h1>
               <p className="portal-header__subtitle">Data Management Portal</p>
             </div>
           </Link>
@@ -53,7 +55,13 @@ export default function Header({ userId }: { userId?: string }) {
         <div className="flex items-center gap-4">
           {userId && (
             <div className="hidden sm:inline-flex items-center content-center min-h-8 text-gray-900 py-1 px-2 text-base">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-gray-900 mr-1 self-center">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="text-gray-900 mr-1 self-center"
+              >
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
               </svg>
               {userId}
@@ -64,7 +72,7 @@ export default function Header({ userId }: { userId?: string }) {
           <div ref={menuRef}>
             <button
               type="button"
-              className="flex w-fit touch-manipulation items-center gap-x-1 rounded-[6px] px-3 pb-1.5 pt-1 text-base text-gray-900 hover:bg-gray-100 hover:underline hover:underline-offset-[3px] focus-visible:bg-yellow-300 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-[2px] focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300 bg-white border border-gray-400"
+              className="flex w-fit touch-manipulation items-center gap-x-1 rounded-[6px] px-3 pb-1.5 pt-1 text-base text-gray-900 hover:bg-gray-100 hover:underline hover:underline-offset-[3px] focus-visible:bg-yellow-300 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-[2px] focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300"
               aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >

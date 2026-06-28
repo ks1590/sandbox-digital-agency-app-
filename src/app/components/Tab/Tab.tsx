@@ -71,10 +71,7 @@ export default function Tab({
       {...(dataPosition ? { "data-position": dataPosition } : {})}
     >
       {/* タブリスト */}
-      <ul
-        className="dads-tab__list"
-        aria-labelledby={headingId}
-      >
+      <ul className="dads-tab__list" aria-labelledby={headingId}>
         {items.map((item, index) => (
           <li key={getPanelId(item, index)}>
             <a
