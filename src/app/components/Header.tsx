@@ -146,6 +146,15 @@ export default function Header({ userId }: { userId?: string }) {
                       データプロファイル参照
                     </Link>
                   </li>
+                  <li className="border-t border-gray-200">
+                    <Link
+                      href="/business-metadata-register"
+                      className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      ビジネスメタデータ登録
+                    </Link>
+                  </li>
                   <li className="border-t border-gray-200 bg-gray-50">
                     <button
                       type="button"

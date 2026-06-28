@@ -35,6 +35,9 @@ export default async function PortalPage() {
 
               {/* 3. データプロファイル参照画面 */}
               <LinkCard title='データプロファイル参照' href='/data-profile' />
+
+              {/* 4. ビジネスメタデータ登録画面 */}
+              <LinkCard title='ビジネスメタデータ登録' href='/business-metadata-register' />
             </div>
           </div>
         </section>
