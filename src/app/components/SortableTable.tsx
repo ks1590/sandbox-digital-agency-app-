@@ -213,7 +213,7 @@ export default function SortableTable({
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className="border-r border-solid-gray-420 px-4 py-5 align-top last:border-r-0"
+                    className="border-r border-solid-gray-420 px-4 py-3 align-top last:border-r-0"
                   >
                     {col.format
                       ? col.format(row[col.key])
