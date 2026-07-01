@@ -272,10 +272,8 @@ export default function ExtractionStatusContent() {
   // 共通CSSクラス
   // -------------------------
 
-  const thClass = 'border-r border-solid-gray-500 px-3 py-3 text-left align-top whitespace-nowrap';
-  const thLastClass = 'px-3 py-3 text-left align-top whitespace-nowrap';
-  const tdClass = 'border-r border-solid-gray-420 px-3 py-3 align-top whitespace-nowrap';
-  const tdLastClass = 'px-3 py-3 align-top whitespace-nowrap';
+  const thClass = 'px-5 py-4 text-left align-top whitespace-nowrap';
+  const tdClass = 'px-5 py-4 align-top whitespace-nowrap';
 
   // -------------------------
   // レンダリング
@@ -317,12 +315,11 @@ export default function ExtractionStatusContent() {
         <div className="overflow-x-auto border border-solid-gray-420">
           <table className="w-full table-auto text-std-16N-170 bg-white text-sm">
             <thead>
-              <tr className="border-b-2 border-black bg-solid-gray-100">
+              <tr className="border-b border-black bg-solid-gray-100">
                 {columns.map((col, i) => {
-                  const isLast = i === columns.length - 1;
                   if (col.sortable) {
                     return (
-                      <th key={col.key} className={isLast ? thLastClass : thClass}>
+                      <th key={col.key} className={thClass}>
                         <button
                           type="button"
                           className="inline-flex items-center gap-x-1 text-start underline underline-offset-2 hover:decoration-2 focus-visible:rounded focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:bg-yellow-300"
@@ -342,7 +339,7 @@ export default function ExtractionStatusContent() {
                     );
                   }
                   return (
-                    <th key={col.key} className={isLast ? thLastClass : thClass}>
+                    <th key={col.key} className={thClass}>
                       {col.label}
                     </th>
                   );
@@ -366,14 +363,13 @@ export default function ExtractionStatusContent() {
                     className="border-b border-solid-gray-500 hover:bg-key-50 transition-colors last:border-b-0"
                   >
                     {columns.map((col, colIdx) => {
-                      const isLast = colIdx === columns.length - 1;
                       const content = col.render
                         ? col.render(row, idx)
                         : String(row[col.key as keyof ExtractionRequest] ?? '');
                       return (
                         <td
                           key={col.key}
-                          className={isLast ? tdLastClass : tdClass}
+                          className={tdClass}
                         >
                           {content}
                         </td>
