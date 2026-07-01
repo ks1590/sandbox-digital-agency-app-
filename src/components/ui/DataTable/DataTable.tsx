@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, type ReactNode } from 'react';
+import React, { useState, useMemo, type ReactNode } from 'react';
 import {
   Pagination,
   PaginationCurrent,
@@ -74,10 +74,12 @@ export function DataTable<T>({
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<number>(pageSizeOptions[0]);
 
-  // データが更新されたら1ページ目に戻す
-  useEffect(() => {
+  // Vercel Best Practice: useEffectでのprop監視による状態リセットを避け、レンダーフェーズで派生状態をリセットする
+  const [prevData, setPrevData] = useState(data);
+  if (data !== prevData) {
+    setPrevData(data);
     setCurrentPage(1);
-  }, [data]);
+  }
 
   // イベントハンドラ
   const handleToggleSort = (key: string) => {

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Tab from "../../components/ui/Tab";
-import { DataTable, type ColumnDef } from '../../components/ui/DataTable';
+import { DataTable, type ColumnDef } from '../../components/ui/DataTable/DataTable';
 
 interface DataProfileRow {
   id: number;

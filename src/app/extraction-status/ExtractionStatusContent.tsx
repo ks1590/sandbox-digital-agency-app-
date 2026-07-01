@@ -15,7 +15,7 @@ import {
   DatePickerYear,
   DatePickerMonth,
 } from '../../components/form/DatePicker';
-import { DataTable, type ColumnDef } from '../../components/ui/DataTable';
+import { DataTable, type ColumnDef } from '../../components/ui/DataTable/DataTable';
 import rawData from './data.json';
 
 // =========================================

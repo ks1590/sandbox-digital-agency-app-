@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Tab from '../../components/ui/Tab';
 import { Input } from '../../components/form/Input';
-import { DataTable, type ColumnDef } from '../../components/ui/DataTable';
+import { DataTable, type ColumnDef } from '../../components/ui/DataTable/DataTable';
 
 // ダミーデータ定義
 interface TableDefRow {
