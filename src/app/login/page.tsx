@@ -3,7 +3,6 @@ import { login } from "../../actions/auth";
 export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#EEF1F8] flex flex-col">
-      {/* ログイン画面用シンプルヘッダー */}
       <header className="border-b-[3px] border-[#0017C1] bg-white">
         <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center gap-[14px]">
           <svg
@@ -36,7 +35,6 @@ export default function LoginPage() {
           </h2>
 
           <form action={login} className="space-y-6">
-            {/* ログインID */}
             <div className="flex flex-col gap-2">
               <label htmlFor="loginId" className="font-bold text-gray-900">
                 ログインID
@@ -54,7 +52,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* パスワード */}
             <div className="flex flex-col gap-2">
               <label htmlFor="password" className="font-bold text-gray-900">
                 パスワード
@@ -72,7 +69,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* ログインボタン */}
             <div className="pt-4">
               <button
                 type="submit"

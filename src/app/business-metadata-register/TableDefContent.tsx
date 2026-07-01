@@ -5,7 +5,6 @@ import Tab from '../../components/ui/Tab';
 import { Input } from '../../components/form/Input';
 import { DataTable, type ColumnDef } from '../../components/ui/DataTable/DataTable';
 
-// ダミーデータ定義
 interface TableDefRow {
   id: number;
   physicalName: string;
@@ -19,7 +18,6 @@ interface TableDefRow {
   sampleData: string;
 }
 
-const PAGE_SIZE_OPTIONS = [10, 50, 100] as const;
 
 const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map((_, i) => ({
   id: i + 1,
@@ -126,7 +124,6 @@ function TableDefGrid() {
 export default function TableDefContent() {
   return (
     <div className="py-6">
-      {/* 上部情報 */}
       <div className="mb-6">
         <h3 className="text-sm font-bold text-gray-900 mb-2">データ種別</h3>
         <p className="text-base text-gray-900">臨床情報</p>
@@ -136,7 +133,6 @@ export default function TableDefContent() {
         <h3 className="text-xl font-bold text-gray-900">テーブル定義</h3>
       </div>
 
-      {/* サブタブ */}
       <Tab
         headingId="table-def-sub-tabs-heading"
         items={[

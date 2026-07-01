@@ -18,11 +18,6 @@ import {
 import { DataTable, type ColumnDef } from '../../components/ui/DataTable/DataTable';
 import rawData from './data.json';
 
-// =========================================
-// 型定義
-// =========================================
-
-/** データ行の型定義 */
 interface ExtractionRequest {
   requestId: string;
   receptionId: string;
@@ -37,13 +32,6 @@ interface ExtractionRequest {
   processingTimeSeconds: number;
 }
 
-// 既存のColumnDefはDataTableのものを利用するため削除
-
-// =========================================
-// ヘルパー関数（コンポーネント外に定義して再生成を防ぐ）
-// =========================================
-
-/** ISO日付文字列をyyyy-mm-dd HH:MM形式にフォーマット */
 function formatTimestamp(isoStr: string): string {
   if (!isoStr) return '';
   const d = new Date(isoStr);
@@ -56,7 +44,6 @@ function formatTimestamp(isoStr: string): string {
   return `${y}-${mo}-${day} ${h}:${min}`;
 }
 
-/** 抽出データ情報JSONを省略表示 */
 function truncateInfo(json: string): string {
   try {
     const parsed = JSON.parse(json);
@@ -69,7 +56,6 @@ function truncateInfo(json: string): string {
   }
 }
 
-/** JSON文字列を整形して返す（パース失敗時はそのまま返す） */
 function formatJsonSafe(json: string): string {
   try {
     return JSON.stringify(JSON.parse(json), null, 2);
@@ -78,30 +64,14 @@ function formatJsonSafe(json: string): string {
   }
 }
 
-const PAGE_SIZE_OPTIONS = [10, 50, 100] as const;
-
-// =========================================
-// サブコンポーネント
-// =========================================
-
-// 既存のSortIconはDataTableに内包されたため削除
-
-// =========================================
-// メインコンポーネント
-// =========================================
 
 export default function ExtractionStatusContent() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [selectedInfo, setSelectedInfo] = useState<string | null>(null);
 
-  // 検索用ステート
   const [yearInput, setYearInput] = useState('');
   const [monthInput, setMonthInput] = useState('');
   const [filteredData, setFilteredData] = useState<ExtractionRequest[]>(rawData.requests);
-
-  // ページネーション・ソートはDataTable内で管理するため削除
-  // イベントハンドラ
-  // -------------------------
 
   const handleOpenModal = (info: string) => {
     setSelectedInfo(info);
@@ -115,13 +85,16 @@ export default function ExtractionStatusContent() {
 
   const handleSearch = () => {
     let result: ExtractionRequest[] = rawData.requests;
+    
     if (yearInput) {
-      result = result.filter((d) => d.receptionTimestamp.startsWith(yearInput));
+      result = result.filter((request) => request.receptionTimestamp.startsWith(yearInput));
     }
+    
     if (monthInput) {
-      const mm = monthInput.padStart(2, '0');
-      result = result.filter((d) => d.receptionTimestamp.substring(5, 7) === mm);
+      const formattedMonth = monthInput.padStart(2, '0');
+      result = result.filter((request) => request.receptionTimestamp.substring(5, 7) === formattedMonth);
     }
+    
     setFilteredData(result);
   };
 
@@ -130,8 +103,6 @@ export default function ExtractionStatusContent() {
     setMonthInput('');
     setFilteredData(rawData.requests);
   };
-  // カラム定義（データ駆動でヘッダーとボディを生成）
-  // -------------------------
 
   const columns: ColumnDef<ExtractionRequest>[] = useMemo(() => [
     {
@@ -175,17 +146,6 @@ export default function ExtractionStatusContent() {
       sortValue: (row) => row.processingTimeSeconds,
     },
   ], []);
-
-  // -------------------------
-  // 共通CSSクラス
-  // -------------------------
-
-  const thClass = 'px-5 py-4 text-left align-top whitespace-nowrap';
-  const tdClass = 'px-5 py-4 align-top whitespace-nowrap';
-
-  // -------------------------
-  // レンダリング
-  // -------------------------
 
   return (
     <>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Tab from "../../components/ui/Tab";
 import { DataTable, type ColumnDef } from '../../components/ui/DataTable/DataTable';
 
@@ -17,7 +17,6 @@ interface DataProfileRow {
   nullRatio: string;
 }
 
-const PAGE_SIZE_OPTIONS = [10, 50, 100] as const;
 
 const DUMMY_DATA: DataProfileRow[] = Array.from({ length: 120 }).map((_, i) => ({
   id: i + 1,

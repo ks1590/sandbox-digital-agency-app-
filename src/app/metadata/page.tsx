@@ -8,11 +8,6 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-/**
- * メタデータ参照画面
- *
- * 各種データ種別ごとのメタデータ（概要、ER図、テーブル定義など）を参照する画面。
- */
 export default async function MetadataPage({ searchParams }: Props) {
   const cookieStore = await cookies();
   const userId = cookieStore.get("login-user-id")?.value;
@@ -26,21 +21,16 @@ export default async function MetadataPage({ searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* ヘッダー */}
       <Header userId={userId} />
 
-      {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">
         <div className="page-container">
-          {/* ページタイトル */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900">メタデータ参照</h2>
           </div>
 
-          {/* 青い下線（区切り） */}
           <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
-          {/* データ種別選択 */}
           <div className="mb-8">
             <label
               htmlFor="dataType"
@@ -74,7 +64,6 @@ export default async function MetadataPage({ searchParams }: Props) {
             </span>
           </div>
 
-          {/* タブ領域 */}
           <div className="mb-12">
             <Tab
               headingId="metadata-tabs-heading"
@@ -118,7 +107,6 @@ export default async function MetadataPage({ searchParams }: Props) {
             />
           </div>
 
-          {/* 戻るボタン */}
           <div className="mt-8">
             <Link
               href="/"
@@ -133,13 +121,9 @@ export default async function MetadataPage({ searchParams }: Props) {
   );
 }
 
-/**
- * 「概要」タブの中身のコンポーネント
- */
 function OverviewContent() {
   return (
     <div className="space-y-10 py-6 text-gray-900">
-      {/* 概要 */}
       <section>
         <h3 className="text-xl font-bold mb-4">概要</h3>
         <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
@@ -152,7 +136,6 @@ function OverviewContent() {
         </p>
       </section>
 
-      {/* 収集期間 */}
       <section>
         <h3 className="text-xl font-bold mb-4">収集期間</h3>
         <div className="space-y-4 text-sm">
@@ -167,7 +150,6 @@ function OverviewContent() {
         </div>
       </section>
 
-      {/* 更新頻度 */}
       <section>
         <h3 className="text-xl font-bold mb-4">更新頻度</h3>
         <div className="overflow-x-auto">
@@ -200,11 +182,9 @@ function OverviewContent() {
         </div>
       </section>
 
-      {/* テーブル一覧 */}
       <section>
         <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
         <div className="space-y-8">
-          {/* テーブルアイテム 1 */}
           <div>
             <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
               〇〇テーブル
@@ -227,7 +207,6 @@ function OverviewContent() {
             </div>
           </div>
 
-          {/* テーブルアイテム 2 */}
           <div>
             <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
               〇〇テーブル
@@ -252,7 +231,6 @@ function OverviewContent() {
         </div>
       </section>
 
-      {/* 留意事項 */}
       <section>
         <h3 className="text-xl font-bold mb-4">留意事項</h3>
         <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">

@@ -8,7 +8,6 @@ import { NotificationBanner } from "../../components/layout/NotificationBanner/N
 import { NotificationBannerBody } from "../../components/layout/NotificationBanner/parts/Body";
 import TableDefContent from "./TableDefContent";
 
-// --- FileUpload系コンポーネント・フックのインポート ---
 import {
   FileUpload,
   FileUploadDropArea,
@@ -39,14 +38,10 @@ function getCookie(name: string) {
   return undefined;
 }
 
-/**
- * ビジネスメタデータ登録画面
- */
 export default function BusinessMetadataRegisterPage() {
   const [userId, setUserId] = useState<string | undefined>();
   const [notification, setNotification] = useState<{ type: "success" | "error"; title: string; message: string } | null>(null);
 
-  // Mermaid用のステート
   const [keyInfoText, setKeyInfoText] = useState<string>("");
   const [mermaidSvg, setMermaidSvg] = useState<string>("");
   const [mermaidError, setMermaidError] = useState<string | null>(null);
@@ -75,9 +70,9 @@ export default function BusinessMetadataRegisterPage() {
             setMermaidError(null);
           }
         }
-      } catch (e: any) {
+      } catch (error: any) {
         if (isMounted) {
-          setMermaidError(e.message || "Mermaid構文エラー");
+          setMermaidError(error.message || "Mermaid構文エラー");
           setMermaidSvg("");
         }
       }
@@ -122,7 +117,6 @@ export default function BusinessMetadataRegisterPage() {
     "block w-full min-h-[120px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base text-gray-900 hover:border-black focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300";
   const labelClass = "block text-sm font-bold text-gray-900 mb-2";
 
-  // --- FileUpload (ER図アップロード) の設定 ---
   const {
     files,
     errors,
@@ -159,7 +153,6 @@ export default function BusinessMetadataRegisterPage() {
   const labelId = useId();
   const supportTextId = useId();
 
-  // プレビュー画像のURL状態管理
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -172,7 +165,6 @@ export default function BusinessMetadataRegisterPage() {
     }
   }, [files]);
 
-  // ER図タブのコンテンツ
   const erDiagramContent = (
     <div className="py-6 flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -320,7 +312,6 @@ export default function BusinessMetadataRegisterPage() {
         </FileUpload>
       </div>
 
-      {/* プレビュー表示エリア */}
       {previewUrl && (
         <div className="mt-6 border border-gray-300 rounded-lg p-4 bg-gray-50 flex justify-center items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -334,10 +325,8 @@ export default function BusinessMetadataRegisterPage() {
     </div>
   );
 
-  // 概要タブのコンテンツ（これまでのフォーム）
   const overviewContent = (
     <div className="space-y-10 py-6">
-      {/* データ種別選択 */}
       <div className="mb-4">
         <label htmlFor="dataType" className={labelClass}>
           データ種別
@@ -368,7 +357,6 @@ export default function BusinessMetadataRegisterPage() {
         </span>
       </div>
 
-      {/* 概要 */}
       <section>
         <h3 className="text-xl font-bold mb-4">概要</h3>
         <label htmlFor="overviewText" className="sr-only">
@@ -381,7 +369,6 @@ export default function BusinessMetadataRegisterPage() {
         />
       </section>
 
-      {/* 収集期間 */}
       <section>
         <h3 className="text-xl font-bold mb-4">収集期間</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
@@ -410,7 +397,6 @@ export default function BusinessMetadataRegisterPage() {
         </div>
       </section>
 
-      {/* 更新頻度 */}
       <section>
         <h3 className="text-xl font-bold mb-4">更新頻度</h3>
         <div className="overflow-x-auto">
@@ -467,11 +453,9 @@ export default function BusinessMetadataRegisterPage() {
         </div>
       </section>
 
-      {/* テーブル一覧 */}
       <section>
         <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
         <div className="space-y-8">
-          {/* テーブルアイテム 1 */}
           <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
             <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">
               〇〇テーブル
@@ -501,7 +485,6 @@ export default function BusinessMetadataRegisterPage() {
             </div>
           </div>
 
-          {/* テーブルアイテム 2 */}
           <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
             <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">
               △△テーブル
@@ -533,7 +516,6 @@ export default function BusinessMetadataRegisterPage() {
         </div>
       </section>
 
-      {/* 留意事項 */}
       <section>
         <h3 className="text-xl font-bold mb-4">留意事項</h3>
         <label htmlFor="notesText" className="sr-only">
@@ -546,7 +528,6 @@ export default function BusinessMetadataRegisterPage() {
         />
       </section>
 
-      {/* キー情報（Mermaidプレビュー） */}
       <section>
         <h3 className="text-xl font-bold mb-4">キー情報</h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -588,10 +569,8 @@ export default function BusinessMetadataRegisterPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* ヘッダー */}
       <Header userId={userId} />
 
-      {/* インラインバナー表示（ヘッダー直下） */}
       {notification && (
         <div className="w-full bg-white border-b border-gray-200">
           <div className="page-container py-4">
@@ -609,17 +588,14 @@ export default function BusinessMetadataRegisterPage() {
         </div>
       )}
 
-      {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">
         <div className="page-container pt-8">
-          {/* ページタイトル */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
               ビジネスメタデータ登録
             </h2>
           </div>
 
-          {/* 青い下線（区切り） */}
           <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
           {/* 
@@ -627,7 +603,6 @@ export default function BusinessMetadataRegisterPage() {
               どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
             */}
           <form onSubmit={handleSubmit} className="text-gray-900">
-            {/* タブ領域 */}
             <div className="mb-12">
               <Tab
                 headingId="register-tabs-heading"
@@ -651,7 +626,6 @@ export default function BusinessMetadataRegisterPage() {
               />
             </div>
 
-            {/* ボタンエリア */}
             <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
               <Link
                 href="/"

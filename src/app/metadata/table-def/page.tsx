@@ -5,7 +5,6 @@ import Tab from "../../../components/ui/Tab";
 import SortableTable from "../../../components/ui/SortableTable";
 import type { Column, RowData } from "../../../components/ui/SortableTable";
 
-/** テーブルのカラム定義 */
 const tableColumns: Column[] = [
   { key: "no", label: "項番" },
   { key: "logicalName", label: "論理名" },
@@ -15,7 +14,6 @@ const tableColumns: Column[] = [
   { key: "sample", label: "サンプルデータ" },
 ];
 
-/** ダミーデータ：傷病テーブル */
 const diseaseData: RowData[] = [
   {
     no: 1,
@@ -51,7 +49,6 @@ const diseaseData: RowData[] = [
   },
 ];
 
-/** ダミーデータ：アレルギーテーブル */
 const allergyData: RowData[] = [
   {
     no: 1,
@@ -87,7 +84,6 @@ const allergyData: RowData[] = [
   },
 ];
 
-/** ダミーデータ：検査テーブル */
 const examData: RowData[] = [
   {
     no: 1,
@@ -135,9 +131,6 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-/**
- * テーブル定義詳細画面
- */
 export default async function TableDefPage({ searchParams }: Props) {
   const cookieStore = await cookies();
   const userId = cookieStore.get("login-user-id")?.value;
@@ -151,23 +144,18 @@ export default async function TableDefPage({ searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* ヘッダー */}
       <Header userId={userId} />
 
-      {/* メインコンテンツ（薄い青背景） */}
       <main className="page-bg flex-1">
         <div className="page-container">
-          {/* ページタイトル */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
               テーブル定義詳細
             </h2>
           </div>
 
-          {/* 青い下線（区切り） */}
           <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
-          {/* タブ領域 */}
           <div className="mb-12">
             <Tab
               headingId="table-def-tabs-heading"
@@ -216,7 +204,6 @@ export default async function TableDefPage({ searchParams }: Props) {
             />
           </div>
 
-          {/* 戻るボタン */}
           <div className="mt-8">
             <Link
               href="/metadata?tab=table-def"
