@@ -1,201 +1,202 @@
 "use client";
 
-import React from "react";
-import SortableTable from "../../components/ui/SortableTable";
-import type { Column, RowData, ColumnGroup } from "../../components/ui/SortableTable";
+import React, { useState } from "react";
 import Tab from "../../components/ui/Tab";
+import {
+  Pagination,
+  PaginationCurrent,
+  PaginationFirst,
+  PaginationLast,
+  PaginationNext,
+  PaginationPrev,
+} from "../../components/ui/Pagination";
 
-export default function DataProfileContent() {
-  // -------------------------
-  // 傷病テーブル定義
-  // -------------------------
-  const diseaseGroups: ColumnGroup[] = [
-    { label: "基本情報", colSpan: 2 },
-    { label: "診療情報", colSpan: 3 },
-  ];
+interface DataProfileRow {
+  id: number;
+  columnName: string;
+  maxLength: number;
+  avgLength: number;
+  distinctCount: number;
+  maxValue: number;
+  minValue: number;
+  validRatio: string;
+  invalidRatio: string;
+  nullRatio: string;
+}
 
-  const diseaseColumns: Column[] = [
-    { key: "name", label: "傷病名" },
-    { key: "date", label: "診断日" },
-    { key: "department", label: "診療科" },
-    { key: "doctor", label: "主治医" },
-    { key: "status", label: "状態" },
-  ];
+const PAGE_SIZE_OPTIONS = [10, 50, 100] as const;
 
-  const diseaseData: RowData[] = [
-    {
-      name: "2型糖尿病",
-      date: "2024-03-15",
-      department: "内科",
-      doctor: "田中 太郎",
-      status: "治療中",
-    },
-    {
-      name: "高血圧症",
-      date: "2023-08-22",
-      department: "循環器内科",
-      doctor: "鈴木 花子",
-      status: "治療中",
-    },
-    {
-      name: "腰椎椎間板ヘルニア",
-      date: "2025-01-10",
-      department: "整形外科",
-      doctor: "佐藤 健一",
-      status: "経過観察",
-    },
-    {
-      name: "急性気管支炎",
-      date: "2025-11-05",
-      department: "呼吸器内科",
-      doctor: "山本 美咲",
-      status: "治癒",
-    },
-    {
-      name: "脂質異常症",
-      date: "2023-09-10",
-      department: "内科",
-      doctor: "田中 太郎",
-      status: "治療中",
-    },
-  ];
+const DUMMY_DATA: DataProfileRow[] = Array.from({ length: 120 }).map((_, i) => ({
+  id: i + 1,
+  columnName: "sample",
+  maxLength: 10,
+  avgLength: 10,
+  distinctCount: 100,
+  maxValue: 99999,
+  minValue: 1,
+  validRatio: "99.8%",
+  invalidRatio: "0.1%",
+  nullRatio: "0.1%",
+}));
 
-  // -------------------------
-  // アレルギーテーブル定義
-  // -------------------------
-  const allergyGroups: ColumnGroup[] = [
-    { label: "アレルゲン情報", colSpan: 2 },
-    { label: "症状・確認", colSpan: 3 },
-  ];
+function DataProfileGrid() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(PAGE_SIZE_OPTIONS[0]);
 
-  const allergyColumns: Column[] = [
-    { key: "allergen", label: "アレルゲン" },
-    { key: "category", label: "分類" },
-    { key: "severity", label: "重症度" },
-    { key: "symptom", label: "症状" },
-    { key: "date", label: "確認日" },
-  ];
+  const totalCount = DUMMY_DATA.length;
+  const maxPage = Math.max(1, Math.ceil(totalCount / pageSize));
+  const safePage = Math.min(currentPage, maxPage);
 
-  const allergyData: RowData[] = [
-    {
-      allergen: "ペニシリン",
-      category: "薬剤",
-      severity: "重度",
-      symptom: "アナフィラキシー",
-      date: "2024-03-15",
-    },
-    {
-      allergen: "スギ花粉",
-      category: "環境",
-      severity: "中度",
-      symptom: "鼻炎・結膜炎",
-      date: "2023-08-22",
-    },
-    {
-      allergen: "エビ",
-      category: "食物",
-      severity: "軽度",
-      symptom: "蕁麻疹",
-      date: "2025-01-10",
-    },
-  ];
+  const pagedData = DUMMY_DATA.slice(
+    (safePage - 1) * pageSize,
+    (safePage - 1) * pageSize + pageSize
+  );
 
-  // -------------------------
-  // 検査テーブル定義
-  // -------------------------
-  const examGroups: ColumnGroup[] = [
-    { label: "検査情報", colSpan: 2 },
-    { label: "結果詳細", colSpan: 3 },
-  ];
+  const handlePageChange = (e: React.MouseEvent, page: number) => {
+    e.preventDefault();
+    if (page >= 1 && page <= maxPage) setCurrentPage(page);
+  };
 
-  const examColumns: Column[] = [
-    { key: "name", label: "検査名" },
-    { key: "date", label: "実施日" },
-    { key: "result", label: "結果" },
-    { key: "reference", label: "基準値" },
-    { key: "judgment", label: "判定" },
-  ];
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setCurrentPage(1);
+  };
 
-  const examData: RowData[] = [
-    {
-      name: "HbA1c",
-      date: "2025-11-05",
-      result: "6.8%",
-      reference: "4.6〜6.2%",
-      judgment: "高値",
-    },
-    {
-      name: "血圧測定",
-      date: "2023-09-10",
-      result: "138/88 mmHg",
-      reference: "130/85 mmHg未満",
-      judgment: "やや高値",
-    },
-    {
-      name: "総コレステロール",
-      date: "2024-03-15",
-      result: "210 mg/dL",
-      reference: "150〜219 mg/dL",
-      judgment: "正常",
-    },
-    {
-      name: "胸部X線",
-      date: "2023-08-22",
-      result: "異常なし",
-      reference: "—",
-      judgment: "正常",
-    },
-  ];
+  const thClass = 'px-5 py-4 text-left align-middle font-bold whitespace-nowrap text-gray-900';
+  const tdClass = 'px-5 py-4 align-middle whitespace-nowrap';
 
   return (
-    <section className="mb-12" id="tab-section">
-      <h3
-        className="text-xl font-bold text-gray-900 mb-1"
-        id="medical-info-heading"
-      >
-        医療情報
-      </h3>
-      <p className="text-sm text-gray-500 mb-4">
-        タブで情報を切り替えて表示するパターン
-      </p>
+    <div className="py-6">
+      <div className="flex gap-8 mb-4 text-base font-bold text-gray-900">
+        <p>合計行数：500件</p>
+        <p>合計ファイル数：100件</p>
+      </div>
+
+      <div className="overflow-x-auto border border-solid-gray-420">
+        <table className="w-full table-auto text-std-16N-170 bg-white text-sm">
+          <thead>
+            <tr className="border-b border-black bg-solid-gray-100">
+              <th className={thClass}>項番</th>
+              <th className={thClass}>列の名前</th>
+              <th className={thClass}>最大長</th>
+              <th className={thClass}>平均長</th>
+              <th className={thClass}>個別値の数</th>
+              <th className={thClass}>最大値</th>
+              <th className={thClass}>最小値</th>
+              <th className={thClass}>有効値割合</th>
+              <th className={thClass}>無効値割合</th>
+              <th className={thClass}>null値割合</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pagedData.map((row) => (
+              <tr
+                key={row.id}
+                className="border-b border-solid-gray-500 hover:bg-key-50 transition-colors last:border-b-0"
+              >
+                <td className={tdClass}>{row.id}</td>
+                <td className={tdClass}>{row.columnName}</td>
+                <td className={tdClass}>{row.maxLength}</td>
+                <td className={tdClass}>{row.avgLength}</td>
+                <td className={tdClass}>{row.distinctCount}</td>
+                <td className={tdClass}>{row.maxValue}</td>
+                <td className={tdClass}>{row.minValue}</td>
+                <td className={tdClass}>{row.validRatio}</td>
+                <td className={tdClass}>{row.invalidRatio}</td>
+                <td className={tdClass}>{row.nullRatio}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* テーブル下部：表示件数とページネーション */}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-1 text-sm text-gray-700">
+          <span>表示件数</span>
+          {PAGE_SIZE_OPTIONS.map((size, i) => (
+            <React.Fragment key={size}>
+              {i > 0 && <span className="text-gray-400">|</span>}
+              <button
+                type="button"
+                className={`px-1 underline underline-offset-2 hover:no-underline ${
+                  pageSize === size
+                    ? 'font-bold text-gray-900 no-underline'
+                    : 'text-[#0017C1]'
+                }`}
+                onClick={() => handlePageSizeChange(size)}
+                aria-pressed={pageSize === size}
+              >
+                {size}件
+              </button>
+            </React.Fragment>
+          ))}
+        </div>
+
+        {maxPage > 1 && (
+          <Pagination>
+            <PaginationFirst
+              href="#"
+              onClick={(e) => handlePageChange(e, 1)}
+              aria-disabled={safePage === 1}
+              className={safePage === 1 ? 'pointer-events-none opacity-50' : ''}
+            />
+            <PaginationPrev
+              href="#"
+              onClick={(e) => handlePageChange(e, safePage - 1)}
+              aria-disabled={safePage === 1}
+              className={safePage === 1 ? 'pointer-events-none opacity-50' : ''}
+            />
+            <PaginationCurrent current={safePage} max={maxPage} />
+            <PaginationNext
+              href="#"
+              onClick={(e) => handlePageChange(e, safePage + 1)}
+              aria-disabled={safePage === maxPage}
+              className={safePage === maxPage ? 'pointer-events-none opacity-50' : ''}
+            />
+            <PaginationLast
+              href="#"
+              onClick={(e) => handlePageChange(e, maxPage)}
+              aria-disabled={safePage === maxPage}
+              className={safePage === maxPage ? 'pointer-events-none opacity-50' : ''}
+            />
+          </Pagination>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function DataProfileContent() {
+  return (
+    <>
+      <div className="mb-8">
+        <h3 className="text-sm font-bold text-gray-900 mb-2">集計対象期間</h3>
+        <p className="text-base text-gray-900 font-bold">
+          2026年4月 <span className="mx-2 font-normal">から</span> 2026年6月
+        </p>
+      </div>
+
       <Tab
-        headingId="medical-info-heading"
+        headingId="data-profile-tabs-heading"
         items={[
           {
-            label: "傷病",
+            label: "傷病名",
             id: "tab-disease",
-            content: (
-              <SortableTable
-                groups={diseaseGroups}
-                columns={diseaseColumns}
-                data={diseaseData}
-              />
-            ),
+            content: <DataProfileGrid />,
           },
           {
-            label: "アレルギー",
+            label: "薬剤・その他アレルギー等",
             id: "tab-allergy",
-            content: (
-              <SortableTable
-                groups={allergyGroups}
-                columns={allergyColumns}
-                data={allergyData}
-              />
-            ),
+            content: <DataProfileGrid />,
           },
           {
-            label: "検査",
+            label: "感染症・検査",
             id: "tab-examination",
-            content: (
-              <SortableTable
-                groups={examGroups}
-                columns={examColumns}
-                data={examData}
-              />
-            ),
+            content: <DataProfileGrid />,
           },
         ]}
       />
-    </section>
+    </>
   );
 }
