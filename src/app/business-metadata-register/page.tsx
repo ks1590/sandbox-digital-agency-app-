@@ -6,6 +6,7 @@ import Header from "../../components/layout/Header";
 import Tab from "../../components/ui/Tab";
 import { NotificationBanner } from "../../components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "../../components/layout/NotificationBanner/parts/Body";
+import TableDefContent from "./TableDefContent";
 
 // --- FileUpload系コンポーネント・フックのインポート ---
 import {
@@ -644,13 +645,7 @@ export default function BusinessMetadataRegisterPage() {
                   {
                     label: "テーブル定義",
                     id: "tab-table-def",
-                    content: (
-                      <div className="py-6">
-                        <p className="text-gray-700 p-8 text-center border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-                          ※後ほど実装予定
-                        </p>
-                      </div>
-                    ),
+                    content: <TableDefContent />,
                   },
                 ]}
               />
