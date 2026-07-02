@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import Header from "../../../components/layout/Header";
-import Tab from "../../../components/ui/Tab";
+import MetadataViewTabs from "../_components/MetadataViewTabs";
 import SortableTable from "../../../components/ui/SortableTable";
 import type { Column, RowData } from "../../../components/ui/SortableTable";
 import { TableDefGrid } from "../_components/TableDefContent";
@@ -150,18 +150,27 @@ export default async function TableDefPage({ searchParams }: Props) {
 
       <main className="page-bg flex-1">
         <div className="page-container">
-          <div className="mb-6">
+          <div className="mb-6 flex items-center gap-4">
             <h2 className="text-2xl font-bold text-gray-900">
               テーブル定義詳細
             </h2>
+            {!isEditMode && (
+              <Link
+                href={`/metadata?mode=edit&tab=table-def&subtab=${tabParam}`}
+                className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border-2 border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300"
+              >
+                編集
+              </Link>
+            )}
           </div>
 
           <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
           <div className="mb-12">
-            <Tab
+            <MetadataViewTabs
               headingId="table-def-tabs-heading"
               defaultIndex={defaultIndex}
+              tabMap={["disease", "allergy", "examination"]}
               items={[
                 {
                   label: "傷病",

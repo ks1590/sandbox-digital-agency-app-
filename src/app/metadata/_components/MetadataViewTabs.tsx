@@ -8,16 +8,16 @@ interface Props {
   items: TabItem[];
   headingId: string;
   defaultIndex: number;
+  tabMap?: string[];
 }
 
-export default function MetadataViewTabs({ items, headingId, defaultIndex }: Props) {
+export default function MetadataViewTabs({ items, headingId, defaultIndex, tabMap = ["overview", "er", "table-def"] }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleTabChange = (index: number) => {
-    const tabMap = ["overview", "er", "table-def"];
-    const newTab = tabMap[index] || "overview";
+    const newTab = tabMap[index] || tabMap[0];
     
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", newTab);
