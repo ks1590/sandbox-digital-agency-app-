@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import Tab from '../../components/ui/Tab';
-import { Input } from '../../components/form/Input';
-import { DataTable, type ColumnDef } from '../../components/ui/DataTable/DataTable';
+import Tab from '../../../components/ui/Tab';
+import { Input } from '../../../components/form/Input';
+import { DataTable, type ColumnDef } from '../../../components/ui/DataTable/DataTable';
+import LinkCard from '../../../components/ui/LinkCard';
 
 interface TableDefRow {
   id: number;
@@ -32,7 +33,7 @@ const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map((_, i) => ({
   sampleData: '',
 }));
 
-function TableDefGrid() {
+export function TableDefGrid() {
   const columns: ColumnDef<TableDefRow>[] = [
     {
       key: 'rowNumber',
@@ -124,35 +125,20 @@ function TableDefGrid() {
 export default function TableDefContent() {
   return (
     <div className="py-6">
-      <div className="mb-6">
-        <h3 className="text-sm font-bold text-gray-900 mb-2">データ種別</h3>
-        <p className="text-base text-gray-900">臨床情報</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+        <LinkCard
+          href="/metadata/table-def?mode=edit&tab=disease"
+          title="傷病"
+        />
+        <LinkCard
+          href="/metadata/table-def?mode=edit&tab=allergy"
+          title="アレルギー"
+        />
+        <LinkCard
+          href="/metadata/table-def?mode=edit&tab=examination"
+          title="検査"
+        />
       </div>
-
-      <div className="mb-4">
-        <h3 className="text-xl font-bold text-gray-900">テーブル定義</h3>
-      </div>
-
-      <Tab
-        headingId="table-def-sub-tabs-heading"
-        items={[
-          {
-            label: '傷病',
-            id: 'sub-tab-shoubyou',
-            content: <TableDefGrid />,
-          },
-          {
-            label: '薬剤・その他アレルギー等',
-            id: 'sub-tab-yakuzai',
-            content: <TableDefGrid />,
-          },
-          {
-            label: '感染症・検査',
-            id: 'sub-tab-kansen',
-            content: <TableDefGrid />,
-          },
-        ]}
-      />
     </div>
   );
 }

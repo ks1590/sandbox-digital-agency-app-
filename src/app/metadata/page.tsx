@@ -3,6 +3,7 @@ import Link from "next/link";
 import Tab from "../../components/ui/Tab";
 import Header from "../../components/layout/Header";
 import LinkCard from "../../components/ui/LinkCard";
+import MetadataEdit from "./_components/MetadataEdit";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -19,14 +20,26 @@ export default async function MetadataPage({ searchParams }: Props) {
   if (tabParam === "er") defaultIndex = 1;
   else if (tabParam === "table-def") defaultIndex = 2;
 
+  const isEditMode = params.mode === "edit";
+
+  if (isEditMode) {
+    return <MetadataEdit />;
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header userId={userId} />
 
       <main className="page-bg flex-1">
         <div className="page-container">
-          <div className="mb-6">
+          <div className="mb-6 flex items-center gap-4">
             <h2 className="text-2xl font-bold text-gray-900">メタデータ参照</h2>
+            <Link
+              href="/metadata?mode=edit"
+              className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border-2 border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300"
+            >
+              編集
+            </Link>
           </div>
 
           <hr className="border-t-[3px] border-[#0017C1] mb-8" />

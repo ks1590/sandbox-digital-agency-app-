@@ -4,6 +4,7 @@ import Header from "../../../components/layout/Header";
 import Tab from "../../../components/ui/Tab";
 import SortableTable from "../../../components/ui/SortableTable";
 import type { Column, RowData } from "../../../components/ui/SortableTable";
+import { TableDefGrid } from "../_components/TableDefContent";
 
 const tableColumns: Column[] = [
   { key: "no", label: "項番" },
@@ -137,6 +138,7 @@ export default async function TableDefPage({ searchParams }: Props) {
 
   const params = await searchParams;
   const tabParam = typeof params.tab === "string" ? params.tab : "disease";
+  const isEditMode = params.mode === "edit";
 
   let defaultIndex = 0;
   if (tabParam === "allergy") defaultIndex = 1;
@@ -166,11 +168,15 @@ export default async function TableDefPage({ searchParams }: Props) {
                   id: "tab-disease",
                   content: (
                     <div className="py-6">
-                      <SortableTable
-                        columns={tableColumns}
-                        data={diseaseData}
-                        sortable={false}
-                      />
+                      {isEditMode ? (
+                        <TableDefGrid />
+                      ) : (
+                        <SortableTable
+                          columns={tableColumns}
+                          data={diseaseData}
+                          sortable={false}
+                        />
+                      )}
                     </div>
                   ),
                 },
@@ -179,11 +185,15 @@ export default async function TableDefPage({ searchParams }: Props) {
                   id: "tab-allergy",
                   content: (
                     <div className="py-6">
-                      <SortableTable
-                        columns={tableColumns}
-                        data={allergyData}
-                        sortable={false}
-                      />
+                      {isEditMode ? (
+                        <TableDefGrid />
+                      ) : (
+                        <SortableTable
+                          columns={tableColumns}
+                          data={allergyData}
+                          sortable={false}
+                        />
+                      )}
                     </div>
                   ),
                 },
@@ -192,11 +202,15 @@ export default async function TableDefPage({ searchParams }: Props) {
                   id: "tab-examination",
                   content: (
                     <div className="py-6">
-                      <SortableTable
-                        columns={tableColumns}
-                        data={examData}
-                        sortable={false}
-                      />
+                      {isEditMode ? (
+                        <TableDefGrid />
+                      ) : (
+                        <SortableTable
+                          columns={tableColumns}
+                          data={examData}
+                          sortable={false}
+                        />
+                      )}
                     </div>
                   ),
                 },
@@ -204,14 +218,33 @@ export default async function TableDefPage({ searchParams }: Props) {
             />
           </div>
 
-          <div className="mt-8">
-            <Link
-              href="/metadata?tab=table-def"
-              className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300"
-            >
-              戻る
-            </Link>
-          </div>
+          {isEditMode ? (
+            <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
+              <Link
+                href="/metadata?mode=edit&tab=table-def"
+                className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
+              >
+                戻る
+              </Link>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-[#0017C1] px-4 py-3 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300"
+                >
+                  更新
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-8">
+              <Link
+                href="/metadata?tab=table-def"
+                className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300"
+              >
+                戻る
+              </Link>
+            </div>
+          )}
         </div>
       </main>
     </div>
