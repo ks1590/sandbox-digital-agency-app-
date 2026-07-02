@@ -155,9 +155,6 @@ export const PaginationCurrent = (props: PaginationCurrentProps) => {
   );
 };
 
-/**
- * ※ Pagination は v1 のみのコンポーネントのため、v2 では非推奨となっています。
- */
 export const Pagination = (props: PaginationProps) => {
   const { children, className, ...rest } = props;
   return (

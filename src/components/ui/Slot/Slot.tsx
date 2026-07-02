@@ -3,6 +3,7 @@ import {
   cloneElement,
   type HTMLAttributes,
   isValidElement,
+  type ReactElement,
   type ReactNode,
 } from "react";
 
@@ -13,13 +14,14 @@ type SlotProps = HTMLAttributes<HTMLElement> & {
 export const Slot = (props: SlotProps) => {
   const { children, ...rest } = props;
 
-  // https://react.dev/reference/react/isValidElement
-  // https://react.dev/reference/react/cloneElement
   if (isValidElement(children)) {
-    return cloneElement(children, {
+    const childProps = (children as ReactElement).props as Record<string, unknown>;
+    return cloneElement(children as ReactElement<any>, {
       ...rest,
-      ...(children.props as any),
-      className: `${rest.className ?? ""} ${(children.props as any).className ?? ""}`,
+      ...childProps,
+      className: `${rest.className ?? ""} ${
+        typeof childProps.className === "string" ? childProps.className : ""
+      }`.trim(),
     });
   }
 

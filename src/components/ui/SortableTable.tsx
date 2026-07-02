@@ -10,10 +10,8 @@ import {
   PaginationPrev,
 } from "./Pagination";
 
-/** ソート方向の型定義 */
 type Sort = "ascending" | "descending" | undefined;
 
-/** ソートアイコンコンポーネント（デジタル庁デザインシステム準拠） */
 function SortIcon({ sort }: { sort: Sort }) {
   if (sort) {
     return (
@@ -24,7 +22,6 @@ function SortIcon({ sort }: { sort: Sort }) {
         fill="black"
         aria-hidden={true}
       >
-        {/* ソート済みアイコン：片方の矢印が強調 */}
         <path d="M17 18.12L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12Z" />
         <path d="M14 8.92L11.73 11L9 8.52V20H6V8.52L3.27 11L1 8.93L7.5 3L14 8.93Z" />
       </svg>
@@ -32,21 +29,18 @@ function SortIcon({ sort }: { sort: Sort }) {
   }
   return (
     <svg width="24" height="24" fill="black" aria-hidden="true">
-      {/* 未ソートアイコン：両方の矢印が均等 */}
       <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12Z" />
       <path d="M8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z" />
     </svg>
   );
 }
 
-/** カラム定義 */
 export interface Column {
   key: string;
   label: string;
   format?: (value: string | number) => React.ReactNode;
 }
 
-/** サンプルデータの行型定義 */
 export interface RowData {
   [key: string]: string | number;
 }
@@ -63,26 +57,17 @@ interface SortableTableProps {
   sortable?: boolean;
 }
 
-/**
- * ソート可能なテーブルヘッダー（SortableHeader）
- *
- * design-example/components/Table/Table.stories.tsx の SortableHeader パターンを
- * Next.js App Router 向けに Client Component として実装。
- * 実際にデータのソートが動作するよう拡張。
- */
 export default function SortableTable({
   groups,
   columns,
   data,
   sortable = true,
 }: SortableTableProps) {
-  /** ソート状態管理（key: カラムインデックス） */
   const [sortState, setSortState] = useState<{
     columnIndex: number | null;
     direction: Sort;
   }>({ columnIndex: null, direction: undefined });
 
-  /** ソートボタンクリック時の処理 */
   const handleSortClick = (columnIndex: number) => {
     if (!sortable) return;
     setSortState((prev) => {
@@ -97,7 +82,6 @@ export default function SortableTable({
     });
   };
 
-  /** ソート済みデータ */
   const sortedData = useMemo(() => {
     if (
       !sortable ||
@@ -123,19 +107,16 @@ export default function SortableTable({
     return sorted;
   }, [sortable, sortState, data, columns]);
 
-  /** カラムのソート状態を取得 */
   const getSortForColumn = (index: number): Sort => {
     if (!sortable) return undefined;
     if (sortState.columnIndex === index) return sortState.direction;
     return undefined;
   };
 
-  /** ページネーション状態管理 */
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const maxPage = Math.max(1, Math.ceil(data.length / itemsPerPage));
 
-  // データが減って現在のページが存在しなくなった場合の対応
   if (currentPage > maxPage && maxPage > 0) {
     setCurrentPage(maxPage);
   }
@@ -187,7 +168,7 @@ export default function SortableTable({
                           type="button"
                           onClick={() => {
                             handleSortClick(i);
-                            setCurrentPage(1); // ソート時に1ページ目に戻す
+                            setCurrentPage(1);
                           }}
                         >
                           {col.label}

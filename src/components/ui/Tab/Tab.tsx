@@ -31,13 +31,6 @@ export interface TabProps {
   onChange?: (index: number, label: string) => void;
 }
 
-/**
- * デジタル庁デザインシステム準拠の汎用タブコンポーネント
- *
- * design-example/components-html/tab/ のTabキーナビゲーションタイプをベースに、
- * Reactコンポーネントとして再実装。
- * 複数ページでの再利用を想定した汎用的な設計。
- */
 export default function Tab({
   items,
   headingId,
@@ -48,7 +41,6 @@ export default function Tab({
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
   const autoId = useId();
 
-  /** タブクリック時の処理 */
   const handleTabClick = useCallback(
     (index: number) => {
       setActiveIndex(index);
@@ -57,12 +49,10 @@ export default function Tab({
     [items, onChange],
   );
 
-  /** 各タブ項目のIDを生成（ユーザー指定 or 自動生成） */
   const getPanelId = (item: TabItem, index: number): string => {
     return item.id ?? `${autoId}-panel-${index}`;
   };
 
-  /** タブリストとパネルの配置を制御 */
   const dataPosition = position && position !== "top" ? position : undefined;
 
   return (
@@ -70,7 +60,6 @@ export default function Tab({
       className="dads-tab"
       {...(dataPosition ? { "data-position": dataPosition } : {})}
     >
-      {/* タブリスト */}
       <ul className="dads-tab__list" aria-labelledby={headingId}>
         {items.map((item, index) => (
           <li key={getPanelId(item, index)}>
@@ -89,7 +78,6 @@ export default function Tab({
         ))}
       </ul>
 
-      {/* タブパネル */}
       <div className="dads-tab__panels">
         {items.map((item, index) => (
           <div

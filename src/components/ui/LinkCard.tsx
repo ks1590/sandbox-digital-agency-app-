@@ -8,12 +8,6 @@ export type LinkCardProps = {
   href: string;
 };
 
-/**
- * リンクカードコンポーネント
- *
- * デジタル庁サイトの「新着・更新」カードを参考にした
- * シンプルなナビゲーション用リンクカード。
- */
 export default function LinkCard({ title, href }: LinkCardProps) {
   return (
     <Link
@@ -26,7 +20,6 @@ export default function LinkCard({ title, href }: LinkCardProps) {
           <p className="link-card__title">{title}</p>
         </div>
 
-        {/* 矢印アイコン */}
         <div className="link-card__arrow" aria-hidden="true">
           <svg
             width="16"

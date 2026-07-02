@@ -64,13 +64,11 @@ export function DataTable<T>({
   emptyMessage = '該当するデータがありません',
   rowKey,
 }: DataTableProps<T>) {
-  // ソートステート
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: 'asc' | 'desc';
   } | null>(null);
 
-  // ページネーションステート
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<number>(pageSizeOptions[0]);
 
@@ -81,7 +79,6 @@ export function DataTable<T>({
     setCurrentPage(1);
   }
 
-  // イベントハンドラ
   const handleToggleSort = (key: string) => {
     setSortConfig((prev) => {
       if (prev?.key === key) {
@@ -103,7 +100,6 @@ export function DataTable<T>({
     setCurrentPage(1);
   };
 
-  // 算出値
   const sortedData = useMemo(() => {
     if (!sortConfig) return data;
     const colDef = columns.find((c) => c.key === sortConfig.key);
@@ -131,7 +127,6 @@ export function DataTable<T>({
     return sortedData.slice(start, start + pageSize);
   }, [sortedData, safePage, pageSize]);
 
-  // CSS
   const thClass = 'px-5 py-4 text-left align-middle font-bold whitespace-nowrap text-gray-900';
   const tdClass = 'px-5 py-4 align-middle whitespace-nowrap text-gray-900';
 

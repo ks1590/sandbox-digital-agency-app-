@@ -1,8 +1,5 @@
 import React, { forwardRef } from "react";
 
-/**
- * モーダルダイアログのラッパー (HTML <dialog> 要素を使用)
- */
 export const ModalDialog = forwardRef<
   HTMLDialogElement,
   React.ComponentProps<"dialog">
@@ -12,7 +9,6 @@ export const ModalDialog = forwardRef<
       ref={ref}
       className={`bg-transparent p-0 backdrop:bg-black/50 overflow-visible ${className}`}
       onClick={(e) => {
-        // ダイアログの背景（backdrop）がクリックされたら閉じる処理
         if (e.target === e.currentTarget) {
           e.currentTarget.close();
         }
@@ -26,9 +22,6 @@ export const ModalDialog = forwardRef<
 });
 ModalDialog.displayName = "ModalDialog";
 
-/**
- * モーダルの白いコンテンツ領域
- */
 export const ModalDialogContent = ({
   children,
   className = "",
@@ -37,7 +30,7 @@ export const ModalDialogContent = ({
   return (
     <div
       className={`bg-white rounded-lg shadow-xl w-full max-w-md mx-auto flex flex-col overflow-hidden ${className}`}
-      onClick={(e) => e.stopPropagation()} // backdropクリック時の閉じるイベントが伝播しないようにする
+      onClick={(e) => e.stopPropagation()}
       {...props}
     >
       {children}
@@ -45,9 +38,6 @@ export const ModalDialogContent = ({
   );
 };
 
-/**
- * モーダルヘッダー領域
- */
 export const ModalDialogHeader = ({
   children,
   className = "",
@@ -63,9 +53,6 @@ export const ModalDialogHeader = ({
   );
 };
 
-/**
- * モーダルのタイトル
- */
 export const ModalDialogHeading = forwardRef<
   HTMLHeadingElement,
   React.ComponentProps<"h2">
@@ -82,9 +69,6 @@ export const ModalDialogHeading = forwardRef<
 });
 ModalDialogHeading.displayName = "ModalDialogHeading";
 
-/**
- * モーダルの本文コンテンツ領域
- */
 export const ModalDialogBody = ({
   children,
   className = "",
@@ -100,9 +84,6 @@ export const ModalDialogBody = ({
   );
 };
 
-/**
- * モーダルのアクション（ボタン）領域
- */
 export const ModalDialogActions = ({
   children,
   className = "",
