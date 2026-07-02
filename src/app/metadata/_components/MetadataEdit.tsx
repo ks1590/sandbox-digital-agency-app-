@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useState, useEffect, useId } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Header from "../../../components/layout/Header";
 import Tab from "../../../components/ui/Tab";
 import { NotificationBanner } from "../../../components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "../../../components/layout/NotificationBanner/parts/Body";
-import TableDefContent from "./TableDefContent";
+import TableDefContent, { TableDefGrid } from "./TableDefContent";
 
 import {
   FileUpload,
@@ -41,7 +41,10 @@ function getCookie(name: string) {
 
 export default function MetadataEdit() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const tabParam = searchParams.get("tab") || "overview";
+  const subtabParam = searchParams.get("subtab");
   
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
@@ -102,12 +105,7 @@ export default function MetadataEdit() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setNotification({
-      type: "success",
-      title: "ビジネスメタデータを更新しました",
-      message: "入力された情報が正しく保存されました。",
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    router.push(`/metadata?mode=view&tab=${tabParam}&success=true`);
   };
 
   const handleErrorSubmit = () => {
@@ -575,6 +573,18 @@ export default function MetadataEdit() {
     </div>
   );
 
+  const handleTabChange = (index: number) => {
+    const tabMap = ["overview", "er", "table-def"];
+    const newTab = tabMap[index] || "overview";
+    
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", newTab);
+    params.delete("subtab"); // clean up any subtab param just in case
+    
+    // Replace URL to preserve tab state without pushing to history stack
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header userId={userId} />
@@ -611,10 +621,11 @@ export default function MetadataEdit() {
               どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
             */}
           <form onSubmit={handleSubmit} className="text-gray-900">
-            <div className="mb-12">
+            <div className="mb-12" hidden={!!subtabParam}>
               <Tab
                 headingId="register-tabs-heading"
                 defaultIndex={defaultIndex}
+                onChange={handleTabChange}
                 items={[
                   {
                     label: "概要",
@@ -635,12 +646,23 @@ export default function MetadataEdit() {
               />
             </div>
 
+            {!!subtabParam && (
+              <div className="mb-12">
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {subtabParam === "disease" ? "傷病" : subtabParam === "allergy" ? "アレルギー" : "検査"}
+                  </h3>
+                </div>
+                <TableDefGrid />
+              </div>
+            )}
+
             <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
               <Link
-                href={`/metadata?mode=view&tab=${tabParam}`}
+                href={subtabParam ? "/metadata?mode=edit&tab=table-def" : `/metadata?mode=view&tab=${tabParam}`}
                 className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
               >
-                戻る
+                キャンセル
               </Link>
               <div className="flex gap-2 w-full sm:w-auto">
                 <button

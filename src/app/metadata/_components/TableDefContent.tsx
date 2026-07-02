@@ -127,15 +127,15 @@ export default function TableDefContent() {
     <div className="py-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
         <LinkCard
-          href="/metadata/table-def?mode=edit&tab=disease"
+          href="/metadata?mode=edit&tab=table-def&subtab=disease"
           title="傷病"
         />
         <LinkCard
-          href="/metadata/table-def?mode=edit&tab=allergy"
+          href="/metadata?mode=edit&tab=table-def&subtab=allergy"
           title="アレルギー"
         />
         <LinkCard
-          href="/metadata/table-def?mode=edit&tab=examination"
+          href="/metadata?mode=edit&tab=table-def&subtab=examination"
           title="検査"
         />
       </div>

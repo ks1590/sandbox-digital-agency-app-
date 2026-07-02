@@ -4,6 +4,9 @@ import Tab from "../../components/ui/Tab";
 import Header from "../../components/layout/Header";
 import LinkCard from "../../components/ui/LinkCard";
 import MetadataEdit from "./_components/MetadataEdit";
+import MetadataViewTabs from "./_components/MetadataViewTabs";
+import { NotificationBanner } from "../../components/layout/NotificationBanner/NotificationBanner";
+import { NotificationBannerBody } from "../../components/layout/NotificationBanner/parts/Body";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,6 +24,7 @@ export default async function MetadataPage({ searchParams }: Props) {
   else if (tabParam === "table-def") defaultIndex = 2;
 
   const isEditMode = params.mode === "edit";
+  const isSuccess = params.success === "true";
 
   if (isEditMode) {
     return <MetadataEdit />;
@@ -31,6 +35,20 @@ export default async function MetadataPage({ searchParams }: Props) {
       <Header userId={userId} />
 
       <main className="page-bg flex-1">
+        {isSuccess && (
+          <div className="page-container py-4">
+            <NotificationBanner
+              headingId="success-notification"
+              type="success"
+              title="ビジネスメタデータを更新しました"
+            >
+              <NotificationBannerBody>
+                入力された情報が正しく保存されました。
+              </NotificationBannerBody>
+            </NotificationBanner>
+          </div>
+        )}
+
         <div className="page-container">
           <div className="mb-6 flex items-center gap-4">
             <h2 className="text-2xl font-bold text-gray-900">メタデータ参照</h2>
@@ -78,7 +96,7 @@ export default async function MetadataPage({ searchParams }: Props) {
           </div>
 
           <div className="mb-12">
-            <Tab
+            <MetadataViewTabs
               headingId="metadata-tabs-heading"
               defaultIndex={defaultIndex}
               items={[
