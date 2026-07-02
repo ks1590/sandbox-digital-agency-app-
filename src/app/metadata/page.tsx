@@ -35,7 +35,7 @@ export default async function MetadataPage({ searchParams }: Props) {
           <div className="mb-6 flex items-center gap-4">
             <h2 className="text-2xl font-bold text-gray-900">メタデータ参照</h2>
             <Link
-              href="/metadata?mode=edit"
+              href={`/metadata?mode=edit&tab=${tabParam}`}
               className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border-2 border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300"
             >
               編集
