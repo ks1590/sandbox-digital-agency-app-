@@ -20,6 +20,77 @@ interface TableDefRow {
   sampleData: string;
 }
 
+function PopoverTextarea({
+  defaultValue,
+  placeholder,
+  ariaLabel,
+  className,
+}: {
+  defaultValue: string;
+  placeholder: string;
+  ariaLabel: string;
+  className?: string;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [value, setValue] = useState(defaultValue);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!expanded) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setExpanded(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [expanded]);
+
+  return (
+    <div className={`relative ${className}`} ref={containerRef}>
+      <Input
+        blockSize="md"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={placeholder}
+        aria-label={ariaLabel}
+        className="w-full pr-8"
+        onFocus={() => setExpanded(true)}
+      />
+      {/* 展開アイコン（ヒント用） */}
+      <svg
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+      </svg>
+
+      {expanded && (
+        <div className="absolute top-0 left-0 w-[300px] bg-white border border-gray-400 rounded-lg shadow-xl z-50 p-3 ring-4 ring-black ring-offset-2 ring-yellow-300">
+          <textarea
+            className="w-full min-h-[160px] resize-y outline-none focus:ring-0 text-base p-2 border border-gray-300 rounded"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={placeholder}
+            aria-label={ariaLabel}
+            autoFocus
+          />
+          <div className="flex justify-end mt-3">
+            <button
+              type="button"
+              className="px-4 py-2 bg-[#0017C1] text-white rounded font-bold text-sm hover:bg-[#1A30C9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300"
+              onClick={() => setExpanded(false)}
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map((_, i) => ({
   id: i + 1,
@@ -62,12 +133,11 @@ export function TableDefGrid() {
       key: 'description',
       label: '項目説明',
       render: (row) => (
-        <Input
-          blockSize="md"
+        <PopoverTextarea
           defaultValue={row.description}
-          placeholder="入力テキスト"
+          placeholder="項目説明を入力"
           className="min-w-[200px]"
-          aria-label={`項目説明（項番${row.id}）`}
+          ariaLabel={`項目説明（項番${row.id}）`}
         />
       ),
     },
@@ -101,12 +171,11 @@ export function TableDefGrid() {
       key: 'sampleData',
       label: 'サンプルデータ',
       render: (row) => (
-        <Input
-          blockSize="md"
+        <PopoverTextarea
           defaultValue={row.sampleData}
-          placeholder="入力テキスト"
-          className="min-w-[120px]"
-          aria-label={`サンプルデータ（項番${row.id}）`}
+          placeholder="サンプルデータを入力"
+          className="min-w-[150px]"
+          ariaLabel={`サンプルデータ（項番${row.id}）`}
         />
       ),
     },
