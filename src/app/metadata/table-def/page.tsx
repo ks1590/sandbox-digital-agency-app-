@@ -139,6 +139,7 @@ export default async function TableDefPage({ searchParams }: Props) {
   const params = await searchParams;
   const tabParam = typeof params.tab === "string" ? params.tab : "disease";
   const isEditMode = params.mode === "edit";
+  const fromType = typeof params.from === "string" ? params.from : "clinical";
 
   let defaultIndex = 0;
   if (tabParam === "allergy") defaultIndex = 1;
@@ -156,7 +157,7 @@ export default async function TableDefPage({ searchParams }: Props) {
             </h2>
             {!isEditMode && (
               <Link
-                href={`/metadata?mode=edit&tab=table-def&subtab=${tabParam}`}
+                href={`/metadata/${fromType}?mode=edit&tab=table-def&subtab=${tabParam}`}
                 className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border-2 border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300"
               >
                 編集
@@ -230,7 +231,7 @@ export default async function TableDefPage({ searchParams }: Props) {
           {isEditMode ? (
             <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
               <Link
-                href="/metadata?mode=edit&tab=table-def"
+                href={`/metadata/${fromType}?mode=edit&tab=table-def`}
                 className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
               >
                 キャンセル
@@ -247,7 +248,7 @@ export default async function TableDefPage({ searchParams }: Props) {
           ) : (
             <div className="mt-8">
               <Link
-                href="/metadata?tab=table-def"
+                href={`/metadata/${fromType}?tab=table-def`}
                 className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300"
               >
                 戻る

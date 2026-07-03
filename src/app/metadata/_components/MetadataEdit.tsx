@@ -105,7 +105,11 @@ export default function MetadataEdit() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/metadata?mode=view&tab=${tabParam}&success=true`);
+    // pathnameから mode パラメータを除外して参照画面に戻る
+    const viewParams = new URLSearchParams();
+    viewParams.set("tab", tabParam);
+    viewParams.set("success", "true");
+    router.push(`${pathname}?${viewParams.toString()}`);
   };
 
   const handleErrorSubmit = () => {
@@ -659,7 +663,7 @@ export default function MetadataEdit() {
 
             <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
               <Link
-                href={subtabParam ? `/metadata/table-def?tab=${subtabParam}` : `/metadata?mode=view&tab=${tabParam}`}
+                href={subtabParam ? `/metadata/table-def?tab=${subtabParam}&from=${pathname.split('/').pop()}` : `${pathname}?tab=${tabParam}`}
                 className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
               >
                 キャンセル

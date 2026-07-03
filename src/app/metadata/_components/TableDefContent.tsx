@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Tab from '../../../components/ui/Tab';
 import { Input } from '../../../components/form/Input';
 import { DataTable, type ColumnDef } from '../../../components/ui/DataTable/DataTable';
@@ -123,19 +124,21 @@ export function TableDefGrid() {
 }
 
 export default function TableDefContent() {
+  const pathname = usePathname();
+
   return (
     <div className="py-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
         <LinkCard
-          href="/metadata?mode=edit&tab=table-def&subtab=disease"
+          href={`${pathname}?mode=edit&tab=table-def&subtab=disease`}
           title="傷病"
         />
         <LinkCard
-          href="/metadata?mode=edit&tab=table-def&subtab=allergy"
+          href={`${pathname}?mode=edit&tab=table-def&subtab=allergy`}
           title="アレルギー"
         />
         <LinkCard
-          href="/metadata?mode=edit&tab=table-def&subtab=examination"
+          href={`${pathname}?mode=edit&tab=table-def&subtab=examination`}
           title="検査"
         />
       </div>
