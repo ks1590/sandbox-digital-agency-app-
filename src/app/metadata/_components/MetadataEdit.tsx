@@ -652,12 +652,43 @@ export default function MetadataEdit() {
 
             {!!subtabParam && (
               <div className="mb-12">
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    {subtabParam === "disease" ? "傷病" : subtabParam === "allergy" ? "アレルギー" : "検査"}
-                  </h3>
-                </div>
-                <TableDefGrid />
+                <Tab
+                  headingId="subtab-tabs-heading"
+                  defaultIndex={subtabParam === "allergy" ? 1 : subtabParam === "examination" ? 2 : 0}
+                  onChange={(index) => {
+                    const newSubtab = index === 0 ? "disease" : index === 1 ? "allergy" : "examination";
+                    router.push(`${pathname}?mode=edit&tab=table-def&subtab=${newSubtab}`);
+                  }}
+                  items={[
+                    {
+                      label: "傷病",
+                      id: "subtab-disease",
+                      content: (
+                        <div className="py-6">
+                          <TableDefGrid />
+                        </div>
+                      ),
+                    },
+                    {
+                      label: "アレルギー",
+                      id: "subtab-allergy",
+                      content: (
+                        <div className="py-6">
+                          <TableDefGrid />
+                        </div>
+                      ),
+                    },
+                    {
+                      label: "検査",
+                      id: "subtab-examination",
+                      content: (
+                        <div className="py-6">
+                          <TableDefGrid />
+                        </div>
+                      ),
+                    },
+                  ]}
+                />
               </div>
             )}
 

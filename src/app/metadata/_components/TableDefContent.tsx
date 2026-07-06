@@ -104,7 +104,7 @@ export function TableDefGrid() {
       label: '項番',
       render: (_row, idx) => idx + 1,
     },
-    { key: 'physicalName', label: '物理名' },
+    { key: 'physicalName', label: '物理名', className: 'min-w-[200px]' },
     { key: 'dataType', label: 'データ型' },
     { key: 'length', label: '桁数' },
     { key: 'required', label: '必須/任意' },
@@ -116,7 +116,7 @@ export function TableDefGrid() {
           blockSize="md"
           defaultValue={row.logicalName}
           placeholder="入力テキスト"
-          className="min-w-[120px]"
+          className="min-w-[160px]"
           aria-label={`論理名（項番${row.id}）`}
         />
       ),
@@ -128,7 +128,7 @@ export function TableDefGrid() {
         <PopoverTextarea
           defaultValue={row.description}
           placeholder="項目説明を入力"
-          className="min-w-[200px]"
+          className="min-w-[250px]"
           ariaLabel={`項目説明（項番${row.id}）`}
         />
       ),
@@ -141,7 +141,7 @@ export function TableDefGrid() {
           blockSize="md"
           defaultValue={row.foreignKey}
           placeholder="入力テキスト"
-          className="min-w-[120px]"
+          className="min-w-[160px]"
           aria-label={`外部キー（項番${row.id}）`}
         />
       ),
@@ -154,7 +154,7 @@ export function TableDefGrid() {
           blockSize="md"
           defaultValue={row.masterType}
           placeholder="入力テキスト"
-          className="min-w-[120px]"
+          className="min-w-[160px]"
           aria-label={`マスタ種別（項番${row.id}）`}
         />
       ),
@@ -166,7 +166,7 @@ export function TableDefGrid() {
         <PopoverTextarea
           defaultValue={row.sampleData}
           placeholder="サンプルデータを入力"
-          className="min-w-[150px]"
+          className="min-w-[250px]"
           ariaLabel={`サンプルデータ（項番${row.id}）`}
           align="right"
         />
