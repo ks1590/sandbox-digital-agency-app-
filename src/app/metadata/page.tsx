@@ -19,7 +19,7 @@ export default async function MetadataPage({ searchParams }: Props) {
   const isSuccess = params.success === "true";
 
   if (isEditMode) {
-    return <MetadataEdit />;
+    return <MetadataEdit userId={userId} />;
   }
 
   return (

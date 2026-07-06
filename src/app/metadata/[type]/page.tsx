@@ -38,7 +38,7 @@ export default async function MetadataTypePage({ params, searchParams }: Props) 
   else if (tabParam === "table-def") defaultIndex = 2;
 
   if (isEditMode) {
-    return <MetadataEdit />;
+    return <MetadataEdit userId={userId} />;
   }
 
   return (

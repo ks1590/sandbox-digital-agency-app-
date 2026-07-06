@@ -11,15 +11,7 @@ import TableDefContent, { TableDefGrid } from "./TableDefContent";
 import OverviewTabContent from "./OverviewTabContent";
 import ErDiagramTabContent from "./ErDiagramTabContent";
 
-/** クライアントサイドでのCookie取得（簡易実装） */
-function getCookie(name: string) {
-  if (typeof document === "undefined") return undefined;
-  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-  if (match) return match[2];
-  return undefined;
-}
-
-export default function MetadataEdit() {
+export default function MetadataEdit({ userId }: { userId?: string }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -31,16 +23,11 @@ export default function MetadataEdit() {
   if (tabParam === "er") defaultIndex = 1;
   else if (tabParam === "table-def") defaultIndex = 2;
 
-  const [userId, setUserId] = useState<string | undefined>();
   const [notification, setNotification] = useState<{
     type: "success" | "error";
     title: string;
     message: string;
   } | null>(null);
-
-  useEffect(() => {
-    setUserId(getCookie("login-user-id"));
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
