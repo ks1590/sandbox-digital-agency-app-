@@ -43,6 +43,7 @@ export default function MetadataEdit() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const isTopPage = pathname === "/metadata";
   const tabParam = searchParams.get("tab") || "overview";
   const subtabParam = searchParams.get("subtab");
   
@@ -56,6 +57,14 @@ export default function MetadataEdit() {
   const [keyInfoText, setKeyInfoText] = useState<string>("");
   const [mermaidSvg, setMermaidSvg] = useState<string>("");
   const [mermaidError, setMermaidError] = useState<string | null>(null);
+
+  const [dataTypes, setDataTypes] = useState([
+    { id: 'clinical', name: '臨床情報' },
+    { id: 'document', name: '文書情報' },
+    { id: 'attachment', name: '添付情報' },
+    { id: 'health-check', name: '健診文書' },
+    { id: 'prescription', name: '処方情報' },
+  ]);
 
   useEffect(() => {
     let isMounted = true;
@@ -337,35 +346,37 @@ export default function MetadataEdit() {
 
   const overviewContent = (
     <div className="space-y-10 py-6">
-      <div className="mb-4">
-        <label htmlFor="dataType" className={labelClass}>
-          データ種別
-        </label>
-        <span className="relative inline-block w-64">
-          <select
-            id="dataType"
-            className="block w-full h-14 appearance-none border border-gray-400 rounded-[8px] bg-white pl-4 pr-10 text-base text-gray-900 hover:border-black focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300"
-            defaultValue="clinical"
-          >
-            <option value="clinical">臨床情報</option>
-            <option value="claim">レセプト情報</option>
-            <option value="health_check">健診情報</option>
-          </select>
-          <svg
-            aria-hidden="true"
-            className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-900"
-            fill="none"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <path
-              d="M13.3344 4.40002L8.00104 9.73336L2.66771 4.40002L1.73438 5.33336L8.00104 11.6L14.2677 5.33336L13.3344 4.40002Z"
-              fill="currentColor"
-            />
-          </svg>
-        </span>
-      </div>
+      {!isTopPage && (
+        <div className="mb-4">
+          <label htmlFor="dataType" className={labelClass}>
+            データ種別
+          </label>
+          <span className="relative inline-block w-64">
+            <select
+              id="dataType"
+              className="block w-full h-14 appearance-none border border-gray-400 rounded-[8px] bg-white pl-4 pr-10 text-base text-gray-900 hover:border-black focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300"
+              defaultValue="clinical"
+            >
+              <option value="clinical">臨床情報</option>
+              <option value="claim">レセプト情報</option>
+              <option value="health_check">健診情報</option>
+            </select>
+            <svg
+              aria-hidden="true"
+              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-900"
+              fill="none"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <path
+                d="M13.3344 4.40002L8.00104 9.73336L2.66771 4.40002L1.73438 5.33336L8.00104 11.6L14.2677 5.33336L13.3344 4.40002Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+        </div>
+      )}
 
       <section>
         <h3 className="text-xl font-bold mb-4">概要</h3>
@@ -378,6 +389,58 @@ export default function MetadataEdit() {
           defaultValue="概要の説明 概要の説明 概要の説明..."
         />
       </section>
+
+      {isTopPage && (
+        <section>
+          <h3 className="text-xl font-bold mb-4">データ種別</h3>
+          <div className="space-y-4">
+            {dataTypes.map((dt, idx) => (
+              <div key={dt.id} className="flex items-center gap-4">
+                <input
+                  type="text"
+                  value={dt.name}
+                  onChange={(e) => {
+                    const newTypes = [...dataTypes];
+                    newTypes[idx].name = e.target.value;
+                    setDataTypes(newTypes);
+                  }}
+                  className={inputClass}
+                />
+                <Link
+                  href={`/metadata/${dt.id}?mode=edit`}
+                  className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border-2 border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300 whitespace-nowrap"
+                >
+                  詳細
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newTypes = [...dataTypes];
+                    newTypes.splice(idx, 1);
+                    setDataTypes(newTypes);
+                  }}
+                  className="inline-flex items-center justify-center min-w-[80px] min-h-[44px] rounded-[8px] bg-white border border-gray-400 px-4 py-2 text-base font-bold text-error-1 transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300 whitespace-nowrap"
+                >
+                  削除
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => {
+                const newId = `new-type-${Date.now()}`;
+                setDataTypes([...dataTypes, { id: newId, name: '新しいデータ種別' }]);
+              }}
+              className="inline-flex items-center justify-center mt-4 min-h-[44px] rounded-[8px] border-2 border-dashed border-gray-400 text-gray-700 hover:bg-gray-50 hover:border-gray-500 px-4 py-2 text-base font-bold transition-colors focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full"
+            >
+              ＋ データ種別を追加
+            </button>
+          </div>
+        </section>
+      )}
+
+      {!isTopPage && (
+        <>
 
       <section>
         <h3 className="text-xl font-bold mb-4">収集期間</h3>
@@ -537,6 +600,8 @@ export default function MetadataEdit() {
           defaultValue="留意事項を入力..."
         />
       </section>
+      </>
+      )}
 
       <section>
         <h3 className="text-xl font-bold mb-4">キー情報</h3>
@@ -623,30 +688,36 @@ export default function MetadataEdit() {
               どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
             */}
           <form onSubmit={handleSubmit} className="text-gray-900">
-            <div className="mb-12" hidden={!!subtabParam}>
-              <Tab
-                headingId="register-tabs-heading"
-                defaultIndex={defaultIndex}
-                onChange={handleTabChange}
-                items={[
-                  {
-                    label: "概要",
-                    id: "tab-overview",
-                    content: overviewContent,
-                  },
-                  {
-                    label: "ER図",
-                    id: "tab-er",
-                    content: erDiagramContent,
-                  },
-                  {
-                    label: "テーブル定義",
-                    id: "tab-table-def",
-                    content: <TableDefContent />,
-                  },
-                ]}
-              />
-            </div>
+            {isTopPage ? (
+              <div className="mb-12">
+                {overviewContent}
+              </div>
+            ) : (
+              <div className="mb-12" hidden={!!subtabParam}>
+                <Tab
+                  headingId="register-tabs-heading"
+                  defaultIndex={defaultIndex}
+                  onChange={handleTabChange}
+                  items={[
+                    {
+                      label: "概要",
+                      id: "tab-overview",
+                      content: overviewContent,
+                    },
+                    {
+                      label: "ER図",
+                      id: "tab-er",
+                      content: erDiagramContent,
+                    },
+                    {
+                      label: "テーブル定義",
+                      id: "tab-table-def",
+                      content: <TableDefContent />,
+                    },
+                  ]}
+                />
+              </div>
+            )}
 
             {!!subtabParam && (
               <div className="mb-12">
@@ -692,7 +763,7 @@ export default function MetadataEdit() {
 
             <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
               <Link
-                href={subtabParam ? `/metadata/table-def?tab=${subtabParam}&from=${pathname.split('/').pop()}` : `${pathname}?tab=${tabParam}`}
+                href={isTopPage ? "/metadata" : subtabParam ? `/metadata/table-def?tab=${subtabParam}&from=${pathname.split('/').pop()}` : `${pathname}?tab=${tabParam}`}
                 className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[2px] focus-visible:ring-[2px] focus-visible:ring-yellow-300 w-full sm:w-auto"
               >
                 キャンセル
