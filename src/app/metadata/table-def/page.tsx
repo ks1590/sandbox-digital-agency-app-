@@ -2,18 +2,9 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import Header from "../../../components/layout/Header";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
-import SortableTable from "../../../components/ui/SortableTable";
-import type { Column, RowData } from "../../../components/ui/SortableTable";
+import { SortableTableWithColumns } from "../_components/TableDefViewClient";
+import type { RowData } from "../../../components/ui/SortableTable";
 import { TableDefGrid } from "../_components/TableDefContent";
-
-const tableColumns: Column[] = [
-  { key: "no", label: "項番" },
-  { key: "logicalName", label: "論理名" },
-  { key: "physicalName", label: "物理名" },
-  { key: "dataType", label: "データ型" },
-  { key: "required", label: "必須/任意" },
-  { key: "sample", label: "サンプルデータ" },
-];
 
 const diseaseData: RowData[] = [
   {
@@ -30,7 +21,7 @@ const diseaseData: RowData[] = [
     physicalName: "disease_name",
     dataType: "VARCHAR(255)",
     required: "必須",
-    sample: "インフルエンザ",
+    sample: "インフルエンザA型（H1N1）およびB型混合感染の疑いがあり、タミフル等の抗ウイルス薬の処方を検討すべき状態。患者は高熱を訴えている。",
   },
   {
     no: 3,
@@ -181,11 +172,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid />
                       ) : (
-                        <SortableTable
-                          columns={tableColumns}
-                          data={diseaseData}
-                          sortable={false}
-                        />
+                        <SortableTableWithColumns data={diseaseData} />
                       )}
                     </div>
                   ),
@@ -198,11 +185,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid />
                       ) : (
-                        <SortableTable
-                          columns={tableColumns}
-                          data={allergyData}
-                          sortable={false}
-                        />
+                        <SortableTableWithColumns data={allergyData} />
                       )}
                     </div>
                   ),
@@ -215,11 +198,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid />
                       ) : (
-                        <SortableTable
-                          columns={tableColumns}
-                          data={examData}
-                          sortable={false}
-                        />
+                        <SortableTableWithColumns data={examData} />
                       )}
                     </div>
                   ),

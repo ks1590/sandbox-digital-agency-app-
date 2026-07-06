@@ -25,11 +25,13 @@ function PopoverTextarea({
   placeholder,
   ariaLabel,
   className,
+  align = 'left',
 }: {
   defaultValue: string;
   placeholder: string;
   ariaLabel: string;
   className?: string;
+  align?: 'left' | 'right';
 }) {
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState(defaultValue);
@@ -68,25 +70,15 @@ function PopoverTextarea({
       </svg>
 
       {expanded && (
-        <div className="absolute top-0 left-0 w-[300px] bg-white border border-gray-400 rounded-lg shadow-xl z-50 p-3 ring-4 ring-black ring-offset-2 ring-yellow-300">
-          <textarea
-            className="w-full min-h-[160px] resize-y outline-none focus:ring-0 text-base p-2 border border-gray-300 rounded"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder={placeholder}
-            aria-label={ariaLabel}
-            autoFocus
-          />
-          <div className="flex justify-end mt-3">
-            <button
-              type="button"
-              className="px-4 py-2 bg-[#0017C1] text-white rounded font-bold text-sm hover:bg-[#1A30C9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300"
-              onClick={() => setExpanded(false)}
-            >
-              閉じる
-            </button>
-          </div>
-        </div>
+        <textarea
+          className={`absolute top-0 ${align === 'right' ? 'right-0' : 'left-0'} w-[300px] min-h-[160px] resize-y bg-white rounded-[8px] border border-solid-gray-600 px-4 py-3 text-base text-gray-900 shadow-xl z-50 focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300`}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={placeholder}
+          aria-label={ariaLabel}
+          autoFocus
+          onBlur={() => setExpanded(false)}
+        />
       )}
     </div>
   );
@@ -176,6 +168,7 @@ export function TableDefGrid() {
           placeholder="サンプルデータを入力"
           className="min-w-[150px]"
           ariaLabel={`サンプルデータ（項番${row.id}）`}
+          align="right"
         />
       ),
     },
