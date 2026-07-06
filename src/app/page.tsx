@@ -19,11 +19,7 @@ export default async function PortalPage() {
 
             <div className="portal-cards-stack">
               <LinkCard title="抽出状況参照" href="/extraction-status" />
-              <LinkCard title="メタデータ参照" href="/metadata" />
-              <LinkCard
-                title="ビジネスメタデータ登録"
-                href="/business-metadata-register"
-              />
+              <LinkCard title="メタデータ参照・登録" href="/metadata" />
               <LinkCard title="データプロファイル参照" href="/data-profile" />
             </div>
           </div>

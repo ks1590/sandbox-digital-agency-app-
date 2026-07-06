@@ -614,11 +614,9 @@ export default function MetadataEdit() {
         <div className="page-container pt-8">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              ビジネスメタデータ登録
+              メタデータ
             </h2>
           </div>
-
-          <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
           {/* 
               フォーム全体でTabを囲むことで、

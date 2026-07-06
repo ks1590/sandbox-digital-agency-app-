@@ -142,9 +142,9 @@ export default async function TableDefPage({ searchParams }: Props) {
 
       <main className="page-bg flex-1">
         <div className="page-container">
-          <div className="mb-6 flex items-center gap-4">
+          <div className="mb-6 flex items-center justify-between gap-4">
             <h2 className="text-2xl font-bold text-gray-900">
-              テーブル定義詳細
+              メタデータ
             </h2>
             {!isEditMode && (
               <Link
@@ -155,8 +155,6 @@ export default async function TableDefPage({ searchParams }: Props) {
               </Link>
             )}
           </div>
-
-          <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
           <div className="mb-12">
             <MetadataViewTabs

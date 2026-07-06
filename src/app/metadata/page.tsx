@@ -42,7 +42,7 @@ export default async function MetadataPage({ searchParams }: Props) {
         )}
 
         <div className="page-container">
-          <div className="mb-6 flex items-center gap-4">
+          <div className="mb-6 flex items-center justify-between gap-4">
             <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
             <Link
               href="/metadata?mode=edit"
@@ -51,8 +51,6 @@ export default async function MetadataPage({ searchParams }: Props) {
               編集
             </Link>
           </div>
-
-          <hr className="border-t-[3px] border-[#0017C1] mb-8" />
 
           {/* 概要セクション */}
           <section className="mb-10">
