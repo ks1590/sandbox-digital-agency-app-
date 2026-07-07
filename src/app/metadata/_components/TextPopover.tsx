@@ -67,7 +67,7 @@ export default function TextPopover({ text, maxLength = 10 }: TextPopoverProps) 
         ref={buttonRef}
         type="button"
         onClick={togglePopover}
-        className="text-left hover:text-[#0017C1] hover:underline focus:outline-none focus:ring-2 focus:ring-yellow-300 rounded px-1 -ml-1 transition-colors group"
+        className="text-left hover:text-[#0017C1] hover:underline focus:outline-hidden focus:ring-2 focus:ring-yellow-300 rounded-sm px-1 -ml-1 transition-colors group"
         aria-expanded={isOpen}
       >
         {displayText}
@@ -84,16 +84,16 @@ export default function TextPopover({ text, maxLength = 10 }: TextPopoverProps) 
       {isOpen && (
         <div
           ref={popoverRef}
-          className="fixed z-[100] w-[300px] bg-white border border-gray-400 rounded-lg shadow-xl p-3 ring-4 ring-black ring-offset-2 ring-yellow-300 break-words text-gray-900 text-base"
+          className="fixed z-100 w-[300px] bg-white border border-gray-400 rounded-lg shadow-xl p-3 ring-4 ring-black ring-offset-2 ring-yellow-300 wrap-break-word text-gray-900 text-base"
           style={{ top: position.top, left: position.left }}
         >
-          <div className="w-full min-h-[160px] p-2 border border-gray-300 rounded overflow-y-auto">
+          <div className="w-full min-h-[160px] p-2 border border-gray-300 rounded-sm overflow-y-auto">
             {text}
           </div>
           <div className="flex justify-end mt-3">
             <button
               type="button"
-              className="px-4 py-2 bg-[#0017C1] text-white rounded font-bold text-sm hover:bg-[#1A30C9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300"
+              className="px-4 py-2 bg-[#0017C1] text-white rounded-sm font-bold text-sm hover:bg-[#1A30C9] focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300"
               onClick={() => setIsOpen(false)}
             >
               閉じる

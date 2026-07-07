@@ -54,7 +54,7 @@ export default function Header({ userId }: { userId?: string }) {
           <div ref={menuRef}>
             <button
               type='button'
-              className='flex w-fit touch-manipulation items-center gap-x-1 rounded-[6px] px-3 pb-1.5 pt-1 text-base text-gray-900 hover:bg-gray-100 hover:underline hover:underline-offset-[3px] focus-visible:bg-yellow-300 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-[2px] focus-visible:outline-black focus-visible:ring-[2px] focus-visible:ring-yellow-300'
+              className='flex w-fit touch-manipulation items-center gap-x-1 rounded-[6px] px-3 pb-1.5 pt-1 text-base text-gray-900 hover:bg-gray-100 hover:underline hover:underline-offset-[3px] focus-visible:bg-yellow-300 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300'
               aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? (

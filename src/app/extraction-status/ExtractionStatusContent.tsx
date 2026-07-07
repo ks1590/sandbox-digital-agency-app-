@@ -197,7 +197,7 @@ export default function ExtractionStatusContent() {
           </ModalDialogHeader>
           <ModalDialogBody>
             {selectedInfo ? (
-              <pre className="text-sm bg-gray-50 border border-gray-200 rounded p-3 overflow-x-auto whitespace-pre-wrap break-all">
+              <pre className="text-sm bg-gray-50 border border-gray-200 rounded-sm p-3 overflow-x-auto whitespace-pre-wrap break-all">
                 {formatJsonSafe(selectedInfo)}
               </pre>
             ) : (

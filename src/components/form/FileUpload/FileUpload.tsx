@@ -23,7 +23,7 @@ export const FileUpload = (props: FileUploadProps) => {
     <div
       className={`
         group/file-upload
-        text-solid-gray-800 text-std-16N-170 [overflow-wrap:anywhere]
+        text-solid-gray-800 text-std-16N-170 wrap-anywhere
         ${className ?? ""}
       `}
       data-multiple={isMultiple ? "true" : "false"}
@@ -70,7 +70,7 @@ export const FileUploadDropArea = (props: FileUploadDropAreaProps) => {
         group/drop-area
         rounded-8 p-8 border border-solid-gray-536 bg-solid-gray-50
         group-data-[has-error=true]/file-upload:border-error-1
-        data-[dragover=true]:outline data-[dragover=true]:outline-4 data-[dragover=true]:outline-success-1 data-[dragover=true]:-outline-offset-4 data-[dragover=true]:bg-green-50
+        data-[dragover=true]:outline-solid data-[dragover=true]:outline-4 data-[dragover=true]:outline-success-1 data-[dragover=true]:-outline-offset-4 data-[dragover=true]:bg-green-50
         ${className ?? ""}
       `}
       data-dragover={isDragOver ? "true" : undefined}
@@ -135,7 +135,7 @@ export const FileUploadFileMarker = (props: FileUploadFileMarkerProps) => {
         group-data-[multiple=true]/file-upload:before:content-[counter(file-item)'.']
         group-data-[multiple=false]/file-upload:flex group-data-[multiple=false]/file-upload:self-start group-data-[multiple=false]/file-upload:justify-center group-data-[multiple=false]/file-upload:items-center group-data-[multiple=false]/file-upload:w-6 group-data-[multiple=false]/file-upload:h-[calc(30/16*1rem)]
         group-data-[multiple=false]/file-upload:before:w-1.5 group-data-[multiple=false]/file-upload:before:h-1.5 group-data-[multiple=false]/file-upload:before:rounded-full group-data-[multiple=false]/file-upload:before:bg-current group-data-[multiple=false]/file-upload:before:content-['']
-        group-data-[multiple=false]/file-upload:forced-colors:before:bg-[CanvasText]
+        forced-colors:group-data-[multiple=false]/file-upload:before:bg-[CanvasText]
         ${className ?? ""}
       `}
       {...rest}
@@ -207,7 +207,7 @@ export const FileUploadViewportOverlay = (
   return createPortal(
     <div
       className={`
-        fixed inset-0 z-[9999] border-4 border-success-1 bg-green-50
+        fixed inset-0 z-9999 border-4 border-success-1 bg-green-50
         ${className ?? ""}
       `}
       {...rest}

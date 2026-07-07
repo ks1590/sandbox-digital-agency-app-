@@ -1,1 +1,6 @@
-export { Button, buttonBaseStyle, buttonSizeStyle, buttonVariantStyle } from './Button';
+export {
+  Button,
+  buttonBaseStyle,
+  buttonSizeStyle,
+  buttonVariantStyle,
+} from './Button';

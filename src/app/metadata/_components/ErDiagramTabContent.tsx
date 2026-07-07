@@ -196,7 +196,7 @@ export default function ErDiagramTabContent() {
                         type="button"
                         variant="text"
                         size="xs"
-                        className="order-[-1] shrink-0 min-w-12 min-h-[calc(30/16*1rem)] text-oln-16B-100 text-[#0017C1]"
+                        className="-order-1 shrink-0 min-w-12 min-h-[calc(30/16*1rem)] text-oln-16B-100 text-[#0017C1]"
                         onClick={() => removeFile(file.id, index)}
                         aria-labelledby={`${file.id}-remove ${file.id}-name`}
                       >

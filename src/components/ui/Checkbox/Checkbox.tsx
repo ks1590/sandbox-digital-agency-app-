@@ -30,7 +30,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           className={`
           appearance-none size-3/4 rounded-[calc(2/18*100%)] border-solid-gray-600 bg-white bg-clip-padding
           hover:border-black
-          focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300
+          focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300
           checked:border-key-900 checked:bg-key-900 checked:hover:border-key-1100 checked:hover:bg-key-1100
           indeterminate:border-key-900 indeterminate:bg-key-900 indeterminate:hover:border-key-1100 indeterminate:hover:bg-key-1100
           before:hidden before:size-3.5 before:bg-white
@@ -39,9 +39,9 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           data-[size=sm]:border-[calc(2/16*1rem)]
           data-[size=md]:border-[calc(2/16*1rem)] data-[size=md]:before:origin-top-left data-[size=md]:before:scale-[calc(20/14)]
           data-[size=lg]:border-[calc(3/16*1rem)] data-[size=lg]:before:origin-top-left data-[size=lg]:before:scale-[calc(27/14)]
-          data-[error]:border-error-1 data-[error]:hover:border-red-1000 data-[error]:checked:bg-error-1 data-[error]:checked:hover:bg-red-1000 data-[error]:indeterminate:bg-error-1 data-[error]:indeterminate:hover:bg-red-1000
-          aria-disabled:!border-solid-gray-300 aria-disabled:!bg-solid-gray-50 aria-disabled:checked:!bg-solid-gray-300 aria-disabled:indeterminate:!bg-solid-gray-300 aria-disabled:before:border-solid-gray-50
-          forced-colors:!border-[ButtonText] forced-colors:checked:!bg-[Highlight] forced-colors:checked:!border-[Highlight] forced-colors:indeterminate:!bg-[Highlight] forced-colors:indeterminate:!border-[Highlight] forced-colors:before:!bg-[HighlightText] forced-colors:aria-disabled:!border-[GrayText] forced-colors:aria-disabled:checked:!bg-[GrayText]
+          data-error:border-error-1 data-error:hover:border-red-1000 data-error:checked:bg-error-1 data-error:checked:hover:bg-red-1000 data-error:indeterminate:bg-error-1 data-error:indeterminate:hover:bg-red-1000
+          aria-disabled:border-solid-gray-300! aria-disabled:bg-solid-gray-50! aria-disabled:checked:bg-solid-gray-300! aria-disabled:indeterminate:bg-solid-gray-300! aria-disabled:before:border-solid-gray-50
+          forced-colors:border-[ButtonText]! forced-colors:checked:bg-[Highlight]! forced-colors:checked:border-[Highlight]! forced-colors:indeterminate:bg-[Highlight]! forced-colors:indeterminate:border-[Highlight]! forced-colors:before:bg-[HighlightText]! forced-colors:aria-disabled:border-[GrayText]! forced-colors:aria-disabled:checked:bg-[GrayText]!
         `}
           onClick={props["aria-disabled"] ? handleDisabled : onClick}
           ref={ref}

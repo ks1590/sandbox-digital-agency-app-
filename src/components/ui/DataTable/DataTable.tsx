@@ -143,7 +143,7 @@ export function DataTable<T>({
                     <th key={col.key} className={`${thClass} ${col.className ?? ''}`}>
                       <button
                         type="button"
-                        className="inline-flex items-center gap-x-1 text-start underline underline-offset-2 hover:decoration-2 focus-visible:rounded focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:bg-yellow-300"
+                        className="inline-flex items-center gap-x-1 text-start underline underline-offset-2 hover:decoration-2 focus-visible:rounded-sm focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:bg-yellow-300"
                         onClick={() => handleToggleSort(col.key)}
                         aria-sort={
                           direction === 'asc'

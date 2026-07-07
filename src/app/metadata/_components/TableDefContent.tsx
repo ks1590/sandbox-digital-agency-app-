@@ -71,7 +71,7 @@ function PopoverTextarea({
 
       {expanded && (
         <textarea
-          className={`absolute top-0 ${align === 'right' ? 'right-0' : 'left-0'} w-[300px] min-h-[160px] resize-y bg-white rounded-[8px] border border-solid-gray-600 px-4 py-3 text-base text-gray-900 shadow-xl z-50 focus:outline focus:outline-4 focus:outline-black focus:outline-offset-[2px] focus:ring-[2px] focus:ring-yellow-300`}
+          className={`absolute top-0 ${align === 'right' ? 'right-0' : 'left-0'} w-full min-h-[160px] resize-y bg-white rounded-[8px] border border-solid-gray-600 px-4 py-3 text-base text-gray-900 shadow-xl z-50 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300`}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
