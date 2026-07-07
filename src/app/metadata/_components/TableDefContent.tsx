@@ -84,7 +84,7 @@ function PopoverTextarea({
   );
 }
 
-const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map((_, i) => ({
+export const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map((_, i) => ({
   id: i + 1,
   physicalName: 'sample',
   dataType: 'VARCHAR',

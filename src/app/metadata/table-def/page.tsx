@@ -3,121 +3,7 @@ import Link from "next/link";
 import Header from "../../../components/layout/Header";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
 import { SortableTableWithColumns } from "../_components/TableDefViewClient";
-import type { RowData } from "../../../components/ui/SortableTable";
-import { TableDefGrid } from "../_components/TableDefContent";
-
-const diseaseData: RowData[] = [
-  {
-    no: 1,
-    logicalName: "患者ID",
-    physicalName: "patient_id",
-    dataType: "VARCHAR(255)",
-    required: "必須",
-    sample: "P0000001",
-  },
-  {
-    no: 2,
-    logicalName: "傷病名",
-    physicalName: "disease_name",
-    dataType: "VARCHAR(255)",
-    required: "必須",
-    sample: "インフルエンザA型（H1N1）およびB型混合感染の疑いがあり、タミフル等の抗ウイルス薬の処方を検討すべき状態。患者は高熱を訴えている。",
-  },
-  {
-    no: 3,
-    logicalName: "診断日",
-    physicalName: "diagnosis_date",
-    dataType: "DATE",
-    required: "任意",
-    sample: "2023-01-15",
-  },
-  {
-    no: 4,
-    logicalName: "転帰",
-    physicalName: "outcome",
-    dataType: "VARCHAR(50)",
-    required: "任意",
-    sample: "治癒",
-  },
-];
-
-const allergyData: RowData[] = [
-  {
-    no: 1,
-    logicalName: "患者ID",
-    physicalName: "patient_id",
-    dataType: "VARCHAR(255)",
-    required: "必須",
-    sample: "P0000001",
-  },
-  {
-    no: 2,
-    logicalName: "アレルゲン",
-    physicalName: "allergen",
-    dataType: "VARCHAR(255)",
-    required: "必須",
-    sample: "ペニシリン",
-  },
-  {
-    no: 3,
-    logicalName: "重症度",
-    physicalName: "severity",
-    dataType: "VARCHAR(50)",
-    required: "任意",
-    sample: "重度",
-  },
-  {
-    no: 4,
-    logicalName: "発現日",
-    physicalName: "onset_date",
-    dataType: "DATE",
-    required: "任意",
-    sample: "2010-05-10",
-  },
-];
-
-const examData: RowData[] = [
-  {
-    no: 1,
-    logicalName: "患者ID",
-    physicalName: "patient_id",
-    dataType: "VARCHAR(255)",
-    required: "必須",
-    sample: "P0000001",
-  },
-  {
-    no: 2,
-    logicalName: "検査日",
-    physicalName: "exam_date",
-    dataType: "DATE",
-    required: "必須",
-    sample: "2023-10-01",
-  },
-  {
-    no: 3,
-    logicalName: "検査項目",
-    physicalName: "exam_item",
-    dataType: "VARCHAR(255)",
-    required: "必須",
-    sample: "HbA1c",
-  },
-  {
-    no: 4,
-    logicalName: "検査値",
-    physicalName: "exam_value",
-    dataType: "DECIMAL(10,2)",
-    required: "任意",
-    sample: "5.8",
-  },
-  {
-    no: 5,
-    logicalName: "単位",
-    physicalName: "unit",
-    dataType: "VARCHAR(50)",
-    required: "任意",
-    sample: "%",
-  },
-];
+import { TableDefGrid, DUMMY_DATA } from "../_components/TableDefContent";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -170,7 +56,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid />
                       ) : (
-                        <SortableTableWithColumns data={diseaseData} />
+                        <SortableTableWithColumns data={DUMMY_DATA as any} />
                       )}
                     </div>
                   ),
@@ -183,7 +69,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid />
                       ) : (
-                        <SortableTableWithColumns data={allergyData} />
+                        <SortableTableWithColumns data={DUMMY_DATA as any} />
                       )}
                     </div>
                   ),
@@ -196,7 +82,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid />
                       ) : (
-                        <SortableTableWithColumns data={examData} />
+                        <SortableTableWithColumns data={DUMMY_DATA as any} />
                       )}
                     </div>
                   ),
