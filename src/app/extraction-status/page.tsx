@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import Header from "../../components/layout/Header";
+import Header from "@/components/layout/Header";
 import ExtractionStatusContent from "./ExtractionStatusContent";
 
 export default async function ExtractionStatusPage() {

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
-import Header from "../components/layout/Header";
-import LinkCard from "../components/ui/LinkCard";
+import Header from "@/components/layout/Header";
+import LinkCard from "@/components/ui/LinkCard";
 
 export default async function PortalPage() {
   const cookieStore = await cookies();

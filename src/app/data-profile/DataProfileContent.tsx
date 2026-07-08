@@ -3,8 +3,8 @@
 import {
   type ColumnDef,
   DataTable,
-} from "../../components/ui/DataTable/DataTable";
-import Tab from "../../components/ui/Tab";
+} from "@/components/ui/DataTable/DataTable";
+import Tab from "@/components/ui/Tab";
 import type { DataProfileCategory, DataProfileRow } from "./types";
 import { useDataProfile } from "./useDataProfile";
 

@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
-import Header from "../../../components/layout/Header";
-import { NotificationBanner } from "../../../components/layout/NotificationBanner/NotificationBanner";
-import { NotificationBannerBody } from "../../../components/layout/NotificationBanner/parts/Body";
-import LinkCard from "../../../components/ui/LinkCard";
+import Header from "@/components/layout/Header";
+import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
+import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
+import LinkCard from "@/components/ui/LinkCard";
 import MetadataEdit from "../_components/MetadataEdit";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
 import OverviewViewClient from "../_components/OverviewViewClient";

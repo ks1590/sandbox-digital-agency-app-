@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import LinkCard from "../../../components/ui/LinkCard";
+import LinkCard from "@/components/ui/LinkCard";
 import { useMetadata } from "../useMetadata";
 
 /**

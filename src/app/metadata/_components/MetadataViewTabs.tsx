@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Tab from "../../../components/ui/Tab";
-import type { TabItem } from "../../../components/ui/Tab/Tab";
+import Tab from "@/components/ui/Tab";
+import type { TabItem } from "@/components/ui/Tab/Tab";
 
 interface Props {
   items: TabItem[];

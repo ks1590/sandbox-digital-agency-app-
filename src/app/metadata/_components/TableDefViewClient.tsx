@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   type ColumnDef,
   DataTable,
-} from "../../../components/ui/DataTable/DataTable";
+} from "@/components/ui/DataTable/DataTable";
 import type { TableDefRow } from "../types";
 import { useMetadata } from "../useMetadata";
 import TextPopover from "./TextPopover";

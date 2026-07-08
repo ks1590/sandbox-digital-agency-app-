@@ -3,12 +3,12 @@
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Input } from "../../../components/form/Input";
+import { Input } from "@/components/form/Input";
 import {
   type ColumnDef,
   DataTable,
-} from "../../../components/ui/DataTable/DataTable";
-import LinkCard from "../../../components/ui/LinkCard";
+} from "@/components/ui/DataTable/DataTable";
+import LinkCard from "@/components/ui/LinkCard";
 import type { TableDefRow } from "../types";
 import type { MetadataFormData } from "./schema";
 

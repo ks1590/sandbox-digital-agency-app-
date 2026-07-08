@@ -5,12 +5,12 @@ import {
   DatePicker,
   DatePickerMonth,
   DatePickerYear,
-} from "../../components/form/DatePicker";
-import { Button } from "../../components/ui/Button";
+} from "@/components/form/DatePicker";
+import { Button } from "@/components/ui/Button";
 import {
   type ColumnDef,
   DataTable,
-} from "../../components/ui/DataTable/DataTable";
+} from "@/components/ui/DataTable/DataTable";
 import {
   ModalDialog,
   ModalDialogActions,
@@ -18,7 +18,7 @@ import {
   ModalDialogContent,
   ModalDialogHeader,
   ModalDialogHeading,
-} from "../../components/ui/ModalDialog";
+} from "@/components/ui/ModalDialog";
 import type { ExtractionRequest } from "./types";
 import { useExtractionStatus } from "./useExtractionStatus";
 

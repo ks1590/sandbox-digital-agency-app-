@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
-import Header from "../../components/layout/Header";
-import { NotificationBanner } from "../../components/layout/NotificationBanner/NotificationBanner";
-import { NotificationBannerBody } from "../../components/layout/NotificationBanner/parts/Body";
+import Header from "@/components/layout/Header";
+import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
+import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import MetadataContent from "./_components/MetadataContent";
 import MetadataEdit from "./_components/MetadataEdit";
 
