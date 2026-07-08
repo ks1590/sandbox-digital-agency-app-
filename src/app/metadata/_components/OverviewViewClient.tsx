@@ -82,9 +82,9 @@ export default function OverviewViewClient() {
               </tr>
             </thead>
             <tbody>
-              {updateFrequencies.map((freq) => (
+              {updateFrequencies.map((freq, index) => (
                 <tr
-                  key={freq.target}
+                  key={`${freq.target}-${index.toString()}`}
                   className="border-b border-gray-200 hover:bg-gray-50"
                 >
                   <td className="py-3 px-4 text-gray-700 border-r border-gray-200">
