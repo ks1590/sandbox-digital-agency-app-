@@ -7,10 +7,19 @@ import { redirect } from "next/navigation";
  * ログイン処理（ダミー）
  * @param formData フォームデータ
  */
-export async function login(formData: FormData) {
-  const loginId = (formData.get("loginId") as string) || "Unknown User";
+export async function login(prevState: any, formData: FormData) {
+  const loginId = (formData.get("loginId") as string) || "";
+  const password = (formData.get("password") as string) || "";
 
-  // 本来はここでID/パスワードの検証を行うが、ダミー実装なので無条件でログイン成功とする
+  if (!loginId || !password) {
+    return { error: "ログインIDとパスワードを入力してください。" };
+  }
+
+  // ダミー認証: IDが "admin" かつ パスワードが "password" の場合のみ許可
+  if (loginId !== "admin" || password !== "password") {
+    return { error: "ログインIDまたはパスワードが間違っています。" };
+  }
+
   // Cookieにダミーの認証トークンをセット
   const cookieStore = await cookies();
   cookieStore.set("auth-token", "dummy-session-12345", {
