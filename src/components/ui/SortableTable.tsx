@@ -1,11 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   Pagination,
   PaginationCurrent,
-  PaginationFirst,
-  PaginationLast,
   PaginationNext,
   PaginationPrev,
 } from "./Pagination";
@@ -55,6 +53,7 @@ interface SortableTableProps {
   columns: Column[];
   data: RowData[];
   sortable?: boolean;
+  rowKey: (row: RowData) => string | number;
 }
 
 export default function SortableTable({
@@ -62,6 +61,7 @@ export default function SortableTable({
   columns,
   data,
   sortable = true,
+  rowKey,
 }: SortableTableProps) {
   const [sortState, setSortState] = useState<{
     columnIndex: number | null;
@@ -114,7 +114,7 @@ export default function SortableTable({
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const maxPage = Math.max(1, Math.ceil(data.length / itemsPerPage));
 
   if (currentPage > maxPage && maxPage > 0) {
@@ -140,9 +140,9 @@ export default function SortableTable({
           <thead>
             {groups && groups.length > 0 && (
               <tr className="bg-solid-gray-100">
-                {groups.map((group, i) => (
+                {groups.map((group) => (
                   <th
-                    key={i}
+                    key={group.label}
                     className="border-b border-r border-solid-gray-500 px-4 py-5 text-start align-top last:border-r-0"
                     colSpan={group.colSpan}
                     scope="col"
@@ -186,9 +186,9 @@ export default function SortableTable({
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row, rowIndex) => (
+            {paginatedData.map((row) => (
               <tr
-                key={rowIndex}
+                key={rowKey(row)}
                 className="border-b border-solid-gray-500 hover:bg-key-50 transition-colors last:border-b-0"
               >
                 {columns.map((col) => (
@@ -207,17 +207,32 @@ export default function SortableTable({
         </table>
       </div>
 
-      {maxPage > 1 && (
-        <div className="flex justify-end mt-2">
+      <div className="flex items-center justify-between mt-4 text-sm">
+        <div className="flex items-center gap-3">
+          <span className="text-gray-700">表示件数</span>
+          {[10, 50, 100].map((size) => (
+            <Fragment key={size}>
+              <button
+                type="button"
+                className={`hover:underline ${
+                  itemsPerPage === size
+                    ? "font-bold text-gray-900 no-underline"
+                    : "text-[#0017C1] underline"
+                }`}
+                onClick={() => {
+                  setItemsPerPage(size);
+                  setCurrentPage(1);
+                }}
+                aria-pressed={itemsPerPage === size}
+              >
+                {size}件
+              </button>
+            </Fragment>
+          ))}
+        </div>
+
+        {maxPage > 1 && (
           <Pagination>
-            <PaginationFirst
-              href="#"
-              onClick={(e) => handlePageChange(e, 1)}
-              aria-disabled={currentPage === 1}
-              className={
-                currentPage === 1 ? "pointer-events-none opacity-50" : ""
-              }
-            />
             <PaginationPrev
               href="#"
               onClick={(e) => handlePageChange(e, currentPage - 1)}
@@ -235,17 +250,9 @@ export default function SortableTable({
                 currentPage === maxPage ? "pointer-events-none opacity-50" : ""
               }
             />
-            <PaginationLast
-              href="#"
-              onClick={(e) => handlePageChange(e, maxPage)}
-              aria-disabled={currentPage === maxPage}
-              className={
-                currentPage === maxPage ? "pointer-events-none opacity-50" : ""
-              }
-            />
           </Pagination>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

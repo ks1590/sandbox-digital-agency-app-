@@ -1,11 +1,9 @@
 "use client";
 
-import React, { type ReactNode, useMemo, useState } from "react";
+import { Fragment, type ReactNode, useMemo, useState } from "react";
 import {
   Pagination,
   PaginationCurrent,
-  PaginationFirst,
-  PaginationLast,
   PaginationNext,
   PaginationPrev,
 } from "../Pagination";
@@ -37,9 +35,10 @@ function SortIcon({ direction }: { direction: "asc" | "desc" | null }) {
       width="20"
       height="20"
       fill="currentColor"
-      aria-hidden
+      aria-hidden="true"
       className={`inline-block ml-1 ${direction === "desc" ? "rotate-180" : ""}`}
     >
+      <title>Sort</title>
       {direction ? (
         <>
           <path d="M13 15.12L16.27 12L17 12.7L12.5 17L8 12.7L8.73 12L12 15.12V4H13V15.12Z" />
@@ -149,18 +148,18 @@ export function DataTable<T>({
                     <th
                       key={col.key}
                       className={`${thClass} ${col.className ?? ""}`}
+                      aria-sort={
+                        direction === "asc"
+                          ? "ascending"
+                          : direction === "desc"
+                            ? "descending"
+                            : "none"
+                      }
                     >
                       <button
                         type="button"
                         className="inline-flex items-center gap-x-1 text-start underline underline-offset-2 hover:decoration-2 focus-visible:rounded-sm focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:bg-yellow-300"
                         onClick={() => handleToggleSort(col.key)}
-                        aria-sort={
-                          direction === "asc"
-                            ? "ascending"
-                            : direction === "desc"
-                              ? "descending"
-                              : "none"
-                        }
                       >
                         {col.label}
                         <SortIcon direction={direction} />
@@ -222,32 +221,25 @@ export function DataTable<T>({
         <div className="flex items-center gap-1 text-sm text-gray-700">
           <span>表示件数</span>
           {pageSizeOptions.map((size, i) => (
-            <React.Fragment key={size}>
-              {i > 0 && <span className="text-gray-400">|</span>}
+            <Fragment key={size}>
               <button
                 type="button"
-                className={`px-1 underline underline-offset-2 hover:no-underline ${
+                className={`px-1 hover:underline ${
                   pageSize === size
                     ? "font-bold text-gray-900 no-underline"
-                    : "text-[#0017C1]"
+                    : "text-[#0017C1] underline"
                 }`}
                 onClick={() => handlePageSizeChange(size)}
                 aria-pressed={pageSize === size}
               >
                 {size}件
               </button>
-            </React.Fragment>
+            </Fragment>
           ))}
         </div>
 
         {maxPage > 1 && (
           <Pagination>
-            <PaginationFirst
-              href="#"
-              onClick={(e) => handlePageChange(e, 1)}
-              aria-disabled={safePage === 1}
-              className={safePage === 1 ? "pointer-events-none opacity-50" : ""}
-            />
             <PaginationPrev
               href="#"
               onClick={(e) => handlePageChange(e, safePage - 1)}
@@ -258,14 +250,6 @@ export function DataTable<T>({
             <PaginationNext
               href="#"
               onClick={(e) => handlePageChange(e, safePage + 1)}
-              aria-disabled={safePage === maxPage}
-              className={
-                safePage === maxPage ? "pointer-events-none opacity-50" : ""
-              }
-            />
-            <PaginationLast
-              href="#"
-              onClick={(e) => handlePageChange(e, maxPage)}
               aria-disabled={safePage === maxPage}
               className={
                 safePage === maxPage ? "pointer-events-none opacity-50" : ""

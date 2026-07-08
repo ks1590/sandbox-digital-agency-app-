@@ -1,10 +1,10 @@
 import type { ComponentProps } from "react";
 
 export const paginationItemStyle = `
-  flex h-12 w-12 items-center justify-center rounded-full border border-solid-gray-200 text-oln-16N-100 text-blue-1000
-  hover:border-blue-900 hover:bg-blue-50
+  flex h-8 w-8 items-center justify-center rounded-full border-2 border-solid-gray-200 text-oln-16N-100 text-black
+  hover:border-blue-900 hover:bg-blue-50 hover:text-blue-900
   focus-visible:outline-2 focus-visible:outline-focus-yellow
-  active:border-blue-900 active:bg-blue-50
+  active:border-blue-900 active:bg-blue-50 active:text-blue-900
 `;
 
 export type PaginationProps = ComponentProps<"nav">;
@@ -69,7 +69,7 @@ export const PaginationPrev = (props: PaginationItemProps) => {
       >
         <path
           d="M15.33 19L16 18.33L9.67 12L16 5.67L15.33 5L8.33 12L15.33 19Z"
-          fill="#1A3EE8"
+          fill="currentColor"
         />
       </svg>
     </a>
@@ -117,8 +117,8 @@ export const PaginationNext = (props: PaginationItemProps) => {
         width="24"
       >
         <path
-          className="fill-blue-900"
           d="M8.67 19L8 18.33L14.33 12L8 5.67L8.67 5L15.67 12L8.67 19Z"
+          fill="currentColor"
         />
       </svg>
     </a>
