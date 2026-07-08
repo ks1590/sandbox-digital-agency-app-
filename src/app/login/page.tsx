@@ -1,4 +1,5 @@
 import { login } from "@/actions/auth";
+import { TextInput } from "@/components/form/TextInput";
 import Header from "@/components/layout/Header";
 
 export default function LoginPage() {
@@ -11,36 +12,23 @@ export default function LoginPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             ログイン
           </h2>
-
           <form action={login} className="space-y-6">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="loginId" className="font-bold text-gray-900">
-                ログインID
-              </label>
-              <input
-                id="loginId"
-                name="loginId"
-                type="text"
-                required
-                className="w-full rounded-[8px] border border-gray-400 bg-white px-4 h-14 text-base text-gray-900 hover:border-black focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300"
-                placeholder="IDを入力"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="password" className="font-bold text-gray-900">
-                パスワード
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="w-full rounded-[8px] border border-gray-400 bg-white px-4 h-14 text-base text-gray-900 hover:border-black focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300"
-                placeholder="パスワードを入力"
-              />
-            </div>
-
+            <TextInput
+              label="ログインID"
+              id="loginId"
+              name="loginId"
+              type="text"
+              required
+              placeholder="IDを入力"
+            />
+            <TextInput
+              label="パスワード"
+              id="password"
+              name="password"
+              type="password"
+              required
+              placeholder="パスワードを入力"
+            />
             <div className="pt-4">
               <button
                 type="submit"
