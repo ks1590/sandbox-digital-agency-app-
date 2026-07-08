@@ -105,15 +105,6 @@ export default function Header({ userId }: { userId?: string }) {
                 <ul className="flex flex-col">
                   <li>
                     <Link
-                      href="/"
-                      className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      ポータル (TOP)
-                    </Link>
-                  </li>
-                  <li className="border-t border-gray-200">
-                    <Link
                       href="/extraction-status"
                       className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
                       onClick={() => setIsMenuOpen(false)}
@@ -139,10 +130,10 @@ export default function Header({ userId }: { userId?: string }) {
                       データプロファイル参照
                     </Link>
                   </li>
-                  <li className="border-t border-gray-200 bg-gray-50">
+                  <li className="border-t border-gray-200">
                     <button
                       type="button"
-                      className="w-full text-left block px-4 py-3 hover:bg-gray-200 hover:underline hover:underline-offset-2 text-red-600 font-bold"
+                      className="w-full text-left block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
                       onClick={async () => {
                         setIsMenuOpen(false);
                         await logout();
