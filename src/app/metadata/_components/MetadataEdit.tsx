@@ -90,11 +90,18 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
     // セッションストレージに保存
     sessionStorage.setItem("metadata_clinical", JSON.stringify(data));
 
-    // pathnameから mode パラメータを除外して参照画面に戻る
-    const viewParams = new URLSearchParams();
-    viewParams.set("tab", tabParam);
-    viewParams.set("success", "true");
-    router.push(`${pathname}?${viewParams.toString()}`);
+    if (isTopPage) {
+      router.push("/metadata?success=true");
+    } else if (subtabParam) {
+      router.push(
+        `/metadata/table-def?tab=${subtabParam}&from=${pathname.split("/").pop()}&success=true`,
+      );
+    } else {
+      const viewParams = new URLSearchParams();
+      viewParams.set("tab", tabParam);
+      viewParams.set("success", "true");
+      router.push(`${pathname}?${viewParams.toString()}`);
+    }
   };
 
   const handleErrorSubmit = () => {
