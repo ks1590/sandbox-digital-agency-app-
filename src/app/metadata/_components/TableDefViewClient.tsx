@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DataTable, type ColumnDef } from "../../../components/ui/DataTable/DataTable";
-import TextPopover from "./TextPopover";
+import {
+  type ColumnDef,
+  DataTable,
+} from "../../../components/ui/DataTable/DataTable";
 import { DUMMY_DATA, type TableDefRow } from "./TableDefContent";
+import TextPopover from "./TextPopover";
 
 const tableColumns: ColumnDef<any>[] = [
   { key: "id", label: "項番" },
@@ -12,21 +15,29 @@ const tableColumns: ColumnDef<any>[] = [
   { key: "length", label: "桁数" },
   { key: "required", label: "必須/任意" },
   { key: "logicalName", label: "論理名" },
-  { 
-    key: "description", 
+  {
+    key: "description",
     label: "項目説明",
-    render: (row) => <TextPopover text={String(row.description || "")} maxLength={20} />
+    render: (row) => (
+      <TextPopover text={String(row.description || "")} maxLength={20} />
+    ),
   },
   { key: "foreignKey", label: "外部キー" },
   { key: "masterType", label: "マスタ種別" },
-  { 
-    key: "sampleData", 
+  {
+    key: "sampleData",
     label: "サンプルデータ",
-    render: (row) => <TextPopover text={String(row.sampleData || "")} maxLength={20} />
+    render: (row) => (
+      <TextPopover text={String(row.sampleData || "")} maxLength={20} />
+    ),
   },
 ];
 
-export function SortableTableWithColumns({ subtab }: { subtab: "disease" | "allergy" | "examination" }) {
+export function SortableTableWithColumns({
+  subtab,
+}: {
+  subtab: "disease" | "allergy" | "examination";
+}) {
   const [data, setData] = useState<any[]>(DUMMY_DATA);
 
   useEffect(() => {
@@ -43,6 +54,11 @@ export function SortableTableWithColumns({ subtab }: { subtab: "disease" | "alle
     }
   }, [subtab]);
 
-  return <DataTable columns={tableColumns} data={data} rowKey={(row) => row.id || row.no} />;
+  return (
+    <DataTable
+      columns={tableColumns}
+      data={data}
+      rowKey={(row) => row.id || row.no}
+    />
+  );
 }
-

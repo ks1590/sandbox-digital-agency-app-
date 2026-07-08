@@ -17,7 +17,9 @@ export default function OverviewViewClient() {
     }
   }, []);
 
-  const overviewText = data?.overviewText || `概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
+  const overviewText =
+    data?.overviewText ||
+    `概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明`;
   const startYear = data?.startYear || "2020年";
@@ -27,8 +29,18 @@ export default function OverviewViewClient() {
     { target: "項目名", frequency: "年次" },
   ];
   const tables = data?.tables || [
-    { id: "table1", name: "〇〇テーブル", overview: "概要の説明...", unit: "レセプト" },
-    { id: "table2", name: "△△テーブル", overview: "概要の説明...", unit: "レセプト" },
+    {
+      id: "table1",
+      name: "〇〇テーブル",
+      overview: "概要の説明...",
+      unit: "レセプト",
+    },
+    {
+      id: "table2",
+      name: "△△テーブル",
+      overview: "概要の説明...",
+      unit: "レセプト",
+    },
   ];
   const notesText = data?.notesText || `留意事項 留意事項 留意事項...`;
 
@@ -71,7 +83,10 @@ export default function OverviewViewClient() {
             </thead>
             <tbody>
               {updateFrequencies.map((freq, idx) => (
-                <tr key={idx} className="border-b border-gray-200 hover:bg-gray-50">
+                <tr
+                  key={idx}
+                  className="border-b border-gray-200 hover:bg-gray-50"
+                >
                   <td className="py-3 px-4 text-gray-700 border-r border-gray-200">
                     {freq.target}
                   </td>

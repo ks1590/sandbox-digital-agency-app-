@@ -1,6 +1,6 @@
-@import 'tailwindcss';
-@import '@digital-go-jp/tailwind-theme-plugin/v4';
-@plugin '@tailwindcss/container-queries';
+@import "tailwindcss";
+@import "@digital-go-jp/tailwind-theme-plugin/v4";
+@plugin "@tailwindcss/container-queries";
 
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
@@ -24,10 +24,10 @@
 :root {
   --background: #ffffff;
   --foreground: #1a1a1c;
-  --color-primary: #0017C1;
-  --color-border: #0017C1;
+  --color-primary: #0017c1;
+  --color-border: #0017c1;
   --color-text-secondary: #626264;
-  --color-bg-section: #F8F8FB;
+  --color-bg-section: #f8f8fb;
   --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -99,13 +99,11 @@ body {
   padding: 32px 24px;
 }
 
-
-
 /* ========================================
    ヒーローセクション
    ======================================== */
 .portal-hero {
-  background: linear-gradient(135deg, #0017C1 0%, #0033E6 40%, #2952FF 100%);
+  background: linear-gradient(135deg, #0017c1 0%, #0033e6 40%, #2952ff 100%);
   position: relative;
   overflow: hidden;
 }
@@ -115,8 +113,16 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
+    radial-gradient(
+      circle at 20% 50%,
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 40%
+    );
   pointer-events: none;
 }
 
@@ -208,7 +214,7 @@ body {
   display: block;
   flex: 1;
   background: #ffffff;
-  border: 1px solid #D9D9DB;
+  border: 1px solid #d9d9db;
   border-radius: 1.5rem;
   text-decoration: none;
   color: inherit;

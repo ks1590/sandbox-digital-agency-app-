@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
  * @param formData フォームデータ
  */
 export async function login(formData: FormData) {
-  const loginId = formData.get("loginId") as string || "Unknown User";
+  const loginId = (formData.get("loginId") as string) || "Unknown User";
 
   // 本来はここでID/パスワードの検証を行うが、ダミー実装なので無条件でログイン成功とする
   // Cookieにダミーの認証トークンをセット

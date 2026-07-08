@@ -1,8 +1,11 @@
 "use client";
 
 import React from "react";
+import {
+  type ColumnDef,
+  DataTable,
+} from "../../components/ui/DataTable/DataTable";
 import Tab from "../../components/ui/Tab";
-import { DataTable, type ColumnDef } from '../../components/ui/DataTable/DataTable';
 
 interface DataProfileRow {
   id: number;
@@ -17,36 +20,37 @@ interface DataProfileRow {
   nullRatio: string;
 }
 
-
-const DUMMY_DATA: DataProfileRow[] = Array.from({ length: 120 }).map((_, i) => ({
-  id: i + 1,
-  columnName: "sample",
-  maxLength: 10,
-  avgLength: 10,
-  distinctCount: 100,
-  maxValue: 99999,
-  minValue: 1,
-  validRatio: "99.8%",
-  invalidRatio: "0.1%",
-  nullRatio: "0.1%",
-}));
+const DUMMY_DATA: DataProfileRow[] = Array.from({ length: 120 }).map(
+  (_, i) => ({
+    id: i + 1,
+    columnName: "sample",
+    maxLength: 10,
+    avgLength: 10,
+    distinctCount: 100,
+    maxValue: 99999,
+    minValue: 1,
+    validRatio: "99.8%",
+    invalidRatio: "0.1%",
+    nullRatio: "0.1%",
+  }),
+);
 
 function DataProfileGrid() {
   const columns: ColumnDef<DataProfileRow>[] = [
     {
-      key: 'rowNumber',
-      label: '項番',
+      key: "rowNumber",
+      label: "項番",
       render: (_row, idx) => idx + 1,
     },
-    { key: 'columnName', label: '列の名前' },
-    { key: 'maxLength', label: '最大長' },
-    { key: 'avgLength', label: '平均長' },
-    { key: 'distinctCount', label: '個別値の数' },
-    { key: 'maxValue', label: '最大値' },
-    { key: 'minValue', label: '最小値' },
-    { key: 'validRatio', label: '有効値割合' },
-    { key: 'invalidRatio', label: '無効値割合' },
-    { key: 'nullRatio', label: 'null値割合' },
+    { key: "columnName", label: "列の名前" },
+    { key: "maxLength", label: "最大長" },
+    { key: "avgLength", label: "平均長" },
+    { key: "distinctCount", label: "個別値の数" },
+    { key: "maxValue", label: "最大値" },
+    { key: "minValue", label: "最小値" },
+    { key: "validRatio", label: "有効値割合" },
+    { key: "invalidRatio", label: "無効値割合" },
+    { key: "nullRatio", label: "null値割合" },
   ];
 
   return (
@@ -56,11 +60,7 @@ function DataProfileGrid() {
         <p>合計ファイル数：100件</p>
       </div>
 
-      <DataTable
-        data={DUMMY_DATA}
-        columns={columns}
-        rowKey={(row) => row.id}
-      />
+      <DataTable data={DUMMY_DATA} columns={columns} rowKey={(row) => row.id} />
     </div>
   );
 }

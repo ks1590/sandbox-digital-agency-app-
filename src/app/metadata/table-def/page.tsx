@@ -2,8 +2,8 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import Header from "../../../components/layout/Header";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
+import { DUMMY_DATA, TableDefGrid } from "../_components/TableDefContent";
 import { SortableTableWithColumns } from "../_components/TableDefViewClient";
-import { TableDefGrid, DUMMY_DATA } from "../_components/TableDefContent";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -29,9 +29,7 @@ export default async function TableDefPage({ searchParams }: Props) {
       <main className="page-bg flex-1">
         <div className="page-container">
           <div className="mb-6 flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-bold text-gray-900">
-              メタデータ
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
             {!isEditMode && (
               <Link
                 href={`/metadata/${fromType}?mode=edit&tab=table-def&subtab=${tabParam}`}

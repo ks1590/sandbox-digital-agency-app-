@@ -1,12 +1,12 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import Header from "../../../components/layout/Header";
-import LinkCard from "../../../components/ui/LinkCard";
-import MetadataViewTabs from "../_components/MetadataViewTabs";
-import MetadataEdit from "../_components/MetadataEdit";
-import OverviewViewClient from "../_components/OverviewViewClient";
 import { NotificationBanner } from "../../../components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "../../../components/layout/NotificationBanner/parts/Body";
+import LinkCard from "../../../components/ui/LinkCard";
+import MetadataEdit from "../_components/MetadataEdit";
+import MetadataViewTabs from "../_components/MetadataViewTabs";
+import OverviewViewClient from "../_components/OverviewViewClient";
 
 /** データ種別の表示名マッピング */
 const typeLabels: Record<string, string> = {
@@ -22,7 +22,10 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function MetadataTypePage({ params, searchParams }: Props) {
+export default async function MetadataTypePage({
+  params,
+  searchParams,
+}: Props) {
   const cookieStore = await cookies();
   const userId = cookieStore.get("login-user-id")?.value;
 
@@ -63,9 +66,7 @@ export default async function MetadataTypePage({ params, searchParams }: Props) 
 
         <div className="page-container">
           <div className="mb-6 flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-bold text-gray-900">
-              メタデータ
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
             <Link
               href={`/metadata/${type}?mode=edit&tab=${tabParam}`}
               className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border-2 border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
@@ -130,5 +131,3 @@ export default async function MetadataTypePage({ params, searchParams }: Props) 
     </div>
   );
 }
-
-

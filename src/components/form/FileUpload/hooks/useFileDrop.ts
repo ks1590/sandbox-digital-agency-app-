@@ -1,6 +1,12 @@
-import { type DragEvent, type RefObject, useEffect, useRef, useState } from 'react';
-import { fileUploadDefaultMessages } from '../messages';
-import type { FileUploadMessages } from '../types';
+import {
+  type DragEvent,
+  type RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { fileUploadDefaultMessages } from "../messages";
+import type { FileUploadMessages } from "../types";
 
 export type UseFileDropOptions = {
   /** ドラッグ＆ドロップを有効化 */
@@ -21,7 +27,10 @@ const expandedDropAreaState = {
 };
 
 const registerExpandedDropArea = (callback: () => void) => {
-  if (expandedDropAreaState.activeCallback && expandedDropAreaState.activeCallback !== callback) {
+  if (
+    expandedDropAreaState.activeCallback &&
+    expandedDropAreaState.activeCallback !== callback
+  ) {
     expandedDropAreaState.activeCallback();
   }
   expandedDropAreaState.activeCallback = callback;
@@ -46,13 +55,15 @@ export const useFileDrop = (options: UseFileDropOptions) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isExpandedDropArea, setIsExpandedDropArea] = useState(false);
   const [showViewportOverlay, setShowViewportOverlay] = useState(false);
-  const [announcerText, setAnnouncerText] = useState('');
-  const [announcerAssertiveText, setAnnouncerAssertiveText] = useState('');
+  const [announcerText, setAnnouncerText] = useState("");
+  const [announcerAssertiveText, setAnnouncerAssertiveText] = useState("");
 
   const dragCounterRef = useRef(0);
   const announcerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragOverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const dropAnnounceIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const dropAnnounceIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null,
+  );
   const collapseCallbackRef = useRef(() => setIsExpandedDropArea(false));
 
   const announceText = (text: string, assertive = false) => {
@@ -62,11 +73,11 @@ export const useFileDrop = (options: UseFileDropOptions) => {
 
     const setText = assertive ? setAnnouncerAssertiveText : setAnnouncerText;
 
-    setText('');
+    setText("");
     announcerTimerRef.current = setTimeout(() => {
       setText(text);
       announcerTimerRef.current = setTimeout(() => {
-        setText('');
+        setText("");
       }, 1000);
     }, 100);
   };
@@ -108,7 +119,7 @@ export const useFileDrop = (options: UseFileDropOptions) => {
 
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy';
+    e.dataTransfer.dropEffect = "copy";
   };
 
   const handleDragLeave = () => {
@@ -142,7 +153,7 @@ export const useFileDrop = (options: UseFileDropOptions) => {
   const handleViewportDragOver = (e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    e.dataTransfer.dropEffect = 'copy';
+    e.dataTransfer.dropEffect = "copy";
 
     if (dragOverTimerRef.current) {
       clearTimeout(dragOverTimerRef.current);
@@ -187,9 +198,15 @@ export const useFileDrop = (options: UseFileDropOptions) => {
       }
     };
 
-    document.documentElement.addEventListener('dragover', handleDocumentDragOver);
+    document.documentElement.addEventListener(
+      "dragover",
+      handleDocumentDragOver,
+    );
     return () => {
-      document.documentElement.removeEventListener('dragover', handleDocumentDragOver);
+      document.documentElement.removeEventListener(
+        "dragover",
+        handleDocumentDragOver,
+      );
     };
   }, [dropAreaExpandable, isExpandedDropArea]);
 

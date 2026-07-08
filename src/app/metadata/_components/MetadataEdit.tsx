@@ -1,18 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import Header from "../../../components/layout/Header";
-import Tab from "../../../components/ui/Tab";
 import { NotificationBanner } from "../../../components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "../../../components/layout/NotificationBanner/parts/Body";
-import TableDefContent, { TableDefGrid, DUMMY_DATA } from "./TableDefContent";
-import OverviewTabContent from "./OverviewTabContent";
+import Tab from "../../../components/ui/Tab";
 import ErDiagramTabContent from "./ErDiagramTabContent";
-import { metadataSchema, type MetadataFormData } from "./schema";
+import OverviewTabContent from "./OverviewTabContent";
+import { type MetadataFormData, metadataSchema } from "./schema";
+import TableDefContent, { DUMMY_DATA, TableDefGrid } from "./TableDefContent";
 
 const DEFAULT_METADATA: MetadataFormData = {
   dataType: "clinical",
@@ -31,8 +31,18 @@ const DEFAULT_METADATA: MetadataFormData = {
     { target: "項目名B", frequency: "月次" },
   ],
   tables: [
-    { id: "table1", name: "〇〇テーブル", overview: "テーブル概要の説明...", unit: "レセプト" },
-    { id: "table2", name: "△△テーブル", overview: "テーブル概要の説明...", unit: "レセプト" },
+    {
+      id: "table1",
+      name: "〇〇テーブル",
+      overview: "テーブル概要の説明...",
+      unit: "レセプト",
+    },
+    {
+      id: "table2",
+      name: "△△テーブル",
+      overview: "テーブル概要の説明...",
+      unit: "レセプト",
+    },
   ],
   notesText: "留意事項を入力...",
   keyInfoText: "",
@@ -81,7 +91,7 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
   const handleSubmit = (data: MetadataFormData) => {
     // セッションストレージに保存
     sessionStorage.setItem("metadata_clinical", JSON.stringify(data));
-    
+
     // pathnameから mode パラメータを除外して参照画面に戻る
     const viewParams = new URLSearchParams();
     viewParams.set("tab", tabParam);
@@ -134,9 +144,7 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
       <main className="page-bg flex-1">
         <div className="page-container pt-8">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">
-              メタデータ
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
           </div>
 
           {/*
@@ -144,7 +152,10 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
             どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
           */}
           <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(handleSubmit)} className="text-gray-900">
+            <form
+              onSubmit={methods.handleSubmit(handleSubmit)}
+              className="text-gray-900"
+            >
               {isTopPage ? (
                 <div className="mb-12">
                   <OverviewTabContent isTopPage />
@@ -195,7 +206,7 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
                             ? "allergy"
                             : "examination";
                       router.push(
-                        `${pathname}?mode=edit&tab=table-def&subtab=${newSubtab}`
+                        `${pathname}?mode=edit&tab=table-def&subtab=${newSubtab}`,
                       );
                     }}
                     items={[

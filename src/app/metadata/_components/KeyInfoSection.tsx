@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { textareaClass, labelClass } from "./styles";
 import type { MetadataFormData } from "./schema";
+import { labelClass, textareaClass } from "./styles";
 
 /**
  * キー情報セクション（Mermaid記法エディタ + SVGプレビュー）
@@ -71,7 +71,9 @@ export default function KeyInfoSection() {
             id="keyInfoText"
             className={textareaClass}
             {...register("keyInfoText")}
-            placeholder={"graph TD;\n  A[利用者] --> B(ビジネスメタデータ登録);\n  B --> C{検証};\n  C -->|成功| D[データ保存];\n  C -->|失敗| E[エラー表示];"}
+            placeholder={
+              "graph TD;\n  A[利用者] --> B(ビジネスメタデータ登録);\n  B --> C{検証};\n  C -->|成功| D[データ保存];\n  C -->|失敗| E[エラー表示];"
+            }
           />
         </div>
         <div className="flex flex-col">

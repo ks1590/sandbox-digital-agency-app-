@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
-import { logout } from '../../actions/auth';
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { logout } from "../../actions/auth";
 
 export default function Header({ userId }: { userId?: string }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,35 +16,36 @@ export default function Header({ userId }: { userId?: string }) {
       }
     }
     if (isMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMenuOpen]);
 
   return (
-    <header className='portal-header' id='portal-header'>
-      <div className='portal-header__inner relative'>
-        <div className='portal-header__logo'>
-          <Link href='/' className='flex items-center gap-[14px]'>
+    <header className="portal-header" id="portal-header">
+      <div className="portal-header__inner relative">
+        <div className="portal-header__logo">
+          <Link href="/" className="flex items-center gap-[14px]">
             <div>
-              <h1 className='portal-header__title'>xx情報DB</h1>
+              <h1 className="portal-header__title">xx情報DB</h1>
             </div>
           </Link>
         </div>
 
         {/* 右側アクションエリア：ユーザー名表示 + ハンバーガーメニュー */}
-        <div className='flex items-center gap-4'>
+        <div className="flex items-center gap-4">
           {userId && (
-            <div className='hidden sm:inline-flex items-center content-center min-h-8 text-gray-900 py-1 px-2 text-base'>
+            <div className="hidden sm:inline-flex items-center content-center min-h-8 text-gray-900 py-1 px-2 text-base">
               <svg
-                width='24'
-                height='24'
-                viewBox='0 0 24 24'
-                fill='currentColor'
-                className='text-gray-900 mr-1 self-center'>
-                <path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z' />
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="text-gray-900 mr-1 self-center"
+              >
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
               </svg>
               {userId}
             </div>
@@ -53,22 +54,24 @@ export default function Header({ userId }: { userId?: string }) {
           {/* ハンバーガーメニュー */}
           <div ref={menuRef}>
             <button
-              type='button'
-              className='flex w-fit touch-manipulation items-center gap-x-1 rounded-[6px] px-3 pb-1.5 pt-1 text-base text-gray-900 hover:bg-gray-100 hover:underline hover:underline-offset-[3px] focus-visible:bg-yellow-300 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300'
+              type="button"
+              className="flex w-fit touch-manipulation items-center gap-x-1 rounded-[6px] px-3 pb-1.5 pt-1 text-base text-gray-900 hover:bg-gray-100 hover:underline hover:underline-offset-[3px] focus-visible:bg-yellow-300 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
               aria-expanded={isMenuOpen}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
               {isMenuOpen ? (
                 <>
                   <svg
                     aria-hidden={true}
-                    className='mt-0.5 flex-none'
-                    fill='none'
-                    height='24'
-                    viewBox='0 0 120 120'
-                    width='24'>
+                    className="mt-0.5 flex-none"
+                    fill="none"
+                    height="24"
+                    viewBox="0 0 120 120"
+                    width="24"
+                  >
                     <path
-                      d='M32 95L25 88L53 60L25 32L32 25L60 53L88 25L95 32L67 60L95 88L88 95L60 67L32 95Z'
-                      fill='currentColor'
+                      d="M32 95L25 88L53 60L25 32L32 25L60 53L88 25L95 32L67 60L95 88L88 95L60 67L32 95Z"
+                      fill="currentColor"
                     />
                   </svg>
                   閉じる
@@ -77,15 +80,16 @@ export default function Header({ userId }: { userId?: string }) {
                 <>
                   <svg
                     aria-hidden={true}
-                    className='mt-0.5 flex-none'
-                    height='24'
-                    viewBox='0 0 24 24'
-                    width='24'>
+                    className="mt-0.5 flex-none"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                  >
                     <path
-                      clipRule='evenodd'
-                      d='M3 18V16H21V18H3ZM3 13V11H21V13H3ZM3 8V6H21V8H3Z'
-                      fill='currentColor'
-                      fillRule='evenodd'
+                      clipRule="evenodd"
+                      d="M3 18V16H21V18H3ZM3 13V11H21V13H3ZM3 8V6H21V8H3Z"
+                      fill="currentColor"
+                      fillRule="evenodd"
                     />
                   </svg>
                   メニュー
@@ -95,48 +99,53 @@ export default function Header({ userId }: { userId?: string }) {
 
             {/* メニューパネル */}
             {isMenuOpen && (
-              <div className='absolute right-6 top-full mt-2 w-64 bg-white border border-gray-400 shadow-lg rounded-md z-50 overflow-hidden'>
-                <ul className='flex flex-col'>
+              <div className="absolute right-6 top-full mt-2 w-64 bg-white border border-gray-400 shadow-lg rounded-md z-50 overflow-hidden">
+                <ul className="flex flex-col">
                   <li>
                     <Link
-                      href='/'
-                      className='block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900'
-                      onClick={() => setIsMenuOpen(false)}>
+                      href="/"
+                      className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       ポータル (TOP)
                     </Link>
                   </li>
-                  <li className='border-t border-gray-200'>
+                  <li className="border-t border-gray-200">
                     <Link
-                      href='/extraction-status'
-                      className='block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900'
-                      onClick={() => setIsMenuOpen(false)}>
+                      href="/extraction-status"
+                      className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       抽出状況参照
                     </Link>
                   </li>
-                  <li className='border-t border-gray-200'>
+                  <li className="border-t border-gray-200">
                     <Link
-                      href='/metadata'
-                      className='block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900'
-                      onClick={() => setIsMenuOpen(false)}>
+                      href="/metadata"
+                      className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       メタデータ参照・登録
                     </Link>
                   </li>
-                  <li className='border-t border-gray-200'>
+                  <li className="border-t border-gray-200">
                     <Link
-                      href='/data-profile'
-                      className='block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900'
-                      onClick={() => setIsMenuOpen(false)}>
+                      href="/data-profile"
+                      className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       データプロファイル参照
                     </Link>
                   </li>
-                  <li className='border-t border-gray-200 bg-gray-50'>
+                  <li className="border-t border-gray-200 bg-gray-50">
                     <button
-                      type='button'
-                      className='w-full text-left block px-4 py-3 hover:bg-gray-200 hover:underline hover:underline-offset-2 text-red-600 font-bold'
+                      type="button"
+                      className="w-full text-left block px-4 py-3 hover:bg-gray-200 hover:underline hover:underline-offset-2 text-red-600 font-bold"
                       onClick={async () => {
                         setIsMenuOpen(false);
                         await logout();
-                      }}>
+                      }}
+                    >
                       ログアウト
                     </button>
                   </li>

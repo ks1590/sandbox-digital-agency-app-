@@ -1,7 +1,7 @@
-import { type ChangeEvent, useRef, useState } from 'react';
-import { fileUploadDefaultMessages } from '../messages';
-import type { FileInfo, FileUploadMessages } from '../types';
-import { isFileTypeAllowed, parseAcceptAttribute, parseSize } from '../utils';
+import { type ChangeEvent, useRef, useState } from "react";
+import { fileUploadDefaultMessages } from "../messages";
+import type { FileInfo, FileUploadMessages } from "../types";
+import { isFileTypeAllowed, parseAcceptAttribute, parseSize } from "../utils";
 
 export type UseFileStateOptions = {
   /** 選択可能なファイル数の上限 */
@@ -23,7 +23,7 @@ export const useFileState = (options: UseFileStateOptions = {}) => {
     maxFiles = 1,
     maxFileSize,
     maxTotalSize,
-    accept = '',
+    accept = "",
     initialFiles = [],
     messages: customMessages,
   } = options;
@@ -84,7 +84,9 @@ export const useFileState = (options: UseFileStateOptions = {}) => {
       newErrors.push(messages.error.maxTotalSize);
     }
 
-    const hasFileErrors = validatedFiles.some((f) => f.errors && f.errors.length > 0);
+    const hasFileErrors = validatedFiles.some(
+      (f) => f.errors && f.errors.length > 0,
+    );
     if (hasFileErrors) {
       newErrors.unshift(messages.error.hasFileErrors);
     }
@@ -122,7 +124,9 @@ export const useFileState = (options: UseFileStateOptions = {}) => {
     if (updatedFiles.length === 0) {
       selectButtonRef.current?.focus();
     } else if (index < updatedFiles.length) {
-      const nextButton = document.getElementById(`${updatedFiles[index].id}-remove`);
+      const nextButton = document.getElementById(
+        `${updatedFiles[index].id}-remove`,
+      );
       nextButton?.focus();
     } else {
       const lastButton = document.getElementById(
@@ -140,7 +144,7 @@ export const useFileState = (options: UseFileStateOptions = {}) => {
     const fileList = Array.from(e.target.files || []);
     addFiles(fileList);
     if (inputRef.current) {
-      inputRef.current.value = '';
+      inputRef.current.value = "";
     }
     selectButtonRef.current?.focus();
   };

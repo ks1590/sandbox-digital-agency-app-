@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
 import {
   type ComponentProps,
   type KeyboardEvent,
   type Ref,
   useRef,
-} from 'react';
+} from "react";
 
-export type DatePickerSize = 'lg' | 'md' | 'sm';
+export type DatePickerSize = "lg" | "md" | "sm";
 
-export type DatePickerProps = Omit<ComponentProps<'div'>, 'children'> & {
+export type DatePickerProps = Omit<ComponentProps<"div">, "children"> & {
   size?: DatePickerSize;
   isError?: boolean;
   isReadonly?: boolean;
@@ -19,15 +19,15 @@ export type DatePickerProps = Omit<ComponentProps<'div'>, 'children'> & {
     monthRef: Ref<HTMLInputElement>;
     dateRef: Ref<HTMLInputElement>;
     readOnly?: boolean;
-    'aria-disabled'?: boolean;
-    'aria-invalid'?: boolean;
+    "aria-disabled"?: boolean;
+    "aria-invalid"?: boolean;
   }) => React.ReactNode;
 };
 
 export const DatePicker = (props: DatePickerProps) => {
   const {
     className,
-    size = 'lg',
+    size = "lg",
     isError,
     isReadonly,
     isDisabled,
@@ -40,9 +40,9 @@ export const DatePicker = (props: DatePickerProps) => {
   const dateRef = useRef<HTMLInputElement>(null);
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'ArrowRight') {
+    if (event.key === "ArrowRight") {
       moveRight(event);
-    } else if (event.key === 'ArrowLeft') {
+    } else if (event.key === "ArrowLeft") {
       moveLeft(event);
     } else if (event.key.match(/^[^0-9]$/)) {
       if (!event.ctrlKey && !event.metaKey) {
@@ -83,20 +83,21 @@ export const DatePicker = (props: DatePickerProps) => {
 
   return (
     <div
-      className={`inline-flex h-14 -space-x-1 rounded-8 border border-solid-gray-600 bg-(--bg) p-0.5 pe-0 text-solid-gray-900 [--bg:var(--color-white)] focus-within:border-black hover:border-solid-gray-900 data-[size=md]:h-12 data-[size=sm]:h-10 data-readonly:border-dashed data-disabled:border-solid-gray-300 data-error:border-error-1 data-disabled:text-solid-gray-420 data-disabled:[--bg:var(--color-solid-gray-50)] data-error:focus-within:border-red-1000 data-error:hover:border-red-1000 data-error:hover:data-readonly:border-error-1 hover:data-readonly:border-solid-gray-600 forced-colors:data-disabled:border-[GrayText] forced-colors:data-disabled:text-[GrayText] ${className ?? ''}`}
+      className={`inline-flex h-14 -space-x-1 rounded-8 border border-solid-gray-600 bg-(--bg) p-0.5 pe-0 text-solid-gray-900 [--bg:var(--color-white)] focus-within:border-black hover:border-solid-gray-900 data-[size=md]:h-12 data-[size=sm]:h-10 data-readonly:border-dashed data-disabled:border-solid-gray-300 data-error:border-error-1 data-disabled:text-solid-gray-420 data-disabled:[--bg:var(--color-solid-gray-50)] data-error:focus-within:border-red-1000 data-error:hover:border-red-1000 data-error:hover:data-readonly:border-error-1 hover:data-readonly:border-solid-gray-600 forced-colors:data-disabled:border-[GrayText] forced-colors:data-disabled:text-[GrayText] ${className ?? ""}`}
       data-size={size}
       data-error={isError || null}
       data-readonly={isReadonly || null}
       data-disabled={isDisabled || null}
       onKeyDown={handleKeyDown}
-      {...rest}>
+      {...rest}
+    >
       {children({
         yearRef,
         monthRef,
         dateRef,
         readOnly: isReadonly,
-        'aria-disabled': isDisabled,
-        'aria-invalid': isError,
+        "aria-disabled": isDisabled,
+        "aria-invalid": isError,
       })}
     </div>
   );

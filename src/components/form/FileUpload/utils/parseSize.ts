@@ -8,11 +8,13 @@ export const parseSize = (sizeStr: string | null): number | null => {
     gb: 1024 * 1024 * 1024,
   };
 
-  const match = sizeStr.toLowerCase().match(/^(\d+(?:\.\d+)?)\s*(b|kb|mb|gb)?$/);
+  const match = sizeStr
+    .toLowerCase()
+    .match(/^(\d+(?:\.\d+)?)\s*(b|kb|mb|gb)?$/);
   if (!match) return null;
 
   const value = parseFloat(match[1]);
-  const unit = match[2] || 'b';
+  const unit = match[2] || "b";
 
   return Math.floor(value * units[unit]);
 };

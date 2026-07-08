@@ -10,7 +10,7 @@ export {
   FileUploadInput,
   FileUploadViewportOverlay,
   FileUploadViewportOverlayMessage,
-} from './FileUpload';
-export { useFileUpload } from './hooks';
-export { fileUploadDefaultMessages } from './messages';
-export type { FileInfo, FileUploadMessages } from './types';
+} from "./FileUpload";
+export { useFileUpload } from "./hooks";
+export { fileUploadDefaultMessages } from "./messages";
+export type { FileInfo, FileUploadMessages } from "./types";

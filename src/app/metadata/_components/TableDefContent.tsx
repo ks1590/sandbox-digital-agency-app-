@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { useFormContext, useFieldArray } from "react-hook-form";
-import Tab from '../../../components/ui/Tab';
-import { Input } from '../../../components/form/Input';
-import { DataTable, type ColumnDef } from '../../../components/ui/DataTable/DataTable';
-import LinkCard from '../../../components/ui/LinkCard';
-import type { MetadataFormData, TableDefRowFormData } from './schema';
+import { usePathname } from "next/navigation";
+import React, { useState } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import { Input } from "../../../components/form/Input";
+import {
+  type ColumnDef,
+  DataTable,
+} from "../../../components/ui/DataTable/DataTable";
+import LinkCard from "../../../components/ui/LinkCard";
+import Tab from "../../../components/ui/Tab";
+import type { MetadataFormData, TableDefRowFormData } from "./schema";
 
 export interface TableDefRow {
   id: number;
@@ -28,14 +31,16 @@ function PopoverTextarea({
   placeholder,
   ariaLabel,
   className,
-  align = 'left',
+  align = "left",
 }: {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => void;
   placeholder: string;
   ariaLabel: string;
   className?: string;
-  align?: 'left' | 'right';
+  align?: "left" | "right";
 }) {
   const [expanded, setExpanded] = useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -43,12 +48,15 @@ function PopoverTextarea({
   React.useEffect(() => {
     if (!expanded) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setExpanded(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [expanded]);
 
   return (
@@ -69,12 +77,17 @@ function PopoverTextarea({
         viewBox="0 0 24 24"
         stroke="currentColor"
       >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+        />
       </svg>
 
       {expanded && (
         <textarea
-          className={`absolute top-0 ${align === 'right' ? 'right-0' : 'left-0'} w-full min-h-[160px] resize-y bg-white rounded-[8px] border border-solid-gray-600 px-4 py-3 text-base text-gray-900 shadow-xl z-50 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300`}
+          className={`absolute top-0 ${align === "right" ? "right-0" : "left-0"} w-full min-h-[160px] resize-y bg-white rounded-[8px] border border-solid-gray-600 px-4 py-3 text-base text-gray-900 shadow-xl z-50 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300`}
           value={value}
           onChange={onChange}
           placeholder={placeholder}
@@ -87,22 +100,28 @@ function PopoverTextarea({
   );
 }
 
-export const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map((_, i) => ({
-  id: i + 1,
-  physicalName: 'sample',
-  dataType: 'VARCHAR',
-  length: 100,
-  required: '必須',
-  logicalName: 'サンプル',
-  description: 'これはデザインの見本',
-  foreignKey: 'キー',
-  masterType: '',
-  sampleData: '',
-}));
+export const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map(
+  (_, i) => ({
+    id: i + 1,
+    physicalName: "sample",
+    dataType: "VARCHAR",
+    length: 100,
+    required: "必須",
+    logicalName: "サンプル",
+    description: "これはデザインの見本",
+    foreignKey: "キー",
+    masterType: "",
+    sampleData: "",
+  }),
+);
 
-export function TableDefGrid({ subtab }: { subtab: "disease" | "allergy" | "examination" }) {
+export function TableDefGrid({
+  subtab,
+}: {
+  subtab: "disease" | "allergy" | "examination";
+}) {
   const { register, control } = useFormContext<MetadataFormData>();
-  
+
   const { fields } = useFieldArray({
     control,
     name: `tableDefs.${subtab}`,
@@ -110,19 +129,19 @@ export function TableDefGrid({ subtab }: { subtab: "disease" | "allergy" | "exam
 
   // DataTableが要求するデータ型に合わせてfieldsを使用
   // ただし各行のレンダリング時にはreact-hook-formのregisterを使用する
-  const columns: ColumnDef<typeof fields[0]>[] = [
+  const columns: ColumnDef<(typeof fields)[0]>[] = [
     {
-      key: 'id',
-      label: '項番',
+      key: "id",
+      label: "項番",
       render: (_row, idx) => idx + 1,
     },
-    { key: 'physicalName', label: '物理名', className: 'min-w-[200px]' },
-    { key: 'dataType', label: 'データ型' },
-    { key: 'length', label: '桁数' },
-    { key: 'required', label: '必須/任意' },
+    { key: "physicalName", label: "物理名", className: "min-w-[200px]" },
+    { key: "dataType", label: "データ型" },
+    { key: "length", label: "桁数" },
+    { key: "required", label: "必須/任意" },
     {
-      key: 'logicalName',
-      label: '論理名',
+      key: "logicalName",
+      label: "論理名",
       render: (row, idx) => (
         <Input
           blockSize="md"
@@ -134,8 +153,8 @@ export function TableDefGrid({ subtab }: { subtab: "disease" | "allergy" | "exam
       ),
     },
     {
-      key: 'description',
-      label: '項目説明',
+      key: "description",
+      label: "項目説明",
       render: (row, idx) => {
         const reg = register(`tableDefs.${subtab}.${idx}.description` as const);
         return (
@@ -150,8 +169,8 @@ export function TableDefGrid({ subtab }: { subtab: "disease" | "allergy" | "exam
       },
     },
     {
-      key: 'foreignKey',
-      label: '外部キー',
+      key: "foreignKey",
+      label: "外部キー",
       render: (row, idx) => (
         <Input
           blockSize="md"
@@ -163,8 +182,8 @@ export function TableDefGrid({ subtab }: { subtab: "disease" | "allergy" | "exam
       ),
     },
     {
-      key: 'masterType',
-      label: 'マスタ種別',
+      key: "masterType",
+      label: "マスタ種別",
       render: (row, idx) => (
         <Input
           blockSize="md"
@@ -176,8 +195,8 @@ export function TableDefGrid({ subtab }: { subtab: "disease" | "allergy" | "exam
       ),
     },
     {
-      key: 'sampleData',
-      label: 'サンプルデータ',
+      key: "sampleData",
+      label: "サンプルデータ",
       render: (row, idx) => {
         const reg = register(`tableDefs.${subtab}.${idx}.sampleData` as const);
         return (
@@ -196,11 +215,7 @@ export function TableDefGrid({ subtab }: { subtab: "disease" | "allergy" | "exam
 
   return (
     <div className="mt-4">
-      <DataTable
-        data={fields}
-        columns={columns}
-        rowKey={(row) => row.id}
-      />
+      <DataTable data={fields} columns={columns} rowKey={(row) => row.id} />
     </div>
   );
 }

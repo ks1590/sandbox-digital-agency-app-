@@ -1,26 +1,31 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface TextPopoverProps {
   text: string;
   maxLength?: number;
 }
 
-export default function TextPopover({ text, maxLength = 10 }: TextPopoverProps) {
+export default function TextPopover({
+  text,
+  maxLength = 10,
+}: TextPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const buttonRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const isTruncated = text.length > maxLength;
-  const displayText = isTruncated ? text.slice(0, maxLength) + '...' : text;
+  const displayText = isTruncated ? text.slice(0, maxLength) + "..." : text;
 
   const togglePopover = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      const maxLeft = typeof window !== 'undefined' ? window.innerWidth - 320 : 0;
+      const maxLeft =
+        typeof window !== "undefined" ? window.innerWidth - 320 : 0;
       setPosition({
         top: rect.top - 8, // セルの位置に被せる
         left: Math.min(rect.left - 8, maxLeft > 0 ? maxLeft : rect.left),
@@ -48,12 +53,12 @@ export default function TextPopover({ text, maxLength = 10 }: TextPopoverProps) 
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      window.addEventListener('scroll', handleScroll, true);
+      document.addEventListener("mousedown", handleClickOutside);
+      window.addEventListener("scroll", handleScroll, true);
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      window.removeEventListener('scroll', handleScroll, true);
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll, true);
     };
   }, [isOpen]);
 
@@ -77,7 +82,12 @@ export default function TextPopover({ text, maxLength = 10 }: TextPopoverProps) 
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
         </svg>
       </button>
 

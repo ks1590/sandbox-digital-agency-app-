@@ -1,6 +1,6 @@
-import type { FileInfo, FileUploadMessages } from '../types';
-import { useFileDrop } from './useFileDrop';
-import { useFileState } from './useFileState';
+import type { FileInfo, FileUploadMessages } from "../types";
+import { useFileDrop } from "./useFileDrop";
+import { useFileState } from "./useFileState";
 
 export type UseFileUploadOptions = {
   /** 選択可能なファイル数の上限 */
