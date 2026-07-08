@@ -19,21 +19,8 @@ import {
   ModalDialogHeader,
   ModalDialogHeading,
 } from "../../components/ui/ModalDialog";
-import rawData from "./data.json";
-
-interface ExtractionRequest {
-  requestId: string;
-  receptionId: string;
-  dataCategory: string;
-  extractionDataInfo: string;
-  extractionStatus: string;
-  receptionTimestamp: string;
-  receptionStatus: string;
-  completionTimestamp: string;
-  resultStatus: string;
-  processingTime: string;
-  processingTimeSeconds: number;
-}
+import type { ExtractionRequest } from "./types";
+import { useExtractionStatus } from "./useExtractionStatus";
 
 function formatTimestamp(isoStr: string): string {
   if (!isoStr) return "";
@@ -73,9 +60,9 @@ export default function ExtractionStatusContent() {
 
   const [yearInput, setYearInput] = useState("");
   const [monthInput, setMonthInput] = useState("");
-  const [filteredData, setFilteredData] = useState<ExtractionRequest[]>(
-    rawData.requests,
-  );
+
+  // APIからデータを取得するカスタムフック
+  const { data: filteredData, isLoading, error, search } = useExtractionStatus();
 
   const handleOpenModal = useCallback((info: string) => {
     setSelectedInfo(info);
@@ -88,23 +75,10 @@ export default function ExtractionStatusContent() {
   };
 
   const handleSearch = () => {
-    let result: ExtractionRequest[] = rawData.requests;
-
-    if (yearInput) {
-      result = result.filter((request) =>
-        request.receptionTimestamp.startsWith(yearInput),
-      );
-    }
-
-    if (monthInput) {
-      const formattedMonth = monthInput.padStart(2, "0");
-      result = result.filter(
-        (request) =>
-          request.receptionTimestamp.substring(5, 7) === formattedMonth,
-      );
-    }
-
-    setFilteredData(result);
+    search({
+      year: yearInput || undefined,
+      month: monthInput || undefined,
+    });
   };
 
   const columns: ColumnDef<ExtractionRequest>[] = useMemo(
@@ -182,17 +156,34 @@ export default function ExtractionStatusContent() {
           </div>
         </div>
 
-        {/* 総件数 */}
-        <p className="text-sm text-gray-700 mb-2">
-          総件数：{filteredData.length}件
-        </p>
+        {/* エラー表示 */}
+        {error && (
+          <div className="mb-4 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+            <p className="font-bold">データ取得エラー</p>
+            <p>{error}</p>
+          </div>
+        )}
 
-        {/* テーブル */}
-        <DataTable
-          data={filteredData}
-          columns={columns}
-          rowKey={(row) => row.requestId}
-        />
+        {/* ローディング表示 */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-sm text-gray-500">データを読み込み中...</p>
+          </div>
+        ) : (
+          <>
+            {/* 総件数 */}
+            <p className="text-sm text-gray-700 mb-2">
+              総件数：{filteredData.length}件
+            </p>
+
+            {/* テーブル */}
+            <DataTable
+              data={filteredData}
+              columns={columns}
+              rowKey={(row) => row.requestId}
+            />
+          </>
+        )}
       </section>
 
       {/* 抽出データ情報表示用のモーダル */}
