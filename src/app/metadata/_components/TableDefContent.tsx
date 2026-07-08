@@ -13,17 +13,15 @@ import type { TableDefRow } from "../types";
 import type { MetadataFormData } from "./schema";
 
 function PopoverTextarea({
-  value,
-  onChange,
+  name,
+  defaultValue,
   placeholder,
   ariaLabel,
   className,
   align = "left",
 }: {
-  value: string;
-  onChange: (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => void;
+  name: string;
+  defaultValue: string;
   placeholder: string;
   ariaLabel: string;
   className?: string;
@@ -31,6 +29,15 @@ function PopoverTextarea({
 }) {
   const [expanded, setExpanded] = useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const { watch, setValue } = useFormContext();
+
+  const value = watch(name) ?? defaultValue;
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    setValue(name, e.target.value, { shouldDirty: true, shouldTouch: true });
+  };
 
   React.useEffect(() => {
     if (!expanded) return;
@@ -51,7 +58,7 @@ function PopoverTextarea({
       <Input
         blockSize="md"
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         placeholder={placeholder}
         aria-label={ariaLabel}
         className="w-full pr-8"
@@ -77,7 +84,7 @@ function PopoverTextarea({
         <textarea
           className={`absolute top-0 ${align === "right" ? "right-0" : "left-0"} w-full min-h-[160px] resize-y bg-white rounded-[8px] border border-solid-gray-600 px-4 py-3 text-base text-gray-900 shadow-xl z-50 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300`}
           value={value}
-          onChange={onChange}
+          onChange={handleChange}
           placeholder={placeholder}
           aria-label={ariaLabel}
           // biome-ignore lint/a11y/noAutofocus: intentional for popover textarea
@@ -145,11 +152,10 @@ export function TableDefGrid({
       key: "description",
       label: "項目説明",
       render: (row, idx) => {
-        const reg = register(`tableDefs.${subtab}.${idx}.description` as const);
         return (
           <PopoverTextarea
-            value={row.description}
-            onChange={reg.onChange}
+            name={`tableDefs.${subtab}.${idx}.description`}
+            defaultValue={row.description}
             placeholder="項目説明を入力"
             className="min-w-[250px]"
             ariaLabel={`項目説明（項番${row.id}）`}
@@ -187,11 +193,10 @@ export function TableDefGrid({
       key: "sampleData",
       label: "サンプルデータ",
       render: (row, idx) => {
-        const reg = register(`tableDefs.${subtab}.${idx}.sampleData` as const);
         return (
           <PopoverTextarea
-            value={row.sampleData}
-            onChange={reg.onChange}
+            name={`tableDefs.${subtab}.${idx}.sampleData`}
+            defaultValue={row.sampleData}
             placeholder="サンプルデータを入力"
             className="min-w-[250px]"
             ariaLabel={`サンプルデータ（項番${row.id}）`}
