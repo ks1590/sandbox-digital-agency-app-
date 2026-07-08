@@ -35,37 +35,7 @@ export default function OverviewTabContent({
   return (
     <div className="space-y-10 py-6">
       {/* データ種別セレクト（配下ページのみ） */}
-      {!isTopPage && (
-        <div className="mb-4">
-          <label htmlFor="dataType" className={labelClass}>
-            データ種別
-          </label>
-          <span className="relative inline-block w-64">
-            <select
-              id="dataType"
-              className="block w-full h-14 appearance-none border border-gray-400 rounded-[8px] bg-white pl-4 pr-10 text-base text-gray-900 hover:border-black focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300"
-              {...register("dataType")}
-            >
-              <option value="clinical">臨床情報</option>
-              {/* <option value="claim">レセプト情報</option>
-              <option value="health_check">健診情報</option> */}
-            </select>
-            <svg
-              aria-hidden="true"
-              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-900"
-              fill="none"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <path
-                d="M13.3344 4.40002L8.00104 9.73336L2.66771 4.40002L1.73438 5.33336L8.00104 11.6L14.2677 5.33336L13.3344 4.40002Z"
-                fill="currentColor"
-              />
-            </svg>
-          </span>
-        </div>
-      )}
+      {/* セレクトボックスは共通要素として親（MetadataEdit）に移動しました */}
 
       {/* 概要 */}
       <section>

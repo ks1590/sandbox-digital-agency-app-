@@ -227,7 +227,6 @@ export default function ErDiagramTabContent() {
 
       {previewUrl && (
         <div className="mt-6 border border-gray-300 rounded-lg p-4 bg-gray-50 flex justify-center items-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           {/* biome-ignore lint/performance/noImgElement: intentional for previewing uploaded files */}
           <img
             src={previewUrl}

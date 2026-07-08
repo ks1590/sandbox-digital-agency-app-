@@ -64,6 +64,19 @@ export default async function MetadataTypePage({
             </Link>
           </div>
 
+          <div className="mb-8">
+            <h3 className="block text-sm font-bold text-gray-900 mb-2">
+              データ種別
+            </h3>
+            <p className="text-base text-gray-900">
+              {type === "clinical"
+                ? "臨床情報"
+                : type === "document"
+                  ? "ドキュメント"
+                  : type}
+            </p>
+          </div>
+
           <div className="mb-12">
             <MetadataViewTabs
               headingId="metadata-tabs-heading"

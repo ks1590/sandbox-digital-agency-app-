@@ -4,10 +4,7 @@ import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Input } from "@/components/form/Input";
-import {
-  type ColumnDef,
-  DataTable,
-} from "@/components/ui/DataTable/DataTable";
+import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import LinkCard from "@/components/ui/LinkCard";
 import type { TableDefRow } from "../types";
 import type { MetadataFormData } from "./schema";
@@ -216,22 +213,52 @@ export function TableDefGrid({
 
 export default function TableDefContent() {
   const pathname = usePathname();
+  const { watch } = useFormContext<MetadataFormData>();
+
+  const dataTypes = watch("dataTypes") || [];
+  const dataType = watch("dataType") || "clinical";
+
+  // データ種別に応じたリンクカードの定義
+  // ※ 将来的にはAPIから取得したデータを利用することを想定
+  const LINK_CARDS_BY_DATA_TYPE: Record<
+    string,
+    { id: string; title: string }[]
+  > = {
+    clinical: [
+      { id: "disease", title: "傷病" },
+      { id: "allergy", title: "アレルギー" },
+      { id: "examination", title: "検査" },
+    ],
+    // その他のデータ種別（デモ用）
+    document: [
+      { id: "prescription", title: "処方箋" },
+      { id: "referral", title: "紹介状" },
+    ],
+  };
+
+  // セレクトボックスの選択肢（APIデータがない場合のフォールバック含む）
+  const options =
+    dataTypes.length > 0
+      ? dataTypes
+      : [
+          { id: "clinical", name: "臨床情報" },
+          { id: "document", name: "ドキュメント" },
+        ];
+
+  const currentCards = LINK_CARDS_BY_DATA_TYPE[dataType] || [];
 
   return (
     <div className="py-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-        <LinkCard
-          href={`${pathname}?mode=edit&tab=table-def&subtab=disease`}
-          title="傷病"
-        />
-        <LinkCard
-          href={`${pathname}?mode=edit&tab=table-def&subtab=allergy`}
-          title="アレルギー"
-        />
-        <LinkCard
-          href={`${pathname}?mode=edit&tab=table-def&subtab=examination`}
-          title="検査"
-        />
+      {/* セレクトボックスは共通要素として親（MetadataEdit）に移動しました */}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4 border-t border-gray-200">
+        {currentCards.map((card) => (
+          <LinkCard
+            key={card.id}
+            href={`${pathname}?mode=edit&tab=table-def&subtab=${card.id}`}
+            title={card.title}
+          />
+        ))}
       </div>
     </div>
   );

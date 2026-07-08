@@ -40,6 +40,21 @@ export default async function TableDefPage({ searchParams }: Props) {
             )}
           </div>
 
+          {!isEditMode && (
+            <div className="mb-8">
+              <h3 className="block text-sm font-bold text-gray-900 mb-2">
+                データ種別
+              </h3>
+              <p className="text-base text-gray-900">
+                {fromType === "clinical"
+                  ? "臨床情報"
+                  : fromType === "document"
+                    ? "ドキュメント"
+                    : fromType}
+              </p>
+            </div>
+          )}
+
           <div className="mb-12">
             <MetadataViewTabs
               headingId="table-def-tabs-heading"
