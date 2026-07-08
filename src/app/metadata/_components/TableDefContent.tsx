@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useFormContext, useFieldArray } from "react-hook-form";
 import Tab from '../../../components/ui/Tab';
 import { Input } from '../../../components/form/Input';
 import { DataTable, type ColumnDef } from '../../../components/ui/DataTable/DataTable';
 import LinkCard from '../../../components/ui/LinkCard';
+import type { MetadataFormData, TableDefRowFormData } from './schema';
 
-interface TableDefRow {
+export interface TableDefRow {
   id: number;
   physicalName: string;
   dataType: string;
@@ -21,20 +23,21 @@ interface TableDefRow {
 }
 
 function PopoverTextarea({
-  defaultValue,
+  value,
+  onChange,
   placeholder,
   ariaLabel,
   className,
   align = 'left',
 }: {
-  defaultValue: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   placeholder: string;
   ariaLabel: string;
   className?: string;
   align?: 'left' | 'right';
 }) {
   const [expanded, setExpanded] = useState(false);
-  const [value, setValue] = useState(defaultValue);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -53,7 +56,7 @@ function PopoverTextarea({
       <Input
         blockSize="md"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={onChange}
         placeholder={placeholder}
         aria-label={ariaLabel}
         className="w-full pr-8"
@@ -73,7 +76,7 @@ function PopoverTextarea({
         <textarea
           className={`absolute top-0 ${align === 'right' ? 'right-0' : 'left-0'} w-full min-h-[160px] resize-y bg-white rounded-[8px] border border-solid-gray-600 px-4 py-3 text-base text-gray-900 shadow-xl z-50 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300`}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={onChange}
           placeholder={placeholder}
           aria-label={ariaLabel}
           autoFocus
@@ -97,10 +100,19 @@ export const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map((_, i) 
   sampleData: '',
 }));
 
-export function TableDefGrid() {
-  const columns: ColumnDef<TableDefRow>[] = [
+export function TableDefGrid({ subtab }: { subtab: "disease" | "allergy" | "examination" }) {
+  const { register, control } = useFormContext<MetadataFormData>();
+  
+  const { fields } = useFieldArray({
+    control,
+    name: `tableDefs.${subtab}`,
+  });
+
+  // DataTableが要求するデータ型に合わせてfieldsを使用
+  // ただし各行のレンダリング時にはreact-hook-formのregisterを使用する
+  const columns: ColumnDef<typeof fields[0]>[] = [
     {
-      key: 'rowNumber',
+      key: 'id',
       label: '項番',
       render: (_row, idx) => idx + 1,
     },
@@ -111,73 +123,81 @@ export function TableDefGrid() {
     {
       key: 'logicalName',
       label: '論理名',
-      render: (row) => (
+      render: (row, idx) => (
         <Input
           blockSize="md"
-          defaultValue={row.logicalName}
           placeholder="入力テキスト"
           className="min-w-[160px]"
           aria-label={`論理名（項番${row.id}）`}
+          {...register(`tableDefs.${subtab}.${idx}.logicalName` as const)}
         />
       ),
     },
     {
       key: 'description',
       label: '項目説明',
-      render: (row) => (
-        <PopoverTextarea
-          defaultValue={row.description}
-          placeholder="項目説明を入力"
-          className="min-w-[250px]"
-          ariaLabel={`項目説明（項番${row.id}）`}
-        />
-      ),
+      render: (row, idx) => {
+        const reg = register(`tableDefs.${subtab}.${idx}.description` as const);
+        return (
+          <PopoverTextarea
+            value={row.description}
+            onChange={reg.onChange}
+            placeholder="項目説明を入力"
+            className="min-w-[250px]"
+            ariaLabel={`項目説明（項番${row.id}）`}
+          />
+        );
+      },
     },
     {
       key: 'foreignKey',
       label: '外部キー',
-      render: (row) => (
+      render: (row, idx) => (
         <Input
           blockSize="md"
-          defaultValue={row.foreignKey}
           placeholder="入力テキスト"
           className="min-w-[160px]"
           aria-label={`外部キー（項番${row.id}）`}
+          {...register(`tableDefs.${subtab}.${idx}.foreignKey` as const)}
         />
       ),
     },
     {
       key: 'masterType',
       label: 'マスタ種別',
-      render: (row) => (
+      render: (row, idx) => (
         <Input
           blockSize="md"
-          defaultValue={row.masterType}
           placeholder="入力テキスト"
           className="min-w-[160px]"
           aria-label={`マスタ種別（項番${row.id}）`}
+          {...register(`tableDefs.${subtab}.${idx}.masterType` as const)}
         />
       ),
     },
     {
       key: 'sampleData',
       label: 'サンプルデータ',
-      render: (row) => (
-        <PopoverTextarea
-          defaultValue={row.sampleData}
-          placeholder="サンプルデータを入力"
-          className="min-w-[250px]"
-          ariaLabel={`サンプルデータ（項番${row.id}）`}
-          align="right"
-        />
-      ),
+      render: (row, idx) => {
+        const reg = register(`tableDefs.${subtab}.${idx}.sampleData` as const);
+        return (
+          <PopoverTextarea
+            value={row.sampleData}
+            onChange={reg.onChange}
+            placeholder="サンプルデータを入力"
+            className="min-w-[250px]"
+            ariaLabel={`サンプルデータ（項番${row.id}）`}
+            align="right"
+          />
+        );
+      },
     },
   ];
 
   return (
     <div className="mt-4">
       <DataTable
-        data={DUMMY_DATA}
+        data={fields}
         columns={columns}
         rowKey={(row) => row.id}
       />

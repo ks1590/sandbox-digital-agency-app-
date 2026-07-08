@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { DataTable, type ColumnDef } from "../../../components/ui/DataTable/DataTable";
 import TextPopover from "./TextPopover";
-import type { TableDefRow } from "./TableDefContent";
+import { DUMMY_DATA, type TableDefRow } from "./TableDefContent";
 
 const tableColumns: ColumnDef<any>[] = [
   { key: "id", label: "項番" },
@@ -25,7 +26,23 @@ const tableColumns: ColumnDef<any>[] = [
   },
 ];
 
-export function SortableTableWithColumns({ data }: { data: any[] }) {
+export function SortableTableWithColumns({ subtab }: { subtab: "disease" | "allergy" | "examination" }) {
+  const [data, setData] = useState<any[]>(DUMMY_DATA);
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem("metadata_clinical");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.tableDefs && parsed.tableDefs[subtab]) {
+          setData(parsed.tableDefs[subtab]);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [subtab]);
+
   return <DataTable columns={tableColumns} data={data} rowKey={(row) => row.id || row.no} />;
 }
 

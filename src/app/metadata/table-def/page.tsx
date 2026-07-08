@@ -54,9 +54,9 @@ export default async function TableDefPage({ searchParams }: Props) {
                   content: (
                     <div className="py-6">
                       {isEditMode ? (
-                        <TableDefGrid />
+                        <TableDefGrid subtab="disease" />
                       ) : (
-                        <SortableTableWithColumns data={DUMMY_DATA as any} />
+                        <SortableTableWithColumns subtab="disease" />
                       )}
                     </div>
                   ),
@@ -67,9 +67,9 @@ export default async function TableDefPage({ searchParams }: Props) {
                   content: (
                     <div className="py-6">
                       {isEditMode ? (
-                        <TableDefGrid />
+                        <TableDefGrid subtab="allergy" />
                       ) : (
-                        <SortableTableWithColumns data={DUMMY_DATA as any} />
+                        <SortableTableWithColumns subtab="allergy" />
                       )}
                     </div>
                   ),
@@ -80,9 +80,9 @@ export default async function TableDefPage({ searchParams }: Props) {
                   content: (
                     <div className="py-6">
                       {isEditMode ? (
-                        <TableDefGrid />
+                        <TableDefGrid subtab="examination" />
                       ) : (
-                        <SortableTableWithColumns data={DUMMY_DATA as any} />
+                        <SortableTableWithColumns subtab="examination" />
                       )}
                     </div>
                   ),

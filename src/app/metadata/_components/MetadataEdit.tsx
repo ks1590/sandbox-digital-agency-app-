@@ -3,13 +3,45 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Header from "../../../components/layout/Header";
 import Tab from "../../../components/ui/Tab";
 import { NotificationBanner } from "../../../components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "../../../components/layout/NotificationBanner/parts/Body";
-import TableDefContent, { TableDefGrid } from "./TableDefContent";
+import TableDefContent, { TableDefGrid, DUMMY_DATA } from "./TableDefContent";
 import OverviewTabContent from "./OverviewTabContent";
 import ErDiagramTabContent from "./ErDiagramTabContent";
+import { metadataSchema, type MetadataFormData } from "./schema";
+
+const DEFAULT_METADATA: MetadataFormData = {
+  dataType: "clinical",
+  overviewText: "概要の説明 概要の説明 概要の説明...",
+  dataTypes: [
+    { id: "clinical", name: "臨床情報" },
+    { id: "document", name: "文書情報" },
+    { id: "attachment", name: "添付情報" },
+    { id: "health-check", name: "健診文書" },
+    { id: "prescription", name: "処方情報" },
+  ],
+  startYear: "2020年",
+  latestYear: "2026年",
+  updateFrequencies: [
+    { target: "項目名A", frequency: "年次" },
+    { target: "項目名B", frequency: "月次" },
+  ],
+  tables: [
+    { id: "table1", name: "〇〇テーブル", overview: "テーブル概要の説明...", unit: "レセプト" },
+    { id: "table2", name: "△△テーブル", overview: "テーブル概要の説明...", unit: "レセプト" },
+  ],
+  notesText: "留意事項を入力...",
+  keyInfoText: "",
+  tableDefs: {
+    disease: DUMMY_DATA,
+    allergy: DUMMY_DATA,
+    examination: DUMMY_DATA,
+  },
+};
 
 export default function MetadataEdit({ userId }: { userId?: string }) {
   const searchParams = useSearchParams();
@@ -18,6 +50,23 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
   const isTopPage = pathname === "/metadata";
   const tabParam = searchParams.get("tab") || "overview";
   const subtabParam = searchParams.get("subtab");
+
+  const methods = useForm<MetadataFormData>({
+    resolver: zodResolver(metadataSchema),
+    defaultValues: DEFAULT_METADATA,
+  });
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem("metadata_clinical");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        methods.reset(parsed);
+      } catch (e) {
+        console.error("Failed to parse sessionStorage data", e);
+      }
+    }
+  }, [methods]);
 
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
@@ -29,8 +78,10 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
     message: string;
   } | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (data: MetadataFormData) => {
+    // セッションストレージに保存
+    sessionStorage.setItem("metadata_clinical", JSON.stringify(data));
+    
     // pathnameから mode パラメータを除外して参照画面に戻る
     const viewParams = new URLSearchParams();
     viewParams.set("tab", tabParam);
@@ -89,126 +140,128 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
           </div>
 
           {/*
-              フォーム全体でTabを囲むことで、
-              どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
-            */}
-          <form onSubmit={handleSubmit} className="text-gray-900">
-            {isTopPage ? (
-              <div className="mb-12">
-                <OverviewTabContent isTopPage />
-              </div>
-            ) : (
-              <div className="mb-12" hidden={!!subtabParam}>
-                <Tab
-                  headingId="register-tabs-heading"
-                  defaultIndex={defaultIndex}
-                  onChange={handleTabChange}
-                  items={[
-                    {
-                      label: "概要",
-                      id: "tab-overview",
-                      content: <OverviewTabContent isTopPage={false} />,
-                    },
-                    {
-                      label: "ER図",
-                      id: "tab-er",
-                      content: <ErDiagramTabContent />,
-                    },
-                    {
-                      label: "テーブル定義",
-                      id: "tab-table-def",
-                      content: <TableDefContent />,
-                    },
-                  ]}
-                />
-              </div>
-            )}
+            フォーム全体でTabを囲むことで、
+            どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
+          */}
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(handleSubmit)} className="text-gray-900">
+              {isTopPage ? (
+                <div className="mb-12">
+                  <OverviewTabContent isTopPage />
+                </div>
+              ) : (
+                <div className="mb-12" hidden={!!subtabParam}>
+                  <Tab
+                    headingId="register-tabs-heading"
+                    defaultIndex={defaultIndex}
+                    onChange={handleTabChange}
+                    items={[
+                      {
+                        label: "概要",
+                        id: "tab-overview",
+                        content: <OverviewTabContent isTopPage={false} />,
+                      },
+                      {
+                        label: "ER図",
+                        id: "tab-er",
+                        content: <ErDiagramTabContent />,
+                      },
+                      {
+                        label: "テーブル定義",
+                        id: "tab-table-def",
+                        content: <TableDefContent />,
+                      },
+                    ]}
+                  />
+                </div>
+              )}
 
-            {!!subtabParam && (
-              <div className="mb-12">
-                <Tab
-                  headingId="subtab-tabs-heading"
-                  defaultIndex={
-                    subtabParam === "allergy"
-                      ? 1
-                      : subtabParam === "examination"
-                        ? 2
-                        : 0
+              {!!subtabParam && (
+                <div className="mb-12">
+                  <Tab
+                    headingId="subtab-tabs-heading"
+                    defaultIndex={
+                      subtabParam === "allergy"
+                        ? 1
+                        : subtabParam === "examination"
+                          ? 2
+                          : 0
+                    }
+                    onChange={(index) => {
+                      const newSubtab =
+                        index === 0
+                          ? "disease"
+                          : index === 1
+                            ? "allergy"
+                            : "examination";
+                      router.push(
+                        `${pathname}?mode=edit&tab=table-def&subtab=${newSubtab}`
+                      );
+                    }}
+                    items={[
+                      {
+                        label: "傷病",
+                        id: "subtab-disease",
+                        content: (
+                          <div className="py-6">
+                            <TableDefGrid subtab="disease" />
+                          </div>
+                        ),
+                      },
+                      {
+                        label: "アレルギー",
+                        id: "subtab-allergy",
+                        content: (
+                          <div className="py-6">
+                            <TableDefGrid subtab="allergy" />
+                          </div>
+                        ),
+                      },
+                      {
+                        label: "検査",
+                        id: "subtab-examination",
+                        content: (
+                          <div className="py-6">
+                            <TableDefGrid subtab="examination" />
+                          </div>
+                        ),
+                      },
+                    ]}
+                  />
+                </div>
+              )}
+
+              <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
+                <Link
+                  href={
+                    isTopPage
+                      ? "/metadata"
+                      : subtabParam
+                        ? `/metadata/table-def?tab=${subtabParam}&from=${pathname.split("/").pop()}`
+                        : `${pathname}?tab=${tabParam}`
                   }
-                  onChange={(index) => {
-                    const newSubtab =
-                      index === 0
-                        ? "disease"
-                        : index === 1
-                          ? "allergy"
-                          : "examination";
-                    router.push(
-                      `${pathname}?mode=edit&tab=table-def&subtab=${newSubtab}`
-                    );
-                  }}
-                  items={[
-                    {
-                      label: "傷病",
-                      id: "subtab-disease",
-                      content: (
-                        <div className="py-6">
-                          <TableDefGrid />
-                        </div>
-                      ),
-                    },
-                    {
-                      label: "アレルギー",
-                      id: "subtab-allergy",
-                      content: (
-                        <div className="py-6">
-                          <TableDefGrid />
-                        </div>
-                      ),
-                    },
-                    {
-                      label: "検査",
-                      id: "subtab-examination",
-                      content: (
-                        <div className="py-6">
-                          <TableDefGrid />
-                        </div>
-                      ),
-                    },
-                  ]}
-                />
-              </div>
-            )}
-
-            <div className="mt-12 flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-300">
-              <Link
-                href={
-                  isTopPage
-                    ? "/metadata"
-                    : subtabParam
-                      ? `/metadata/table-def?tab=${subtabParam}&from=${pathname.split("/").pop()}`
-                      : `${pathname}?tab=${tabParam}`
-                }
-                className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300 w-full sm:w-auto"
-              >
-                キャンセル
-              </Link>
-              <div className="flex gap-2 w-full sm:w-auto">
-                <button
-                  type="button"
-                  onClick={handleErrorSubmit}
-                  className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-white border border-gray-400 px-4 py-3 text-base font-bold text-error-1 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
+                  className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300 w-full sm:w-auto"
                 >
-                  エラーテスト
-                </button>
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-[#0017C1] px-4 py-3 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
-                >
-                  更新
-                </button>
+                  キャンセル
+                </Link>
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={handleErrorSubmit}
+                    className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-white border border-gray-400 px-4 py-3 text-base font-bold text-error-1 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
+                  >
+                    エラーテスト
+                  </button>
+                  <button
+                    type="submit"
+                    className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] bg-[#0017C1] px-4 py-3 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
+                  >
+                    更新
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </FormProvider>
         </div>
       </main>
     </div>

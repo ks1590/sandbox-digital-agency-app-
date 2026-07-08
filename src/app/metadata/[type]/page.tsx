@@ -4,6 +4,7 @@ import Header from "../../../components/layout/Header";
 import LinkCard from "../../../components/ui/LinkCard";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
 import MetadataEdit from "../_components/MetadataEdit";
+import OverviewViewClient from "../_components/OverviewViewClient";
 import { NotificationBanner } from "../../../components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "../../../components/layout/NotificationBanner/parts/Body";
 
@@ -81,7 +82,7 @@ export default async function MetadataTypePage({ params, searchParams }: Props) 
                 {
                   label: "概要",
                   id: "tab-overview",
-                  content: <OverviewContent />,
+                  content: <OverviewViewClient />,
                 },
                 {
                   label: "ER図",
@@ -130,128 +131,4 @@ export default async function MetadataTypePage({ params, searchParams }: Props) 
   );
 }
 
-function OverviewContent() {
-  return (
-    <div className="space-y-10 py-6 text-gray-900">
-      <section>
-        <h3 className="text-xl font-bold mb-4">概要</h3>
-        <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
-          概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-          概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-          概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-          概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-          概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-          概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-        </p>
-      </section>
 
-      <section>
-        <h3 className="text-xl font-bold mb-4">収集期間</h3>
-        <div className="space-y-4 text-sm">
-          <div>
-            <h4 className="font-bold mb-1">収集開始年度</h4>
-            <p className="text-gray-700">2020年</p>
-          </div>
-          <div>
-            <h4 className="font-bold mb-1">最新の提供可能年度</h4>
-            <p className="text-gray-700">2026年</p>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h3 className="text-xl font-bold mb-4">更新頻度</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px] border-collapse text-sm">
-            <thead>
-              <tr className="bg-gray-100 border-b-2 border-gray-300">
-                <th className="py-3 px-4 text-left font-bold text-gray-900 border-r border-gray-300 w-1/2">
-                  対象項目
-                </th>
-                <th className="py-3 px-4 text-left font-bold text-gray-900 w-1/2">
-                  頻度
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="py-3 px-4 text-gray-700 border-r border-gray-200">
-                  項目名
-                </td>
-                <td className="py-3 px-4 text-gray-700">年次</td>
-              </tr>
-              <tr className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="py-3 px-4 text-gray-700 border-r border-gray-200">
-                  項目名
-                </td>
-                <td className="py-3 px-4 text-gray-700">年次</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section>
-        <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
-        <div className="space-y-8">
-          <div>
-            <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
-              〇〇テーブル
-            </h4>
-            <div className="space-y-4 text-sm ml-4">
-              <div>
-                <h5 className="font-bold mb-1">概要</h5>
-                <p className="text-gray-700 leading-relaxed">
-                  概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-                  概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-                  概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-                  概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-                  概要の説明 概要の説明 概要の説明 概要の説明
-                </p>
-              </div>
-              <div>
-                <h5 className="font-bold mb-1">格納単位</h5>
-                <p className="text-gray-700">レセプト</p>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
-              〇〇テーブル
-            </h4>
-            <div className="space-y-4 text-sm ml-4">
-              <div>
-                <h5 className="font-bold mb-1">概要</h5>
-                <p className="text-gray-700 leading-relaxed">
-                  概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-                  概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-                  概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-                  概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-                  概要の説明 概要の説明 概要の説明 概要の説明
-                </p>
-              </div>
-              <div>
-                <h5 className="font-bold mb-1">格納単位</h5>
-                <p className="text-gray-700">レセプト</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h3 className="text-xl font-bold mb-4">留意事項</h3>
-        <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
-          留意事項 留意事項 留意事項 留意事項 留意事項 留意事項 留意事項
-          留意事項 留意事項 留意事項 留意事項 留意事項 留意事項 留意事項
-          留意事項 留意事項 留意事項 留意事項 留意事項 留意事項 留意事項
-          留意事項 留意事項 留意事項 留意事項 留意事項 留意事項 留意事項
-          留意事項 留意事項 留意事項 留意事項 留意事項 留意事項 留意事項
-          留意事項 留意事項 留意事項 留意事項 留意事項 留意事項 留意事項
-          留意事項 留意事項 留意事項
-        </p>
-      </section>
-    </div>
-  );
-}

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 import { textareaClass, labelClass } from "./styles";
+import type { MetadataFormData } from "./schema";
 
 /**
  * キー情報セクション（Mermaid記法エディタ + SVGプレビュー）
@@ -10,7 +12,8 @@ import { textareaClass, labelClass } from "./styles";
  * MetadataEditから分離するためのコンポーネント。
  */
 export default function KeyInfoSection() {
-  const [keyInfoText, setKeyInfoText] = useState<string>("");
+  const { register, watch } = useFormContext<MetadataFormData>();
+  const keyInfoText = watch("keyInfoText") || "";
   const [mermaidSvg, setMermaidSvg] = useState<string>("");
   const [mermaidError, setMermaidError] = useState<string | null>(null);
 
@@ -67,8 +70,7 @@ export default function KeyInfoSection() {
           <textarea
             id="keyInfoText"
             className={textareaClass}
-            value={keyInfoText}
-            onChange={(e) => setKeyInfoText(e.target.value)}
+            {...register("keyInfoText")}
             placeholder={"graph TD;\n  A[利用者] --> B(ビジネスメタデータ登録);\n  B --> C{検証};\n  C -->|成功| D[データ保存];\n  C -->|失敗| E[エラー表示];"}
           />
         </div>

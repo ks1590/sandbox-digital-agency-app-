@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useFormContext, useFieldArray } from "react-hook-form";
 import { inputClass, textareaClass, labelClass } from "./styles";
 import KeyInfoSection from "./KeyInfoSection";
 import DataTypeListEditor from "./DataTypeListEditor";
+import type { MetadataFormData } from "./schema";
 
 interface OverviewTabContentProps {
   /** /metadata 直下の編集画面かどうか */
@@ -12,21 +13,23 @@ interface OverviewTabContentProps {
 
 /**
  * 概要タブのコンテンツ
- *
- * isTopPage の値に応じて表示する項目を切り替える：
- * - トップページ: 概要 + データ種別エディタ + キー情報
- * - 配下ページ:   データ種別セレクト + 概要 + 収集期間 + 更新頻度 + テーブル一覧 + 留意事項 + キー情報
  */
 export default function OverviewTabContent({
   isTopPage,
 }: OverviewTabContentProps) {
-  const [dataTypes, setDataTypes] = useState([
-    { id: "clinical", name: "臨床情報" },
-    { id: "document", name: "文書情報" },
-    { id: "attachment", name: "添付情報" },
-    { id: "health-check", name: "健診文書" },
-    { id: "prescription", name: "処方情報" },
-  ]);
+  const { register, control, watch, setValue } = useFormContext<MetadataFormData>();
+
+  const dataTypes = watch("dataTypes") || [];
+
+  const { fields: freqFields } = useFieldArray({
+    control,
+    name: "updateFrequencies",
+  });
+
+  const { fields: tableFields } = useFieldArray({
+    control,
+    name: "tables",
+  });
 
   return (
     <div className="space-y-10 py-6">
@@ -40,7 +43,7 @@ export default function OverviewTabContent({
             <select
               id="dataType"
               className="block w-full h-14 appearance-none border border-gray-400 rounded-[8px] bg-white pl-4 pr-10 text-base text-gray-900 hover:border-black focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300"
-              defaultValue="clinical"
+              {...register("dataType")}
             >
               <option value="clinical">臨床情報</option>
               <option value="claim">レセプト情報</option>
@@ -72,7 +75,7 @@ export default function OverviewTabContent({
         <textarea
           id="overviewText"
           className={textareaClass}
-          defaultValue="概要の説明 概要の説明 概要の説明..."
+          {...register("overviewText")}
         />
       </section>
 
@@ -80,7 +83,7 @@ export default function OverviewTabContent({
       {isTopPage && (
         <DataTypeListEditor
           dataTypes={dataTypes}
-          onChange={setDataTypes}
+          onChange={(val) => setValue("dataTypes", val, { shouldDirty: true })}
         />
       )}
 
@@ -98,7 +101,7 @@ export default function OverviewTabContent({
                   type="text"
                   id="startYear"
                   className={inputClass}
-                  defaultValue="2020年"
+                  {...register("startYear")}
                 />
               </div>
               <div>
@@ -109,7 +112,7 @@ export default function OverviewTabContent({
                   type="text"
                   id="latestYear"
                   className={inputClass}
-                  defaultValue="2026年"
+                  {...register("latestYear")}
                 />
               </div>
             </div>
@@ -130,42 +133,26 @@ export default function OverviewTabContent({
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-gray-200">
-                    <td className="py-3 px-4 border-r border-gray-200">
-                      <input
-                        type="text"
-                        aria-label="対象項目1"
-                        className={inputClass}
-                        defaultValue="項目名A"
-                      />
-                    </td>
-                    <td className="py-3 px-4">
-                      <input
-                        type="text"
-                        aria-label="頻度1"
-                        className={inputClass}
-                        defaultValue="年次"
-                      />
-                    </td>
-                  </tr>
-                  <tr className="border-b border-gray-200">
-                    <td className="py-3 px-4 border-r border-gray-200">
-                      <input
-                        type="text"
-                        aria-label="対象項目2"
-                        className={inputClass}
-                        defaultValue="項目名B"
-                      />
-                    </td>
-                    <td className="py-3 px-4">
-                      <input
-                        type="text"
-                        aria-label="頻度2"
-                        className={inputClass}
-                        defaultValue="月次"
-                      />
-                    </td>
-                  </tr>
+                  {freqFields.map((field, index) => (
+                    <tr key={field.id} className="border-b border-gray-200">
+                      <td className="py-3 px-4 border-r border-gray-200">
+                        <input
+                          type="text"
+                          aria-label={`対象項目${index + 1}`}
+                          className={inputClass}
+                          {...register(`updateFrequencies.${index}.target`)}
+                        />
+                      </td>
+                      <td className="py-3 px-4">
+                        <input
+                          type="text"
+                          aria-label={`頻度${index + 1}`}
+                          className={inputClass}
+                          {...register(`updateFrequencies.${index}.frequency`)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -174,63 +161,36 @@ export default function OverviewTabContent({
           <section>
             <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
             <div className="space-y-8">
-              <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
-                <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">
-                  〇〇テーブル
-                </h4>
-                <div className="space-y-6">
-                  <div>
-                    <label htmlFor="table1Overview" className={labelClass}>
-                      概要
-                    </label>
-                    <textarea
-                      id="table1Overview"
-                      className={textareaClass}
-                      defaultValue="テーブル概要の説明..."
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="table1Unit" className={labelClass}>
-                      格納単位
-                    </label>
-                    <input
-                      type="text"
-                      id="table1Unit"
-                      className={inputClass}
-                      defaultValue="レセプト"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
-                <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">
-                  △△テーブル
-                </h4>
-                <div className="space-y-6">
-                  <div>
-                    <label htmlFor="table2Overview" className={labelClass}>
-                      概要
-                    </label>
-                    <textarea
-                      id="table2Overview"
-                      className={textareaClass}
-                      defaultValue="テーブル概要の説明..."
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="table2Unit" className={labelClass}>
-                      格納単位
-                    </label>
-                    <input
-                      type="text"
-                      id="table2Unit"
-                      className={inputClass}
-                      defaultValue="レセプト"
-                    />
+              {tableFields.map((field, index) => (
+                <div key={field.id} className="border border-gray-300 rounded-lg p-6 bg-gray-50">
+                  <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">
+                    {field.name}
+                  </h4>
+                  <div className="space-y-6">
+                    <div>
+                      <label htmlFor={`table-${index}-overview`} className={labelClass}>
+                        概要
+                      </label>
+                      <textarea
+                        id={`table-${index}-overview`}
+                        className={textareaClass}
+                        {...register(`tables.${index}.overview`)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`table-${index}-unit`} className={labelClass}>
+                        格納単位
+                      </label>
+                      <input
+                        type="text"
+                        id={`table-${index}-unit`}
+                        className={inputClass}
+                        {...register(`tables.${index}.unit`)}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </section>
 
@@ -242,7 +202,7 @@ export default function OverviewTabContent({
             <textarea
               id="notesText"
               className={textareaClass}
-              defaultValue="留意事項を入力..."
+              {...register("notesText")}
             />
           </section>
         </>
