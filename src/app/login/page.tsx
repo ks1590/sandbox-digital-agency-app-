@@ -1,32 +1,10 @@
+import Header from "@/components/layout/Header";
 import { login } from "@/actions/auth";
 
 export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#EEF1F8] flex flex-col">
-      <header className="border-b-[3px] border-[#0017C1] bg-white">
-        <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center gap-[14px]">
-          <svg
-            width="36"
-            height="36"
-            viewBox="0 0 36 36"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle cx="18" cy="18" r="18" fill="#0017C1" />
-            <path
-              d="M18 7C11.925 7 7 11.925 7 18s4.925 11 11 11 11-4.925 11-11S24.075 7 18 7zm0 20c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z"
-              fill="white"
-            />
-            <circle cx="18" cy="18" r="3.5" fill="white" />
-          </svg>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900 leading-tight">
-              データマネジメントポータル
-            </h1>
-            <p className="text-xs text-gray-500">Data Management Portal</p>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="bg-white rounded-[12px] shadow-xs p-10 w-full max-w-md border border-gray-200">
