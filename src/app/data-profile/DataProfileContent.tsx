@@ -5,36 +5,10 @@ import {
   DataTable,
 } from "../../components/ui/DataTable/DataTable";
 import Tab from "../../components/ui/Tab";
+import type { DataProfileCategory, DataProfileRow } from "./types";
+import { useDataProfile } from "./useDataProfile";
 
-interface DataProfileRow {
-  id: number;
-  columnName: string;
-  maxLength: number;
-  avgLength: number;
-  distinctCount: number;
-  maxValue: number;
-  minValue: number;
-  validRatio: string;
-  invalidRatio: string;
-  nullRatio: string;
-}
-
-const DUMMY_DATA: DataProfileRow[] = Array.from({ length: 120 }).map(
-  (_, i) => ({
-    id: i + 1,
-    columnName: "sample",
-    maxLength: 10,
-    avgLength: 10,
-    distinctCount: 100,
-    maxValue: 99999,
-    minValue: 1,
-    validRatio: "99.8%",
-    invalidRatio: "0.1%",
-    nullRatio: "0.1%",
-  }),
-);
-
-function DataProfileGrid() {
+function DataProfileGrid({ rows }: { rows: DataProfileRow[] }) {
   const columns: ColumnDef<DataProfileRow>[] = [
     {
       key: "rowNumber",
@@ -54,45 +28,55 @@ function DataProfileGrid() {
 
   return (
     <div className="py-6">
-      <div className="flex gap-8 mb-4 text-base font-bold text-gray-900">
-        <p>合計行数：500件</p>
-        <p>合計ファイル数：100件</p>
-      </div>
-
-      <DataTable data={DUMMY_DATA} columns={columns} rowKey={(row) => row.id} />
+      <DataTable data={rows} columns={columns} rowKey={(row) => row.id} />
     </div>
   );
 }
 
 export default function DataProfileContent() {
+  const { data, isLoading, error } = useDataProfile();
+
+  // エラー表示
+  if (error) {
+    return (
+      <div className="mb-4 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p className="font-bold">データ取得エラー</p>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  // ローディング表示
+  if (isLoading || !data) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-sm text-gray-500">データを読み込み中...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="mb-8">
         <h3 className="text-sm font-bold text-gray-900 mb-2">集計対象期間</h3>
         <p className="text-base text-gray-900 font-bold">
-          2026年4月 <span className="mx-2 font-normal">から</span> 2026年6月
+          {data.periodFrom}
+          <span className="mx-2 font-normal">から</span> {data.periodTo}
         </p>
+      </div>
+
+      <div className="flex gap-8 mb-4 text-base font-bold text-gray-900">
+        <p>合計行数：{data.totalRows.toLocaleString()}件</p>
+        <p>合計ファイル数：{data.totalFiles.toLocaleString()}件</p>
       </div>
 
       <Tab
         headingId="data-profile-tabs-heading"
-        items={[
-          {
-            label: "傷病名",
-            id: "tab-disease",
-            content: <DataProfileGrid />,
-          },
-          {
-            label: "薬剤・その他アレルギー等",
-            id: "tab-allergy",
-            content: <DataProfileGrid />,
-          },
-          {
-            label: "感染症・検査",
-            id: "tab-examination",
-            content: <DataProfileGrid />,
-          },
-        ]}
+        items={data.categories.map((category: DataProfileCategory) => ({
+          label: category.label,
+          id: `tab-${category.categoryId}`,
+          content: <DataProfileGrid rows={category.rows} />,
+        }))}
       />
     </>
   );
