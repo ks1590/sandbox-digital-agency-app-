@@ -1,48 +1,53 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useMetadata } from "../useMetadata";
 import type { MetadataFormData } from "./schema";
 
 export default function OverviewViewClient() {
-  const [data, setData] = useState<MetadataFormData | null>(null);
+  const { data: apiData, isLoading, error } = useMetadata();
+  const [sessionData, setSessionData] = useState<MetadataFormData | null>(null);
 
+  // sessionStorageに編集済みデータがあれば優先する
   useEffect(() => {
     const saved = sessionStorage.getItem("metadata_clinical");
     if (saved) {
       try {
-        setData(JSON.parse(saved));
+        setSessionData(JSON.parse(saved));
       } catch (e) {
         console.error(e);
       }
     }
   }, []);
 
+  // エラー表示
+  if (error) {
+    return (
+      <div className="mb-4 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p className="font-bold">データ取得エラー</p>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  // ローディング表示
+  if (isLoading || !apiData) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-sm text-gray-500">データを読み込み中...</p>
+      </div>
+    );
+  }
+
+  // sessionStorageに編集済みデータがあればそちらを優先、なければAPIデータを使用
   const overviewText =
-    data?.overviewText ||
-    `概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明
-概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明`;
-  const startYear = data?.startYear || "2020年";
-  const latestYear = data?.latestYear || "2026年";
-  const updateFrequencies = data?.updateFrequencies || [
-    { target: "項目名", frequency: "年次" },
-    { target: "項目名", frequency: "年次" },
-  ];
-  const tables = data?.tables || [
-    {
-      id: "table1",
-      name: "〇〇テーブル",
-      overview: "概要の説明...",
-      unit: "レセプト",
-    },
-    {
-      id: "table2",
-      name: "△△テーブル",
-      overview: "概要の説明...",
-      unit: "レセプト",
-    },
-  ];
-  const notesText = data?.notesText || `留意事項 留意事項 留意事項...`;
+    sessionData?.overviewText || apiData.overview.overviewText;
+  const startYear = sessionData?.startYear || apiData.overview.startYear;
+  const latestYear = sessionData?.latestYear || apiData.overview.latestYear;
+  const updateFrequencies =
+    sessionData?.updateFrequencies || apiData.overview.updateFrequencies;
+  const tables = sessionData?.tables || apiData.overview.tables;
+  const notesText = sessionData?.notesText || apiData.overview.notesText;
 
   return (
     <div className="space-y-10 py-6 text-gray-900">

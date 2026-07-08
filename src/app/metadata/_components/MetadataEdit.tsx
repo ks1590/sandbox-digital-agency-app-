@@ -9,49 +9,11 @@ import Header from "../../../components/layout/Header";
 import { NotificationBanner } from "../../../components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "../../../components/layout/NotificationBanner/parts/Body";
 import Tab from "../../../components/ui/Tab";
+import { useMetadata } from "../useMetadata";
 import ErDiagramTabContent from "./ErDiagramTabContent";
 import OverviewTabContent from "./OverviewTabContent";
 import { type MetadataFormData, metadataSchema } from "./schema";
-import TableDefContent, { DUMMY_DATA, TableDefGrid } from "./TableDefContent";
-
-const DEFAULT_METADATA: MetadataFormData = {
-  dataType: "clinical",
-  overviewText: "概要の説明 概要の説明 概要の説明...",
-  dataTypes: [
-    { id: "clinical", name: "臨床情報" },
-    // { id: "document", name: "文書情報" },
-    // { id: "attachment", name: "添付情報" },
-    // { id: "health-check", name: "健診文書" },
-    // { id: "prescription", name: "処方情報" },
-  ],
-  startYear: "2020年",
-  latestYear: "2026年",
-  updateFrequencies: [
-    { target: "項目名A", frequency: "年次" },
-    { target: "項目名B", frequency: "月次" },
-  ],
-  tables: [
-    {
-      id: "table1",
-      name: "〇〇テーブル",
-      overview: "テーブル概要の説明...",
-      unit: "レセプト",
-    },
-    {
-      id: "table2",
-      name: "△△テーブル",
-      overview: "テーブル概要の説明...",
-      unit: "レセプト",
-    },
-  ],
-  notesText: "留意事項を入力...",
-  keyInfoText: "",
-  tableDefs: {
-    disease: DUMMY_DATA,
-    allergy: DUMMY_DATA,
-    examination: DUMMY_DATA,
-  },
-};
+import TableDefContent, { TableDefGrid } from "./TableDefContent";
 
 export default function MetadataEdit({ userId }: { userId?: string }) {
   const searchParams = useSearchParams();
@@ -61,22 +23,58 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
   const tabParam = searchParams.get("tab") || "overview";
   const subtabParam = searchParams.get("subtab");
 
+  const { data: apiData, isLoading } = useMetadata();
+
   const methods = useForm<MetadataFormData>({
     resolver: zodResolver(metadataSchema),
-    defaultValues: DEFAULT_METADATA,
+    defaultValues: {
+      dataType: "clinical",
+      overviewText: "",
+      dataTypes: [],
+      startYear: "",
+      latestYear: "",
+      updateFrequencies: [],
+      tables: [],
+      notesText: "",
+      keyInfoText: "",
+      tableDefs: {
+        disease: [],
+        allergy: [],
+        examination: [],
+      },
+    },
   });
 
+  // APIデータが取得できたらフォームの初期値としてリセット
   useEffect(() => {
+    if (!apiData) return;
+
+    // sessionStorageに保存済みデータがあればそちらを優先
     const saved = sessionStorage.getItem("metadata_clinical");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         methods.reset(parsed);
+        return;
       } catch (e) {
         console.error("Failed to parse sessionStorage data", e);
       }
     }
-  }, [methods]);
+
+    // sessionStorageにデータがなければAPIデータを使用
+    methods.reset({
+      dataType: "clinical",
+      overviewText: apiData.overview.overviewText,
+      dataTypes: apiData.overview.dataTypes,
+      startYear: apiData.overview.startYear,
+      latestYear: apiData.overview.latestYear,
+      updateFrequencies: apiData.overview.updateFrequencies,
+      tables: apiData.overview.tables,
+      notesText: apiData.overview.notesText,
+      keyInfoText: apiData.overview.keyInfoText,
+      tableDefs: apiData.tableDefs,
+    });
+  }, [apiData, methods]);
 
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
@@ -119,6 +117,22 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
     // Replace URL to preserve tab state without pushing to history stack
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
+
+  // ローディング中はヘッダー + ローディング表示
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <Header userId={userId} />
+        <main className="page-bg flex-1">
+          <div className="page-container pt-8">
+            <div className="flex items-center justify-center py-12">
+              <p className="text-sm text-gray-500">データを読み込み中...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">

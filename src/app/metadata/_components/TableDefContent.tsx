@@ -9,21 +9,8 @@ import {
   DataTable,
 } from "../../../components/ui/DataTable/DataTable";
 import LinkCard from "../../../components/ui/LinkCard";
-
+import type { TableDefRow } from "../types";
 import type { MetadataFormData } from "./schema";
-
-export interface TableDefRow {
-  id: number;
-  physicalName: string;
-  dataType: string;
-  length: number | string;
-  required: string;
-  logicalName: string;
-  description: string;
-  foreignKey: string;
-  masterType: string;
-  sampleData: string;
-}
 
 function PopoverTextarea({
   value,

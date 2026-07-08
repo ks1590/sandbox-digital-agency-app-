@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import Header from "../../../components/layout/Header";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
-import { DUMMY_DATA, TableDefGrid } from "../_components/TableDefContent";
+import { TableDefGrid } from "../_components/TableDefContent";
 import { SortableTableWithColumns } from "../_components/TableDefViewClient";
 
 type Props = {
