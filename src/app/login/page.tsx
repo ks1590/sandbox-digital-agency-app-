@@ -1,5 +1,5 @@
-import Header from "@/components/layout/Header";
 import { login } from "@/actions/auth";
+import Header from "@/components/layout/Header";
 
 export default function LoginPage() {
   return (
@@ -16,9 +16,6 @@ export default function LoginPage() {
             <div className="flex flex-col gap-2">
               <label htmlFor="loginId" className="font-bold text-gray-900">
                 ログインID
-                <span className="ml-2 text-xs font-normal text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded-sm">
-                  ※必須
-                </span>
               </label>
               <input
                 id="loginId"
@@ -33,9 +30,6 @@ export default function LoginPage() {
             <div className="flex flex-col gap-2">
               <label htmlFor="password" className="font-bold text-gray-900">
                 パスワード
-                <span className="ml-2 text-xs font-normal text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded-sm">
-                  ※必須
-                </span>
               </label>
               <input
                 id="password"
