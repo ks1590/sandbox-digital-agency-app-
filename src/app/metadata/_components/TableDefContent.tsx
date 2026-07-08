@@ -9,8 +9,8 @@ import {
   DataTable,
 } from "../../../components/ui/DataTable/DataTable";
 import LinkCard from "../../../components/ui/LinkCard";
-import Tab from "../../../components/ui/Tab";
-import type { MetadataFormData, TableDefRowFormData } from "./schema";
+
+import type { MetadataFormData } from "./schema";
 
 export interface TableDefRow {
   id: number;
@@ -76,6 +76,7 @@ function PopoverTextarea({
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
+        aria-hidden="true"
       >
         <path
           strokeLinecap="round"
@@ -92,6 +93,7 @@ function PopoverTextarea({
           onChange={onChange}
           placeholder={placeholder}
           aria-label={ariaLabel}
+          // biome-ignore lint/a11y/noAutofocus: intentional for popover textarea
           autoFocus
           onBlur={() => setExpanded(false)}
         />

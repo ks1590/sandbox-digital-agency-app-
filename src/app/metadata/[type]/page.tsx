@@ -8,15 +8,6 @@ import MetadataEdit from "../_components/MetadataEdit";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
 import OverviewViewClient from "../_components/OverviewViewClient";
 
-/** データ種別の表示名マッピング */
-const typeLabels: Record<string, string> = {
-  clinical: "臨床情報",
-  document: "文書情報",
-  attachment: "添付情報",
-  "health-check": "健診文書",
-  prescription: "処方情報",
-};
-
 type Props = {
   params: Promise<{ type: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -34,8 +25,6 @@ export default async function MetadataTypePage({
   const tabParam = typeof query.tab === "string" ? query.tab : "overview";
   const isEditMode = query.mode === "edit";
   const isSuccess = query.success === "true";
-
-  const typeLabel = typeLabels[type] || type;
 
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;

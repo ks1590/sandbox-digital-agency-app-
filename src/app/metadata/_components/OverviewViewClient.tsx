@@ -82,9 +82,9 @@ export default function OverviewViewClient() {
               </tr>
             </thead>
             <tbody>
-              {updateFrequencies.map((freq, idx) => (
+              {updateFrequencies.map((freq) => (
                 <tr
-                  key={idx}
+                  key={freq.target}
                   className="border-b border-gray-200 hover:bg-gray-50"
                 >
                   <td className="py-3 px-4 text-gray-700 border-r border-gray-200">
@@ -101,8 +101,8 @@ export default function OverviewViewClient() {
       <section>
         <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
         <div className="space-y-8">
-          {tables.map((table, idx) => (
-            <div key={idx}>
+          {tables.map((table) => (
+            <div key={table.name}>
               <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
                 {table.name}
               </h4>

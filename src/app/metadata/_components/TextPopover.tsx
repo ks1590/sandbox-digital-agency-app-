@@ -18,7 +18,7 @@ export default function TextPopover({
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const isTruncated = text.length > maxLength;
-  const displayText = isTruncated ? text.slice(0, maxLength) + "..." : text;
+  const displayText = isTruncated ? `${text.slice(0, maxLength)}...` : text;
 
   const togglePopover = (e: React.MouseEvent) => {
     e.stopPropagation();

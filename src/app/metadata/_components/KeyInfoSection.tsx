@@ -41,9 +41,11 @@ export default function KeyInfoSection() {
             setMermaidError(null);
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (isMounted) {
-          setMermaidError(error.message || "Mermaid構文エラー");
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          setMermaidError(errorMessage || "Mermaid構文エラー");
           setMermaidSvg("");
         }
       }
@@ -85,6 +87,7 @@ export default function KeyInfoSection() {
               </div>
             ) : mermaidSvg ? (
               <div
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: intentionally rendering Mermaid SVG
                 dangerouslySetInnerHTML={{ __html: mermaidSvg }}
                 className="max-w-full h-auto flex justify-center"
               />

@@ -58,22 +58,22 @@ export default function DataTypeListEditor({
             >
               詳細
             </Link>
-            <button
+            {/* <button
               type="button"
               onClick={() => handleRemove(idx)}
               className="inline-flex items-center justify-center min-w-[80px] min-h-[44px] rounded-[8px] bg-white border border-gray-400 px-4 py-2 text-base font-bold text-error-1 transition-colors hover:bg-gray-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap"
             >
               削除
-            </button>
+            </button> */}
           </div>
         ))}
-        <button
+        {/* <button
           type="button"
           onClick={handleAdd}
           className="inline-flex items-center justify-center mt-4 min-h-[44px] rounded-[8px] border-2 border-dashed border-gray-400 text-gray-700 hover:bg-gray-50 hover:border-gray-500 px-4 py-2 text-base font-bold transition-colors focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 w-full"
         >
           ＋ データ種別を追加
-        </button>
+        </button> */}
       </div>
     </section>
   );

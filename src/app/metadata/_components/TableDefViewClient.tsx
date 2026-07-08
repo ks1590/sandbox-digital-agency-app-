@@ -8,7 +8,7 @@ import {
 import { DUMMY_DATA, type TableDefRow } from "./TableDefContent";
 import TextPopover from "./TextPopover";
 
-const tableColumns: ColumnDef<any>[] = [
+const tableColumns: ColumnDef<TableDefRow>[] = [
   { key: "id", label: "項番" },
   { key: "physicalName", label: "物理名" },
   { key: "dataType", label: "データ型" },
@@ -38,14 +38,14 @@ export function SortableTableWithColumns({
 }: {
   subtab: "disease" | "allergy" | "examination";
 }) {
-  const [data, setData] = useState<any[]>(DUMMY_DATA);
+  const [data, setData] = useState<TableDefRow[]>(DUMMY_DATA);
 
   useEffect(() => {
     const saved = sessionStorage.getItem("metadata_clinical");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.tableDefs && parsed.tableDefs[subtab]) {
+        if (parsed.tableDefs?.[subtab]) {
           setData(parsed.tableDefs[subtab]);
         }
       } catch (e) {
@@ -58,7 +58,7 @@ export function SortableTableWithColumns({
     <DataTable
       columns={tableColumns}
       data={data}
-      rowKey={(row) => row.id || row.no}
+      rowKey={(row) => String(row.id)}
     />
   );
 }

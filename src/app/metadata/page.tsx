@@ -70,10 +70,10 @@ export default async function MetadataPage({ searchParams }: Props) {
             <h3 className="text-xl font-bold text-gray-900 mb-4">データ種別</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <LinkCard href="/metadata/clinical" title="臨床情報" />
-              <LinkCard href="/metadata/document" title="文書情報" />
+              {/* <LinkCard href="/metadata/document" title="文書情報" />
               <LinkCard href="/metadata/attachment" title="添付情報" />
               <LinkCard href="/metadata/health-check" title="健診文書" />
-              <LinkCard href="/metadata/prescription" title="処方情報" />
+              <LinkCard href="/metadata/prescription" title="処方情報" /> */}
             </div>
           </section>
 

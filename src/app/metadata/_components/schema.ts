@@ -49,10 +49,8 @@ export const metadataSchema = z.object({
     .optional(),
   notesText: z.string().optional(),
 
-  // Key Info Section
   keyInfoText: z.string().optional(),
 
-  // Table Def Tab (disease, allergy, examination)
   tableDefs: z
     .object({
       disease: z.array(tableDefRowSchema).optional(),

@@ -47,8 +47,8 @@ export default function OverviewTabContent({
               {...register("dataType")}
             >
               <option value="clinical">臨床情報</option>
-              <option value="claim">レセプト情報</option>
-              <option value="health_check">健診情報</option>
+              {/* <option value="claim">レセプト情報</option>
+              <option value="health_check">健診情報</option> */}
             </select>
             <svg
               aria-hidden="true"

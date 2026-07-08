@@ -1,6 +1,6 @@
 "use client";
 
-import React, { type ReactNode, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   DatePicker,
   DatePickerMonth,
@@ -38,7 +38,7 @@ interface ExtractionRequest {
 function formatTimestamp(isoStr: string): string {
   if (!isoStr) return "";
   const d = new Date(isoStr);
-  if (isNaN(d.getTime())) return isoStr;
+  if (Number.isNaN(d.getTime())) return isoStr;
   const y = d.getFullYear();
   const mo = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
@@ -55,7 +55,7 @@ function truncateInfo(json: string): string {
     const [firstKey, firstVal] = entries[0];
     return `..."${firstKey}": ${JSON.stringify(firstVal)}...`;
   } catch {
-    return json.length > 40 ? json.slice(0, 40) + "..." : json;
+    return json.length > 40 ? `${json.slice(0, 40)}...` : json;
   }
 }
 
@@ -77,10 +77,10 @@ export default function ExtractionStatusContent() {
     rawData.requests,
   );
 
-  const handleOpenModal = (info: string) => {
+  const handleOpenModal = useCallback((info: string) => {
     setSelectedInfo(info);
     dialogRef.current?.showModal();
-  };
+  }, []);
 
   const handleCloseModal = () => {
     dialogRef.current?.close();
@@ -105,12 +105,6 @@ export default function ExtractionStatusContent() {
     }
 
     setFilteredData(result);
-  };
-
-  const handleReset = () => {
-    setYearInput("");
-    setMonthInput("");
-    setFilteredData(rawData.requests);
   };
 
   const columns: ColumnDef<ExtractionRequest>[] = useMemo(
@@ -156,7 +150,7 @@ export default function ExtractionStatusContent() {
         sortValue: (row) => row.processingTimeSeconds,
       },
     ],
-    [],
+    [handleOpenModal],
   );
 
   return (
