@@ -2,14 +2,6 @@
 @import "@digital-go-jp/tailwind-theme-plugin/v4";
 @plugin "@tailwindcss/container-queries";
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -36,9 +28,7 @@ body {
   color: var(--foreground);
 }
 
-/* ========================================
-   ポータルヘッダー
-   ======================================== */
+/* ポータルヘッダー */
 .portal-header {
   border-bottom: 3px solid var(--color-primary);
   background: #ffffff;
@@ -78,17 +68,13 @@ body {
   margin-top: 1px;
 }
 
-/* ========================================
-   ポータルメインコンテンツ
-   ======================================== */
+/* ポータルメインコンテンツ */
 .portal-main {
   flex: 1;
 }
 
-/* ========================================
-   共通ページコンテナ（サブページ用）
-   外側：薄い青背景 / 内側：白いカード
-   ======================================== */
+/* 共通ページコンテナ（サブページ用）
+   外側：薄い青背景 / 内側：白いカード */
 .page-bg {
   background: #ffffff;
 }
@@ -99,64 +85,7 @@ body {
   padding: 32px 24px;
 }
 
-/* ========================================
-   ヒーローセクション
-   ======================================== */
-.portal-hero {
-  background: linear-gradient(135deg, #0017c1 0%, #0033e6 40%, #2952ff 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.portal-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      circle at 20% 50%,
-      rgba(255, 255, 255, 0.08) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(255, 255, 255, 0.05) 0%,
-      transparent 40%
-    );
-  pointer-events: none;
-}
-
-.portal-hero__inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 64px 24px 72px;
-  position: relative;
-  z-index: 1;
-}
-
-.portal-hero__content {
-  max-width: 640px;
-}
-
-.portal-hero__heading {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #ffffff;
-  line-height: 1.5;
-  letter-spacing: 0.04em;
-  margin-bottom: 20px;
-}
-
-.portal-hero__text {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 1.8;
-  letter-spacing: 0.02em;
-}
-
-/* ========================================
-   リンクカードセクション
-   ======================================== */
+/* リンクカードセクション */
 .portal-cards-section {
   background: #ffffff;
   padding: 64px 0 80px;
@@ -177,20 +106,7 @@ body {
   font-weight: 700;
   color: var(--foreground);
   letter-spacing: 0.02em;
-  position: relative;
-  padding-bottom: 12px;
   margin-bottom: 8px;
-}
-
-.portal-cards-section__title::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 40px;
-  height: 3px;
-  background: var(--color-primary);
-  border-radius: 2px;
 }
 
 .portal-cards-section__subtitle {
@@ -206,10 +122,8 @@ body {
   gap: 16px;
 }
 
-/* ========================================
-   リンクカードコンポーネント（シンプル版）
-   デジタル庁「新着・更新」カードを参考
-   ======================================== */
+/* リンクカードコンポーネント（シンプル版）
+   デジタル庁「新着・更新」カードを参考 */
 .link-card {
   display: block;
   flex: 1;
@@ -287,9 +201,7 @@ body {
   color: #ffffff;
 }
 
-/* ========================================
-   レスポンシブ対応
-   ======================================== */
+/* レスポンシブ対応 */
 @media (max-width: 640px) {
   .portal-header__inner {
     padding: 12px 16px;
@@ -302,18 +214,6 @@ body {
   .portal-header__logo svg {
     width: 30px;
     height: 30px;
-  }
-
-  .portal-hero__inner {
-    padding: 40px 16px 48px;
-  }
-
-  .portal-hero__heading {
-    font-size: 1.5rem;
-  }
-
-  .portal-hero__text {
-    font-size: 0.9375rem;
   }
 
   .portal-cards-section {
