@@ -31,7 +31,11 @@ export default function OverviewTabContent({
     name: "updateFrequencies",
   });
 
-  const { fields: tableFields } = useFieldArray({
+  const {
+    fields: tableFields,
+    append: appendTable,
+    remove: removeTable,
+  } = useFieldArray({
     control,
     name: "tables",
   });
@@ -163,15 +167,55 @@ export default function OverviewTabContent({
           </section>
 
           <section>
-            <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
+            <h3 className="text-xl font-bold mb-4">テーブル一覧</h3>
+            <button
+              type="button"
+              onClick={() =>
+                appendTable({ id: "", name: "", overview: "", unit: "" })
+              }
+              className="mb-4 inline-flex items-center gap-2 px-4 py-2 border border-solid-gray-420 rounded-md bg-white text-gray-900 hover:bg-gray-50 font-bold text-sm"
+            >
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 4v16m8-8H4"
+                ></path>
+              </svg>
+              追加
+            </button>
             <div className="space-y-8">
               {tableFields.map((field, index) => (
                 <div
                   key={field.id}
-                  className="border border-gray-300 rounded-lg p-6 bg-gray-50"
+                  className="border border-gray-300 rounded-lg p-6 bg-gray-50 relative"
                 >
-                  <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3">
-                    {field.name}
+                  <button
+                    type="button"
+                    onClick={() => removeTable(index)}
+                    className="absolute top-6 right-6 p-2 text-error-1 hover:text-red-800 focus:outline-none"
+                    aria-label={`テーブル ${index + 1} を削除`}
+                  >
+                    削除
+                  </button>
+                  <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3 pr-12">
+                    <label htmlFor={`table-${index}-name`} className="sr-only">
+                      テーブル名
+                    </label>
+                    <input
+                      type="text"
+                      id={`table-${index}-name`}
+                      placeholder="テーブル名"
+                      className="bg-transparent border-none focus:ring-0 p-0 w-full outline-none"
+                      {...register(`tables.${index}.name`)}
+                    />
                   </h4>
                   <div className="space-y-6">
                     <div>
