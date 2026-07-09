@@ -10,6 +10,7 @@ export const Label = (props: LabelProps) => {
   const { children, className, size = "md", ...rest } = props;
 
   return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: 汎用的なラッパーコンポーネントであり、コントロールとの関連付けは利用側で行うため
     <label
       className={`
         text-solid-gray-800

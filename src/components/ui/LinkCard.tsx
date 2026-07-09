@@ -27,6 +27,7 @@ export default function LinkCard({ title, href }: LinkCardProps) {
             viewBox="0 0 16 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
           >
             <path
               d="M8.162 3.077 13.14 8l-4.978 4.923L7.239 12l3.4-3.4H2.86V7.4h7.779L7.239 4Z"

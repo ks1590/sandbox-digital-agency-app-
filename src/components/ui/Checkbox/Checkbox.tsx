@@ -1,4 +1,4 @@
-import { type ComponentProps, forwardRef } from "react";
+import { type ComponentProps, forwardRef, useId } from "react";
 
 export type CheckboxSize = "sm" | "md" | "lg";
 
@@ -9,7 +9,9 @@ export type CheckboxProps = Omit<ComponentProps<"input">, "size"> & {
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (props, ref) => {
-    const { children, isError, onClick, size = "sm", ...rest } = props;
+    const { children, isError, onClick, size = "sm", id: propId, ...rest } = props;
+    const generatedId = useId();
+    const id = propId ?? generatedId;
 
     const handleDisabled = (
       e: React.MouseEvent<HTMLInputElement, MouseEvent>,
@@ -48,6 +50,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           type="checkbox"
           data-size={size}
           data-error={isError || null}
+          id={id}
           {...rest}
         />
       </span>
@@ -55,6 +58,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     return children ? (
       <label
+        htmlFor={id}
         className="flex w-fit items-start py-2 data-[size=sm]:gap-1 data-[size=md]:gap-2 data-[size=lg]:gap-2"
         data-size={size}
       >
