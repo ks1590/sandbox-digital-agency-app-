@@ -5,8 +5,12 @@ import {
   DataTable,
 } from "@/components/ui/DataTable/DataTable";
 import Tab from "@/components/ui/Tab";
-import type { DataProfileCategory, DataProfileRow } from "./types";
-import { useDataProfile } from "./useDataProfile";
+import type {
+  DataProfileCategory,
+  DataProfileResponse,
+  DataProfileRow,
+} from "./types";
+
 
 function DataProfileGrid({ rows }: { rows: DataProfileRow[] }) {
   const columns: ColumnDef<DataProfileRow>[] = [
@@ -33,28 +37,11 @@ function DataProfileGrid({ rows }: { rows: DataProfileRow[] }) {
   );
 }
 
-export default function DataProfileContent() {
-  const { data, isLoading, error } = useDataProfile();
-
-  // エラー表示
-  if (error) {
-    return (
-      <div className="mb-4 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
-        <p className="font-bold">データ取得エラー</p>
-        <p>{error}</p>
-      </div>
-    );
-  }
-
-  // ローディング表示
-  if (isLoading || !data) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <p className="text-sm text-gray-500">データを読み込み中...</p>
-      </div>
-    );
-  }
-
+export default function DataProfileContent({
+  data,
+}: {
+  data: DataProfileResponse;
+}) {
   return (
     <>
       <div className="mb-8">
