@@ -10,9 +10,7 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "データマネジメントポータル",
-  description:
-    "データの抽出状況確認、メタデータ参照、データプロファイル分析を一元的に行えるポータルサイト",
+  title: "公的DB",
 };
 
 export default function RootLayout({
