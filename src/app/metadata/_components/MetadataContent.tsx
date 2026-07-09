@@ -2,35 +2,38 @@
 
 import Link from "next/link";
 import LinkCard from "@/components/ui/LinkCard";
-import { useMetadata } from "../useMetadata";
+import type { MetadataResponse } from "../types";
+
+import { useEffect, useState } from "react";
+import type { MetadataFormData } from "./schema";
 
 /**
  * メタデータトップページ用のクライアントコンポーネント
- * useMetadata フックでデータを取得し、ローディング/エラー/データ表示を制御する
+ * サーバーから受け取ったデータを初期表示し、モック環境用としてsessionStorageがあれば上書きする
  */
-export default function MetadataContent() {
-  const { data, isLoading, error } = useMetadata();
+export default function MetadataContent({
+  data,
+}: {
+  data: MetadataResponse;
+}) {
+  const [sessionData, setSessionData] = useState<MetadataFormData | null>(null);
 
-  // エラー表示
-  if (error) {
-    return (
-      <div className="mb-4 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
-        <p className="font-bold">データ取得エラー</p>
-        <p>{error}</p>
-      </div>
-    );
-  }
+  // 今回はモックAPI環境のため、サーバー側にはデータが永続化されない。
+  // そのため、画面リロード時や遷移時に更新内容を反映できるよう sessionData を優先する。
+  useEffect(() => {
+    const saved = sessionStorage.getItem("metadata_clinical");
+    if (saved) {
+      try {
+        setSessionData(JSON.parse(saved));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
 
-  // ローディング表示
-  if (isLoading || !data) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <p className="text-sm text-gray-500">データを読み込み中...</p>
-      </div>
-    );
-  }
-
-  const { overview } = data;
+  const overviewText = sessionData?.overviewText ?? data.overview.overviewText;
+  const dataTypes = sessionData?.dataTypes ?? data.overview.dataTypes;
+  const keyInfoText = sessionData?.keyInfoText ?? data.overview.keyInfoText;
 
   return (
     <>
@@ -38,7 +41,7 @@ export default function MetadataContent() {
       <section className="mb-10">
         <h3 className="text-xl font-bold text-gray-900 mb-4">概要</h3>
         <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
-          {overview.overviewText}
+          {overviewText}
         </p>
       </section>
 
@@ -46,7 +49,7 @@ export default function MetadataContent() {
       <section className="mb-10">
         <h3 className="text-xl font-bold text-gray-900 mb-4">データ種別</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {overview.dataTypes.map((dt) => (
+          {dataTypes.map((dt) => (
             <LinkCard key={dt.id} href={`/metadata/${dt.id}`} title={dt.name} />
           ))}
         </div>
@@ -56,7 +59,13 @@ export default function MetadataContent() {
       <section className="mb-10">
         <h3 className="text-xl font-bold text-gray-900 mb-4">キー情報</h3>
         <div className="p-6 border border-gray-300 rounded-lg bg-white min-h-[120px]">
-          <p className="text-sm text-gray-500 text-center">キー情報</p>
+          {keyInfoText ? (
+            <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
+              {keyInfoText}
+            </p>
+          ) : (
+            <p className="text-sm text-gray-500 text-center">キー情報</p>
+          )}
         </div>
       </section>
 

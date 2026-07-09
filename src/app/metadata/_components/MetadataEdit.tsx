@@ -9,21 +9,26 @@ import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import Tab from "@/components/ui/Tab";
-import { useMetadata } from "../useMetadata";
+import { saveMetadataAction } from "../actions";
+import type { MetadataResponse } from "../types";
 import ErDiagramTabContent from "./ErDiagramTabContent";
 import OverviewTabContent from "./OverviewTabContent";
 import { type MetadataFormData, metadataSchema } from "./schema";
 import TableDefContent, { TableDefGrid } from "./TableDefContent";
 
-export default function MetadataEdit({ userId }: { userId?: string }) {
+export default function MetadataEdit({
+  userId,
+  data: apiData,
+}: {
+  userId?: string;
+  data: MetadataResponse;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const isTopPage = pathname === "/metadata";
   const tabParam = searchParams.get("tab") || "overview";
   const subtabParam = searchParams.get("subtab");
-
-  const { data: apiData, isLoading } = useMetadata();
 
   const methods = useForm<MetadataFormData>({
     resolver: zodResolver(metadataSchema),
@@ -86,8 +91,12 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
     message: string;
   } | null>(null);
 
-  const handleSubmit = (data: MetadataFormData) => {
-    // セッションストレージに保存
+  const handleSubmit = async (data: MetadataFormData) => {
+    // サーバーアクションを呼び出してAPI経由での保存をシミュレート
+    await saveMetadataAction(data);
+
+    // 今回はバックエンド（DB）が存在しないモック環境のため、
+    // 画面リロード時に編集内容が消えないようにセッションストレージにも保存しておく
     sessionStorage.setItem("metadata_clinical", JSON.stringify(data));
 
     if (isTopPage) {
@@ -125,21 +134,6 @@ export default function MetadataEdit({ userId }: { userId?: string }) {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  // ローディング中はヘッダー + ローディング表示
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col">
-        <Header userId={userId} />
-        <main className="page-bg flex-1">
-          <div className="page-container pt-8">
-            <div className="flex items-center justify-center py-12">
-              <p className="text-sm text-gray-500">データを読み込み中...</p>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
 
   const watchDataTypes = methods.watch("dataTypes");
 

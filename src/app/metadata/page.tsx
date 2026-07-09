@@ -5,6 +5,7 @@ import { NotificationBanner } from "@/components/layout/NotificationBanner/Notif
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import MetadataContent from "./_components/MetadataContent";
 import MetadataEdit from "./_components/MetadataEdit";
+import { fetchMetadata } from "./api";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -18,8 +19,11 @@ export default async function MetadataPage({ searchParams }: Props) {
   const isEditMode = params.mode === "edit";
   const isSuccess = params.success === "true";
 
+  // サーバー側でデータを取得
+  const data = await fetchMetadata();
+
   if (isEditMode) {
-    return <MetadataEdit userId={userId} />;
+    return <MetadataEdit userId={userId} data={data} />;
   }
 
   return (
@@ -52,7 +56,7 @@ export default async function MetadataPage({ searchParams }: Props) {
             </Link>
           </div>
 
-          <MetadataContent />
+          <MetadataContent data={data} />
         </div>
       </main>
     </div>

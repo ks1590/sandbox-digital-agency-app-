@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
 import { TableDefGrid } from "../_components/TableDefContent";
 import { SortableTableWithColumns } from "../_components/TableDefViewClient";
+import { fetchMetadata } from "../api";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,6 +22,8 @@ export default async function TableDefPage({ searchParams }: Props) {
   let defaultIndex = 0;
   if (tabParam === "allergy") defaultIndex = 1;
   else if (tabParam === "examination") defaultIndex = 2;
+
+  const data = await fetchMetadata();
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -69,7 +72,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid subtab="disease" />
                       ) : (
-                        <SortableTableWithColumns subtab="disease" />
+                        <SortableTableWithColumns subtab="disease" data={data} />
                       )}
                     </div>
                   ),
@@ -82,7 +85,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid subtab="allergy" />
                       ) : (
-                        <SortableTableWithColumns subtab="allergy" />
+                        <SortableTableWithColumns subtab="allergy" data={data} />
                       )}
                     </div>
                   ),
@@ -95,7 +98,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid subtab="examination" />
                       ) : (
-                        <SortableTableWithColumns subtab="examination" />
+                        <SortableTableWithColumns subtab="examination" data={data} />
                       )}
                     </div>
                   ),

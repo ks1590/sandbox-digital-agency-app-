@@ -7,6 +7,7 @@ import LinkCard from "@/components/ui/LinkCard";
 import MetadataEdit from "../_components/MetadataEdit";
 import MetadataViewTabs from "../_components/MetadataViewTabs";
 import OverviewViewClient from "../_components/OverviewViewClient";
+import { fetchMetadata } from "../api";
 
 type Props = {
   params: Promise<{ type: string }>;
@@ -30,8 +31,11 @@ export default async function MetadataTypePage({
   if (tabParam === "er") defaultIndex = 1;
   else if (tabParam === "table-def") defaultIndex = 2;
 
+  // サーバー側でデータを取得
+  const data = await fetchMetadata();
+
   if (isEditMode) {
-    return <MetadataEdit userId={userId} />;
+    return <MetadataEdit userId={userId} data={data} />;
   }
 
   return (
@@ -85,7 +89,7 @@ export default async function MetadataTypePage({
                 {
                   label: "概要",
                   id: "tab-overview",
-                  content: <OverviewViewClient />,
+                  content: <OverviewViewClient data={data} />,
                 },
                 {
                   label: "ER図",
