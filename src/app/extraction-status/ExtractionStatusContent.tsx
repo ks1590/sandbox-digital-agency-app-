@@ -64,6 +64,9 @@ export default function ExtractionStatusContent({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [selectedInfo, setSelectedInfo] = useState<string | null>(null);
 
+  const hasSearched = initialYear !== undefined || initialMonth !== undefined;
+  const displayData = hasSearched ? filteredData : [];
+
   const [yearInput, setYearInput] = useState(initialYear || "");
   const [monthInput, setMonthInput] = useState(initialMonth || "");
 
@@ -163,12 +166,12 @@ export default function ExtractionStatusContent({
 
         {/* 総件数 */}
         <p className="text-sm text-gray-700 mb-2">
-          総件数：{filteredData.length}件
+          総件数：{displayData.length}件
         </p>
 
         {/* テーブル */}
         <DataTable
-          data={filteredData}
+          data={displayData}
           columns={columns}
           rowKey={(row) => row.requestId}
         />

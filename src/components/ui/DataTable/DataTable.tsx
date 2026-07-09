@@ -60,7 +60,7 @@ export function DataTable<T>({
   data,
   columns,
   pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
-  emptyMessage = "該当するデータがありません",
+  emptyMessage = "",
   rowKey,
 }: DataTableProps<T>) {
   const [sortConfig, setSortConfig] = useState<{
