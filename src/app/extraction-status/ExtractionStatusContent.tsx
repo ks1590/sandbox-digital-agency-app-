@@ -149,11 +149,13 @@ export default function ExtractionStatusContent({
                     ref={yearRef}
                     value={yearInput}
                     onChange={(e) => setYearInput(e.target.value)}
+                    placeholder="YYYY"
                   />
                   <DatePickerMonth
                     ref={monthRef}
                     value={monthInput}
                     onChange={(e) => setMonthInput(e.target.value)}
+                    placeholder="M"
                   />
                 </>
               )}

@@ -2,6 +2,9 @@
 @import "@digital-go-jp/tailwind-theme-plugin/v4";
 @plugin "@tailwindcss/container-queries";
 
+/* Ubuntu + Chromeなどのタッチデバイス環境でhoverが無効化されるのを防ぐための設定 */
+@custom-variant hover (&:hover);
+
 @layer base {
   *,
   ::after,
