@@ -10,7 +10,7 @@ import {
 
 export interface ColumnDef<T> {
   key: string;
-  label: string;
+  label: ReactNode;
   sortable?: boolean;
   /** ソートロジックが必要な場合（デフォルトは string/number として比較） */
   sortValue?: (row: T) => number | string;

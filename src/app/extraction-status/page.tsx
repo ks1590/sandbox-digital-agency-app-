@@ -34,7 +34,7 @@ export default async function ExtractionStatusPage({
         <div className="page-container">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              抽出状況参照
+              抽出状況検索
             </h2>
           </div>
 

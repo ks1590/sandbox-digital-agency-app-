@@ -120,7 +120,7 @@ export default function Header({ userId }: { userId?: string }) {
                         className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        抽出状況参照
+                        抽出状況検索
                       </Link>
                     </li>
                     <li className="border-t border-gray-200">
