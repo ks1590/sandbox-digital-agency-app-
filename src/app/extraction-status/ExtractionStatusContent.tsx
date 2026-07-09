@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
   DatePicker,
@@ -7,10 +8,7 @@ import {
   DatePickerYear,
 } from "@/components/form/DatePicker";
 import { Button } from "@/components/ui/Button";
-import {
-  type ColumnDef,
-  DataTable,
-} from "@/components/ui/DataTable/DataTable";
+import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import {
   ModalDialog,
   ModalDialogActions,
@@ -20,7 +18,6 @@ import {
   ModalDialogHeading,
 } from "@/components/ui/ModalDialog";
 import type { ExtractionRequest } from "./types";
-import { useExtractionStatus } from "./useExtractionStatus";
 
 function formatTimestamp(isoStr: string): string {
   if (!isoStr) return "";
@@ -54,15 +51,21 @@ function formatJsonSafe(json: string): string {
   }
 }
 
-export default function ExtractionStatusContent() {
+export default function ExtractionStatusContent({
+  data: filteredData,
+  initialYear,
+  initialMonth,
+}: {
+  data: ExtractionRequest[];
+  initialYear?: string;
+  initialMonth?: string;
+}) {
+  const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [selectedInfo, setSelectedInfo] = useState<string | null>(null);
 
-  const [yearInput, setYearInput] = useState("");
-  const [monthInput, setMonthInput] = useState("");
-
-  // APIからデータを取得するカスタムフック
-  const { data: filteredData, isLoading, error, search } = useExtractionStatus();
+  const [yearInput, setYearInput] = useState(initialYear || "");
+  const [monthInput, setMonthInput] = useState(initialMonth || "");
 
   const handleOpenModal = useCallback((info: string) => {
     setSelectedInfo(info);
@@ -75,10 +78,12 @@ export default function ExtractionStatusContent() {
   };
 
   const handleSearch = () => {
-    search({
-      year: yearInput || undefined,
-      month: monthInput || undefined,
-    });
+    const params = new URLSearchParams();
+    if (yearInput) params.set("year", yearInput);
+    if (monthInput) params.set("month", monthInput);
+
+    // URLのクエリパラメータを更新することでServer Componentに再フェッチさせる
+    router.push(`?${params.toString()}`);
   };
 
   const columns: ColumnDef<ExtractionRequest>[] = useMemo(
@@ -156,34 +161,17 @@ export default function ExtractionStatusContent() {
           </div>
         </div>
 
-        {/* エラー表示 */}
-        {error && (
-          <div className="mb-4 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
-            <p className="font-bold">データ取得エラー</p>
-            <p>{error}</p>
-          </div>
-        )}
+        {/* 総件数 */}
+        <p className="text-sm text-gray-700 mb-2">
+          総件数：{filteredData.length}件
+        </p>
 
-        {/* ローディング表示 */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <p className="text-sm text-gray-500">データを読み込み中...</p>
-          </div>
-        ) : (
-          <>
-            {/* 総件数 */}
-            <p className="text-sm text-gray-700 mb-2">
-              総件数：{filteredData.length}件
-            </p>
-
-            {/* テーブル */}
-            <DataTable
-              data={filteredData}
-              columns={columns}
-              rowKey={(row) => row.requestId}
-            />
-          </>
-        )}
+        {/* テーブル */}
+        <DataTable
+          data={filteredData}
+          columns={columns}
+          rowKey={(row) => row.requestId}
+        />
       </section>
 
       {/* 抽出データ情報表示用のモーダル */}
