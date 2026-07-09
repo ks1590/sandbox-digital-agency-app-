@@ -4,7 +4,7 @@
       "requestId": "id-a",
       "receptionId": "id-a-111",
       "dataCategory": "データ分類",
-      "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-01\", \"patient_count\": 1200}",
+      "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-01\", \"patient_count\": 1200, \"filters\": {\"age_range\": [20, 60], \"gender\": \"male\", \"diagnoses\": [\"E11\", \"I10\", \"E78\", \"J45\", \"K21\", \"M54\"], \"medications\": [\"Metformin\", \"Lisinopril\", \"Atorvastatin\", \"Amlodipine\", \"Omeprazole\", \"Albuterol\"], \"lab_results\": {\"HbA1c\": { \"operator\": \">=\", \"value\": 6.5 }, \"LDL\": { \"operator\": \">\", \"value\": 140 }, \"BMI\": { \"operator\": \">=\", \"value\": 25 }, \"eGFR\": { \"operator\": \"<\", \"value\": 60 } }, \"visit_types\": [\"outpatient\", \"telehealth\", \"inpatient_short_stay\"], \"departments\": [\"internal_medicine\", \"endocrinology\", \"cardiology\", \"gastroenterology\"], \"exclude_conditions\": [\"pregnancy\", \"cancer\", \"severe_dementia\"], \"include_demographics\": true, \"anonymization_level\": \"strict\", \"export_format\": \"csv_gzip\", \"notify_email\": \"admin@example.com\", \"remarks\": \"Monthly regular extraction job configured by system admin. Please ensure data quality checks are performed before delivering to the research team.\"}}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-01T09:00:00Z",
       "receptionStatus": "受付",

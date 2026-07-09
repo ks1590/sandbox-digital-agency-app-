@@ -175,25 +175,36 @@ export default function ExtractionStatusContent({
       </section>
 
       {/* 抽出データ情報表示用のモーダル */}
-      <ModalDialog ref={dialogRef} aria-labelledby="info-modal-title">
-        <ModalDialogContent>
-          <ModalDialogHeader>
-            <ModalDialogHeading id="info-modal-title">
+      <ModalDialog
+        ref={dialogRef}
+        aria-labelledby="info-modal-title"
+        className="m-auto"
+      >
+        <ModalDialogContent className="!w-[40vw] !max-w-none !h-[90vh]">
+          <ModalDialogHeader className="border-none px-6 pt-5 pb-2 shrink-0">
+            <ModalDialogHeading
+              id="info-modal-title"
+              className="text-base font-bold text-gray-900"
+            >
               抽出データ情報
             </ModalDialogHeading>
           </ModalDialogHeader>
-          <ModalDialogBody>
-            {selectedInfo ? (
-              <pre className="text-sm bg-gray-50 border border-gray-200 rounded-sm p-3 overflow-x-auto whitespace-pre-wrap break-all">
-                {formatJsonSafe(selectedInfo)}
-              </pre>
-            ) : (
-              <p>情報が設定されていません</p>
-            )}
+          <ModalDialogBody className="px-6 py-0 flex-1 flex flex-col min-h-0">
+            <div className="bg-gray-100 rounded-lg p-5 flex-1 min-h-0 overflow-y-auto">
+              {selectedInfo ? (
+                <pre className="text-sm text-gray-700 whitespace-pre-wrap break-all font-sans">
+                  {formatJsonSafe(selectedInfo)}
+                </pre>
+              ) : (
+                <p className="text-sm text-gray-700">
+                  情報が設定されていません
+                </p>
+              )}
+            </div>
           </ModalDialogBody>
-          <ModalDialogActions className="flex justify-end">
-            <Button onClick={handleCloseModal} size="lg" variant="solid-fill">
-              OK
+          <ModalDialogActions className="border-none bg-white px-6 pt-4 pb-5 flex justify-end shrink-0">
+            <Button onClick={handleCloseModal} size="md" variant="outline">
+              閉じる
             </Button>
           </ModalDialogActions>
         </ModalDialogContent>
