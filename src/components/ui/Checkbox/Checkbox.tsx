@@ -9,7 +9,14 @@ export type CheckboxProps = Omit<ComponentProps<"input">, "size"> & {
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (props, ref) => {
-    const { children, isError, onClick, size = "sm", id: propId, ...rest } = props;
+    const {
+      children,
+      isError,
+      onClick,
+      size = "sm",
+      id: propId,
+      ...rest
+    } = props;
     const generatedId = useId();
     const id = propId ?? generatedId;
 

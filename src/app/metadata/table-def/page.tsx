@@ -72,7 +72,10 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid subtab="disease" />
                       ) : (
-                        <SortableTableWithColumns subtab="disease" data={data} />
+                        <SortableTableWithColumns
+                          subtab="disease"
+                          data={data}
+                        />
                       )}
                     </div>
                   ),
@@ -85,7 +88,10 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid subtab="allergy" />
                       ) : (
-                        <SortableTableWithColumns subtab="allergy" data={data} />
+                        <SortableTableWithColumns
+                          subtab="allergy"
+                          data={data}
+                        />
                       )}
                     </div>
                   ),
@@ -98,7 +104,10 @@ export default async function TableDefPage({ searchParams }: Props) {
                       {isEditMode ? (
                         <TableDefGrid subtab="examination" />
                       ) : (
-                        <SortableTableWithColumns subtab="examination" data={data} />
+                        <SortableTableWithColumns
+                          subtab="examination"
+                          data={data}
+                        />
                       )}
                     </div>
                   ),

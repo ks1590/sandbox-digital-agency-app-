@@ -1,16 +1,12 @@
 "use client";
 
-import {
-  type ColumnDef,
-  DataTable,
-} from "@/components/ui/DataTable/DataTable";
+import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import Tab from "@/components/ui/Tab";
 import type {
   DataProfileCategory,
   DataProfileResponse,
   DataProfileRow,
 } from "./types";
-
 
 function DataProfileGrid({ rows }: { rows: DataProfileRow[] }) {
   const columns: ColumnDef<DataProfileRow>[] = [

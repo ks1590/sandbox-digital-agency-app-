@@ -22,7 +22,11 @@ export default function OverviewTabContent({
 
   const dataTypes = watch("dataTypes") || [];
 
-  const { fields: freqFields } = useFieldArray({
+  const {
+    fields: freqFields,
+    append: appendFreq,
+    remove: removeFreq,
+  } = useFieldArray({
     control,
     name: "updateFrequencies",
   });
@@ -91,41 +95,70 @@ export default function OverviewTabContent({
 
           <section>
             <h3 className="text-xl font-bold mb-4">更新頻度</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px] border-collapse text-sm border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-100 border-b-2 border-gray-300">
-                    <th className="py-3 px-4 text-left font-bold text-gray-900 border-r border-gray-300 w-1/2">
+            <button
+              type="button"
+              onClick={() => appendFreq({ target: "", frequency: "" })}
+              className="mb-4 inline-flex items-center gap-2 px-4 py-2 border border-solid-gray-420 rounded-md bg-white text-gray-900 hover:bg-gray-50 font-bold text-sm"
+            >
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 4v16m8-8H4"
+                ></path>
+              </svg>
+              追加
+            </button>
+            <div className="space-y-4 max-h-80 overflow-y-auto p-2 -m-2">
+              {freqFields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="flex flex-col sm:flex-row gap-4 items-center"
+                >
+                  <div className="flex-1 w-full">
+                    <label htmlFor={`freq-target-${index}`} className="sr-only">
                       対象項目
-                    </th>
-                    <th className="py-3 px-4 text-left font-bold text-gray-900 w-1/2">
+                    </label>
+                    <input
+                      type="text"
+                      id={`freq-target-${index}`}
+                      placeholder="対象項目（例: 検査結果）"
+                      className={inputClass}
+                      {...register(`updateFrequencies.${index}.target`)}
+                    />
+                  </div>
+                  <div className="flex-1 w-full">
+                    <label
+                      htmlFor={`freq-frequency-${index}`}
+                      className="sr-only"
+                    >
                       頻度
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {freqFields.map((field, index) => (
-                    <tr key={field.id} className="border-b border-gray-200">
-                      <td className="py-3 px-4 border-r border-gray-200">
-                        <input
-                          type="text"
-                          aria-label={`対象項目${index + 1}`}
-                          className={inputClass}
-                          {...register(`updateFrequencies.${index}.target`)}
-                        />
-                      </td>
-                      <td className="py-3 px-4">
-                        <input
-                          type="text"
-                          aria-label={`頻度${index + 1}`}
-                          className={inputClass}
-                          {...register(`updateFrequencies.${index}.frequency`)}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                    </label>
+                    <input
+                      type="text"
+                      id={`freq-frequency-${index}`}
+                      placeholder="頻度（例: 月1回）"
+                      className={inputClass}
+                      {...register(`updateFrequencies.${index}.frequency`)}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeFreq(index)}
+                    className="p-2 text-error-1 hover:text-red-800 focus:outline-none"
+                    aria-label={`更新頻度 ${index + 1} を削除`}
+                  >
+                    削除
+                  </button>
+                </div>
+              ))}
             </div>
           </section>
 

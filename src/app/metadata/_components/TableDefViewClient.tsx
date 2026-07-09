@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  type ColumnDef,
-  DataTable,
-} from "@/components/ui/DataTable/DataTable";
+import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import type { MetadataResponse, TableDefRow } from "../types";
 import TextPopover from "./TextPopover";
 
@@ -40,9 +37,9 @@ export function SortableTableWithColumns({
   subtab: "disease" | "allergy" | "examination";
   data: MetadataResponse;
 }) {
-  const [sessionOverride, setSessionOverride] = useState<
-    TableDefRow[] | null
-  >(null);
+  const [sessionOverride, setSessionOverride] = useState<TableDefRow[] | null>(
+    null,
+  );
 
   // sessionStorageに編集済みデータがあれば優先する
   useEffect(() => {
@@ -59,7 +56,6 @@ export function SortableTableWithColumns({
     }
   }, [subtab]);
 
-
   // sessionStorageに編集済みデータがあればそちらを優先
   const data = sessionOverride || apiData.tableDefs[subtab];
 
@@ -71,4 +67,3 @@ export function SortableTableWithColumns({
     />
   );
 }
-

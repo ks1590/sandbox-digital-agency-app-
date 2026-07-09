@@ -97,7 +97,16 @@ export default function ExtractionStatusContent({
         render: (_row, idx) => idx + 1,
       },
       { key: "requestId", label: "抽出リクエストID" },
-      { key: "receptionId", label: <>抽出リクエスト<br />受付ID</> },
+      {
+        key: "receptionId",
+        label: (
+          <>
+            抽出リクエスト
+            <br />
+            受付ID
+          </>
+        ),
+      },
       { key: "dataCategory", label: "データ分類" },
       {
         key: "extractionDataInfo",
@@ -112,19 +121,58 @@ export default function ExtractionStatusContent({
           </button>
         ),
       },
-      { key: "extractionStatus", label: <>抽出<br />ステータス</> },
+      {
+        key: "extractionStatus",
+        label: (
+          <>
+            抽出
+            <br />
+            ステータス
+          </>
+        ),
+      },
       {
         key: "receptionTimestamp",
-        label: <>受付時<br />タイムスタンプ</>,
+        label: (
+          <>
+            受付時
+            <br />
+            タイムスタンプ
+          </>
+        ),
         render: (row) => formatTimestamp(row.receptionTimestamp),
       },
-      { key: "receptionStatus", label: <>受付<br />ステータス</> },
+      {
+        key: "receptionStatus",
+        label: (
+          <>
+            受付
+            <br />
+            ステータス
+          </>
+        ),
+      },
       {
         key: "completionTimestamp",
-        label: <>抽出処理完了時<br />タイムスタンプ</>,
+        label: (
+          <>
+            抽出処理完了時
+            <br />
+            タイムスタンプ
+          </>
+        ),
         render: (row) => formatTimestamp(row.completionTimestamp),
       },
-      { key: "resultStatus", label: <>抽出結果<br />ステータス</> },
+      {
+        key: "resultStatus",
+        label: (
+          <>
+            抽出結果
+            <br />
+            ステータス
+          </>
+        ),
+      },
       {
         key: "processingTime",
         label: "処理時間",

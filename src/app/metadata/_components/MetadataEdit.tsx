@@ -134,7 +134,6 @@ export default function MetadataEdit({
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-
   const watchDataTypes = methods.watch("dataTypes");
 
   return (
@@ -175,7 +174,10 @@ export default function MetadataEdit({
             >
               {!isTopPage && (
                 <div className="mb-8">
-                  <label htmlFor="globalDataType" className="block text-sm font-bold text-gray-900 mb-2">
+                  <label
+                    htmlFor="globalDataType"
+                    className="block text-sm font-bold text-gray-900 mb-2"
+                  >
                     データ種別
                   </label>
                   <div className="relative w-full md:w-1/2 lg:w-1/3">
@@ -197,7 +199,11 @@ export default function MetadataEdit({
                       ))}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                      <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
+                      <svg
+                        className="h-4 w-4 fill-current"
+                        viewBox="0 0 20 20"
+                        aria-hidden="true"
+                      >
                         <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                       </svg>
                     </div>

@@ -23,7 +23,6 @@ export default function OverviewViewClient({
     }
   }, []);
 
-
   // sessionStorageに編集済みデータがあればそちらを優先、なければAPIデータを使用
   const overviewText =
     sessionData?.overviewText || apiData.overview.overviewText;
@@ -72,17 +71,24 @@ export default function OverviewViewClient({
               </tr>
             </thead>
             <tbody>
-              {updateFrequencies.map((freq: { target: string; frequency: string }, index: number) => (
-                <tr
-                  key={`${freq.target}-${index.toString()}`}
-                  className="border-b border-gray-200 hover:bg-gray-50"
-                >
-                  <td className="py-3 px-4 text-gray-700 border-r border-gray-200">
-                    {freq.target}
-                  </td>
-                  <td className="py-3 px-4 text-gray-700">{freq.frequency}</td>
-                </tr>
-              ))}
+              {updateFrequencies.map(
+                (
+                  freq: { target: string; frequency: string },
+                  index: number,
+                ) => (
+                  <tr
+                    key={`${freq.target}-${index.toString()}`}
+                    className="border-b border-gray-200 hover:bg-gray-50"
+                  >
+                    <td className="py-3 px-4 text-gray-700 border-r border-gray-200">
+                      {freq.target}
+                    </td>
+                    <td className="py-3 px-4 text-gray-700">
+                      {freq.frequency}
+                    </td>
+                  </tr>
+                ),
+              )}
             </tbody>
           </table>
         </div>
@@ -91,25 +97,27 @@ export default function OverviewViewClient({
       <section>
         <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
         <div className="space-y-8">
-          {tables.map((table: { name: string; overview: string; unit: string }) => (
-            <div key={table.name}>
-              <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
-                {table.name}
-              </h4>
-              <div className="space-y-4 text-sm ml-4">
-                <div>
-                  <h5 className="font-bold mb-1">概要</h5>
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                    {table.overview}
-                  </p>
-                </div>
-                <div>
-                  <h5 className="font-bold mb-1">格納単位</h5>
-                  <p className="text-gray-700">{table.unit}</p>
+          {tables.map(
+            (table: { name: string; overview: string; unit: string }) => (
+              <div key={table.name}>
+                <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
+                  {table.name}
+                </h4>
+                <div className="space-y-4 text-sm ml-4">
+                  <div>
+                    <h5 className="font-bold mb-1">概要</h5>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {table.overview}
+                    </p>
+                  </div>
+                  <div>
+                    <h5 className="font-bold mb-1">格納単位</h5>
+                    <p className="text-gray-700">{table.unit}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </section>
 

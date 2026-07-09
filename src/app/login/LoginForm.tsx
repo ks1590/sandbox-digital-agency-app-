@@ -12,8 +12,16 @@ export default function LoginForm() {
     <form action={formAction} className="space-y-6">
       <div className="bg-blue-50 border border-blue-200 text-blue-900 px-4 py-3 rounded-md text-sm">
         <p className="font-bold mb-1">【開発用ダミーアカウント】</p>
-        <p>ログインID: <code className="bg-white px-1 py-0.5 rounded text-black">admin</code></p>
-        <p>パスワード: <code className="bg-white px-1 py-0.5 rounded text-black">password</code></p>
+        <p>
+          ログインID:{" "}
+          <code className="bg-white px-1 py-0.5 rounded text-black">admin</code>
+        </p>
+        <p>
+          パスワード:{" "}
+          <code className="bg-white px-1 py-0.5 rounded text-black">
+            password
+          </code>
+        </p>
       </div>
 
       <TextInput

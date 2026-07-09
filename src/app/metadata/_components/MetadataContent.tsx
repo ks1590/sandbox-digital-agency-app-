@@ -1,21 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import LinkCard from "@/components/ui/LinkCard";
 import type { MetadataResponse } from "../types";
-
-import { useEffect, useState } from "react";
 import type { MetadataFormData } from "./schema";
 
 /**
  * メタデータトップページ用のクライアントコンポーネント
  * サーバーから受け取ったデータを初期表示し、モック環境用としてsessionStorageがあれば上書きする
  */
-export default function MetadataContent({
-  data,
-}: {
-  data: MetadataResponse;
-}) {
+export default function MetadataContent({ data }: { data: MetadataResponse }) {
   const [sessionData, setSessionData] = useState<MetadataFormData | null>(null);
 
   // 今回はモックAPI環境のため、サーバー側にはデータが永続化されない。
