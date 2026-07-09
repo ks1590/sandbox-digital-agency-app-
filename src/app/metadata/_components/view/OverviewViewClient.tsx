@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { MetadataResponse } from "../types";
-import type { MetadataFormData } from "./schema";
+import type { MetadataResponse } from "../../types";
+import type { MetadataFormData } from "../schema";
 
 export default function OverviewViewClient({
   data: apiData,

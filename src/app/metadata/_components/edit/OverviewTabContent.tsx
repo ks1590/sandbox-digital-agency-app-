@@ -1,10 +1,10 @@
 "use client";
 
 import { useFieldArray, useFormContext } from "react-hook-form";
+import type { MetadataFormData } from "../schema";
+import { inputClass, labelClass, textareaClass } from "../styles";
 import DataTypeListEditor from "./DataTypeListEditor";
 import KeyInfoSection from "./KeyInfoSection";
-import type { MetadataFormData } from "./schema";
-import { inputClass, labelClass, textareaClass } from "./styles";
 
 interface OverviewTabContentProps {
   /** /metadata 直下の編集画面かどうか */

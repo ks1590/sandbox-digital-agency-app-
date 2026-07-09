@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import LinkCard from "@/components/ui/LinkCard";
-import type { MetadataResponse } from "../types";
-import type { MetadataFormData } from "./schema";
+import type { MetadataResponse } from "../../types";
+import type { MetadataFormData } from "../schema";
 
 /**
  * メタデータトップページ用のクライアントコンポーネント

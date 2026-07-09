@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { inputClass } from "./styles";
+import { inputClass } from "../styles";
 
 interface DataType {
   id: string;

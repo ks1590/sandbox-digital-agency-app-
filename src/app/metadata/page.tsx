@@ -3,8 +3,8 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
-import MetadataContent from "./_components/MetadataContent";
-import MetadataEdit from "./_components/MetadataEdit";
+import MetadataEdit from "./_components/edit/MetadataEdit";
+import MetadataContent from "./_components/view/MetadataContent";
 import { fetchMetadata } from "./api";
 
 type Props = {
@@ -19,7 +19,6 @@ export default async function MetadataPage({ searchParams }: Props) {
   const isEditMode = params.mode === "edit";
   const isSuccess = params.success === "true";
 
-  // サーバー側でデータを取得
   const data = await fetchMetadata();
 
   if (isEditMode) {

@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
-import MetadataViewTabs from "../_components/MetadataViewTabs";
-import { TableDefGrid } from "../_components/TableDefContent";
-import { SortableTableWithColumns } from "../_components/TableDefViewClient";
+import { TableDefGrid } from "../_components/table-def/TableDefContent";
+import { SortableTableWithColumns } from "../_components/table-def/TableDefViewClient";
+import MetadataViewTabs from "../_components/view/MetadataViewTabs";
 import { fetchMetadata } from "../api";
 
 type Props = {

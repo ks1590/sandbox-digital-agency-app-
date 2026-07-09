@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import type { MetadataFormData } from "./schema";
-import { labelClass, textareaClass } from "./styles";
+import type { MetadataFormData } from "../schema";
+import { labelClass, textareaClass } from "../styles";
 
 /**
  * キー情報セクション（Mermaid記法エディタ + SVGプレビュー）

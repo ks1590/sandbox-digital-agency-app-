@@ -6,8 +6,8 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { Input } from "@/components/form/Input";
 import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import LinkCard from "@/components/ui/LinkCard";
-import type { TableDefRow } from "../types";
-import type { MetadataFormData } from "./schema";
+import type { TableDefRow } from "../../types";
+import type { MetadataFormData } from "../schema";
 
 function PopoverTextarea({
   name,

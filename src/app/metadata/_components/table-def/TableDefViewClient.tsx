@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
-import type { MetadataResponse, TableDefRow } from "../types";
+import type { MetadataResponse, TableDefRow } from "../../types";
 import TextPopover from "./TextPopover";
 
 const tableColumns: ColumnDef<TableDefRow>[] = [

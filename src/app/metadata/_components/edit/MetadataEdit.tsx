@@ -1,0 +1,120 @@
+"use client";
+
+import { FormProvider } from "react-hook-form";
+import Header from "@/components/layout/Header";
+import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
+import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
+import Tab from "@/components/ui/Tab";
+import type { MetadataResponse } from "../../types";
+import TableDefContent from "../table-def/TableDefContent";
+import DataTypeSelect from "./DataTypeSelect";
+import EditFormFooter from "./EditFormFooter";
+import ErDiagramTabContent from "./ErDiagramTabContent";
+import OverviewTabContent from "./OverviewTabContent";
+import SubtabSection from "./SubtabSection";
+import { useMetadataForm } from "./useMetadataForm";
+
+export default function MetadataEdit({
+  userId,
+  data: apiData,
+}: {
+  userId?: string;
+  data: MetadataResponse;
+}) {
+  const {
+    methods,
+    notification,
+    isTopPage,
+    subtabParam,
+    pathname,
+    defaultIndex,
+    handleSubmit,
+    handleErrorSubmit,
+    handleTabChange,
+    cancelHref,
+  } = useMetadataForm(apiData);
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col">
+      <Header userId={userId} />
+
+      {notification && (
+        <div className="w-full bg-white border-b border-gray-200">
+          <div className="page-container py-4">
+            <NotificationBanner
+              bannerStyle="standard"
+              type={notification.type}
+              headingLevel="h3"
+              title={notification.title}
+            >
+              <NotificationBannerBody>
+                {notification.message}
+              </NotificationBannerBody>
+            </NotificationBanner>
+          </div>
+        </div>
+      )}
+
+      <main className="page-bg flex-1">
+        <div className="page-container pt-8">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
+          </div>
+
+          {/*
+            フォーム全体でTabを囲むことで、
+            どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
+          */}
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(handleSubmit)}
+              className="text-gray-900"
+            >
+              {!isTopPage && <DataTypeSelect />}
+
+              {isTopPage ? (
+                <div className="mb-12">
+                  <OverviewTabContent isTopPage />
+                </div>
+              ) : (
+                <div className="mb-12" hidden={!!subtabParam}>
+                  <Tab
+                    headingId="register-tabs-heading"
+                    defaultIndex={defaultIndex}
+                    onChange={handleTabChange}
+                    items={[
+                      {
+                        label: "概要",
+                        id: "tab-overview",
+                        content: <OverviewTabContent isTopPage={false} />,
+                      },
+                      {
+                        label: "ER図",
+                        id: "tab-er",
+                        content: <ErDiagramTabContent />,
+                      },
+                      {
+                        label: "テーブル定義",
+                        id: "tab-table-def",
+                        content: <TableDefContent />,
+                      },
+                    ]}
+                  />
+                </div>
+              )}
+
+              {!!subtabParam && (
+                <SubtabSection subtabParam={subtabParam} pathname={pathname} />
+              )}
+
+              <EditFormFooter
+                cancelHref={cancelHref}
+                onErrorTest={handleErrorSubmit}
+              />
+            </form>
+          </FormProvider>
+        </div>
+      </main>
+    </div>
+  );
+}

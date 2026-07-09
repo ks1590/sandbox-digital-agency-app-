@@ -77,6 +77,7 @@ export default function TextPopover({
       >
         {displayText}
         <svg
+          aria-hidden="true"
           className="inline-block w-4 h-4 ml-1 text-gray-400 group-hover:text-[#0017C1]"
           fill="none"
           stroke="currentColor"

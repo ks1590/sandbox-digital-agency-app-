@@ -4,9 +4,9 @@ import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import LinkCard from "@/components/ui/LinkCard";
-import MetadataEdit from "../_components/MetadataEdit";
-import MetadataViewTabs from "../_components/MetadataViewTabs";
-import OverviewViewClient from "../_components/OverviewViewClient";
+import MetadataEdit from "../_components/edit/MetadataEdit";
+import MetadataViewTabs from "../_components/view/MetadataViewTabs";
+import OverviewViewClient from "../_components/view/OverviewViewClient";
 import { fetchMetadata } from "../api";
 
 type Props = {
