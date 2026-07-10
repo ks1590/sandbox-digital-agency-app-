@@ -62,7 +62,7 @@ export default function ExtractionStatusContent({
 }) {
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [selectedInfo, setSelectedInfo] = useState<string | null>(null);
+  const [modalState, setModalState] = useState<{ title: string; content: string } | null>(null);
 
   const hasSearched = initialYear !== undefined || initialMonth !== undefined;
   const displayData = hasSearched ? filteredData : [];
@@ -70,14 +70,14 @@ export default function ExtractionStatusContent({
   const [yearInput, setYearInput] = useState(initialYear || "");
   const [monthInput, setMonthInput] = useState(initialMonth || "");
 
-  const handleOpenModal = useCallback((info: string) => {
-    setSelectedInfo(info);
+  const handleOpenModal = useCallback((title: string, content: string) => {
+    setModalState({ title, content });
     dialogRef.current?.showModal();
   }, []);
 
   const handleCloseModal = () => {
     dialogRef.current?.close();
-    setSelectedInfo(null);
+    setModalState(null);
   };
 
   const handleSearch = () => {
@@ -115,7 +115,7 @@ export default function ExtractionStatusContent({
           <button
             type="button"
             className="text-[#0017C1] underline hover:no-underline text-left"
-            onClick={() => handleOpenModal(row.extractionDataInfo)}
+            onClick={() => handleOpenModal("抽出データ情報", row.extractionDataInfo)}
           >
             {truncateInfo(row.extractionDataInfo)}
           </button>
@@ -172,6 +172,23 @@ export default function ExtractionStatusContent({
             ステータス
           </>
         ),
+        render: (row) => {
+          if (row.resultStatus === "異常終了" || row.resultStatus === "エラー") {
+            if (row.errorMessage) {
+              return (
+                <button
+                  type="button"
+                  className="text-[#0017C1] underline hover:no-underline text-left"
+                  onClick={() => handleOpenModal("エラー内容", row.errorMessage!)}
+                >
+                  エラー
+                </button>
+              );
+            }
+            return <span className="text-red-600">エラー</span>;
+          }
+          return row.resultStatus;
+        },
       },
       {
         key: "processingTime",
@@ -239,14 +256,14 @@ export default function ExtractionStatusContent({
               id="info-modal-title"
               className="text-base font-bold text-gray-900"
             >
-              抽出データ情報
+              {modalState?.title || "情報"}
             </ModalDialogHeading>
           </ModalDialogHeader>
           <ModalDialogBody className="px-6 py-0 flex-1 flex flex-col min-h-0">
             <div className="bg-gray-100 rounded-lg p-5 flex-1 min-h-0 overflow-y-auto">
-              {selectedInfo ? (
+              {modalState?.content ? (
                 <pre className="text-sm text-gray-700 whitespace-pre-wrap break-all font-sans">
-                  {formatJsonSafe(selectedInfo)}
+                  {formatJsonSafe(modalState.content)}
                 </pre>
               ) : (
                 <p className="text-sm text-gray-700">

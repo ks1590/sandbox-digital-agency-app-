@@ -126,9 +126,10 @@
       "receptionTimestamp": "2026-05-02T10:00:00Z",
       "receptionStatus": "受付",
       "completionTimestamp": "2026-05-02T10:05:00Z",
-      "resultStatus": "異常終了",
+      "resultStatus": "エラー",
       "processingTime": "00:05:00",
-      "processingTimeSeconds": 300
+      "processingTimeSeconds": 300,
+      "errorMessage": "データベース接続エラー: タイムアウトが発生しました。再試行してください。"
     },
     {
       "requestId": "id-k",

@@ -14,6 +14,7 @@ export interface ExtractionRequest {
   resultStatus: string;
   processingTime: string;
   processingTimeSeconds: number;
+  errorMessage?: string;
 }
 
 /**
