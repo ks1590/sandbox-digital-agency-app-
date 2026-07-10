@@ -36,7 +36,7 @@ export default function OverviewViewClient({
   const notesText = sessionData?.notesText || apiData.overview.notesText;
 
   return (
-    <div className="space-y-10 py-6 text-gray-900">
+    <div className="space-y-10 p-8 text-gray-900 border border-gray-300 bg-transparent rounded-b-lg mt-[-1px]">
       <section>
         <h3 className="text-xl font-bold mb-4">概要</h3>
         <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
@@ -106,12 +106,12 @@ export default function OverviewViewClient({
         <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
         <div className="space-y-8">
           {tables.map(
-            (table: { logicalName: string; physicalName: string; overview: string; unit: string }) => (
-              <div key={table.logicalName || table.physicalName}>
-                <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
+            (table: { id: string; logicalName: string; physicalName: string; overview: string; unit: string }, index: number) => (
+              <div key={table.id || index.toString()}>
+                <h4 className="text-lg text-gray-900 mb-3">
                   {table.logicalName}
                 </h4>
-                <div className="space-y-4 text-sm ml-4">
+                <div className="space-y-4 text-sm">
                   <div>
                     <h5 className="font-bold mb-1">概要</h5>
                     <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
