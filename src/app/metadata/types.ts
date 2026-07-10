@@ -14,8 +14,10 @@ export interface UpdateFrequency {
 export interface TableInfo {
   /** テーブルID */
   id: string;
-  /** テーブル名 */
-  name: string;
+  /** テーブル物理名 */
+  physicalName: string;
+  /** テーブル論理名 */
+  logicalName: string;
   /** 概要 */
   overview: string;
   /** 格納単位 */
@@ -70,6 +72,8 @@ export interface MetadataOverview {
   startYear: string;
   /** 最新の提供可能年度 */
   latestYear: string;
+  /** 収集頻度 */
+  collectionFrequency?: string;
   /** 更新頻度一覧 */
   updateFrequencies: UpdateFrequency[];
   /** テーブル一覧 */

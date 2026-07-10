@@ -29,6 +29,7 @@ export const metadataSchema = z.object({
     .optional(),
   startYear: z.string().optional(),
   latestYear: z.string().optional(),
+  collectionFrequency: z.string().optional(),
   updateFrequencies: z
     .array(
       z.object({
@@ -41,7 +42,8 @@ export const metadataSchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        name: z.string(),
+        physicalName: z.string(),
+        logicalName: z.string(),
         overview: z.string(),
         unit: z.string(),
       }),

@@ -28,6 +28,8 @@ export default function OverviewViewClient({
     sessionData?.overviewText || apiData.overview.overviewText;
   const startYear = sessionData?.startYear || apiData.overview.startYear;
   const latestYear = sessionData?.latestYear || apiData.overview.latestYear;
+  const collectionFrequency =
+    sessionData?.collectionFrequency || apiData.overview.collectionFrequency;
   const updateFrequencies =
     sessionData?.updateFrequencies || apiData.overview.updateFrequencies;
   const tables = sessionData?.tables || apiData.overview.tables;
@@ -47,12 +49,18 @@ export default function OverviewViewClient({
         <div className="space-y-4 text-sm">
           <div>
             <h4 className="font-bold mb-1">収集開始年度</h4>
-            <p className="text-gray-700">{startYear}</p>
+            <p className="text-gray-700">{startYear}年</p>
           </div>
           <div>
             <h4 className="font-bold mb-1">最新の提供可能年度</h4>
-            <p className="text-gray-700">{latestYear}</p>
+            <p className="text-gray-700">{latestYear}年</p>
           </div>
+          {collectionFrequency && (
+            <div>
+              <h4 className="font-bold mb-1">収集頻度</h4>
+              <p className="text-gray-700">{collectionFrequency}</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -98,10 +106,10 @@ export default function OverviewViewClient({
         <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
         <div className="space-y-8">
           {tables.map(
-            (table: { name: string; overview: string; unit: string }) => (
-              <div key={table.name}>
+            (table: { logicalName: string; physicalName: string; overview: string; unit: string }) => (
+              <div key={table.logicalName || table.physicalName}>
                 <h4 className="text-lg text-gray-600 font-bold mb-3 border-l-4 border-gray-400 pl-3">
-                  {table.name}
+                  {table.logicalName}
                 </h4>
                 <div className="space-y-4 text-sm ml-4">
                   <div>

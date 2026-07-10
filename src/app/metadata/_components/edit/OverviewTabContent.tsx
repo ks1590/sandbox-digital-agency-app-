@@ -71,28 +71,68 @@ export default function OverviewTabContent({
         <>
           <section>
             <h3 className="text-xl font-bold mb-4">収集期間</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+            <div className="space-y-4 text-sm">
               <div>
                 <label htmlFor="startYear" className={labelClass}>
                   収集開始年度
                 </label>
-                <input
-                  type="text"
-                  id="startYear"
-                  className={inputClass}
-                  {...register("startYear")}
-                />
+                <div className="flex items-center gap-2">
+                  <div className="w-64">
+                    <input
+                      type="text"
+                      id="startYear"
+                      className={inputClass}
+                      {...register("startYear")}
+                    />
+                  </div>
+                  <span className="text-gray-900 font-bold">年</span>
+                </div>
               </div>
               <div>
                 <label htmlFor="latestYear" className={labelClass}>
                   最新の提供可能年度
                 </label>
-                <input
-                  type="text"
-                  id="latestYear"
-                  className={inputClass}
-                  {...register("latestYear")}
-                />
+                <div className="flex items-center gap-2">
+                  <div className="w-64">
+                    <input
+                      type="text"
+                      id="latestYear"
+                      className={inputClass}
+                      {...register("latestYear")}
+                    />
+                  </div>
+                  <span className="text-gray-900 font-bold">年</span>
+                </div>
+              </div>
+              <div>
+                <label htmlFor="collectionFrequency" className={labelClass}>
+                  収集頻度
+                </label>
+                <div className="relative inline-block w-64">
+                  <select
+                    id="collectionFrequency"
+                    className="block w-full h-12 appearance-none border border-gray-400 rounded-md bg-white pl-4 pr-10 text-sm text-gray-900 hover:border-black focus:outline focus:outline-2 focus:outline-black focus:outline-offset-[2px]"
+                    {...register("collectionFrequency")}
+                  >
+                    <option value="">選択してください</option>
+                    <option value="年次">年次</option>
+                    <option value="月次">月次</option>
+                    <option value="日次">日次</option>
+                  </select>
+                  <svg
+                    aria-hidden="true"
+                    className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-900"
+                    fill="none"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <path
+                      d="M13.3344 4.40002L8.00104 9.73336L2.66771 4.40002L1.73438 5.33336L8.00104 11.6L14.2677 5.33336L13.3344 4.40002Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
           </section>
@@ -102,23 +142,9 @@ export default function OverviewTabContent({
             <button
               type="button"
               onClick={() => appendFreq({ target: "", frequency: "" })}
-              className="mb-4 inline-flex items-center gap-2 px-4 py-2 border border-solid-gray-420 rounded-md bg-white text-gray-900 hover:bg-gray-50 font-bold text-sm"
+              className="mb-4 inline-flex items-center justify-center gap-2 rounded-md bg-white border border-[#0017C1] px-4 py-2 text-sm font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
-              <svg
-                aria-hidden="true"
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 4v16m8-8H4"
-                ></path>
-              </svg>
-              追加
+              ＋ 対象項目・頻度を追加
             </button>
             <div className="space-y-4 max-h-80 overflow-y-auto p-2 -m-2">
               {freqFields.map((field, index) => (
@@ -156,7 +182,7 @@ export default function OverviewTabContent({
                   <button
                     type="button"
                     onClick={() => removeFreq(index)}
-                    className="p-2 text-error-1 hover:text-red-800 focus:outline-none"
+                    className="px-6 py-2 h-12 flex items-center justify-center border border-error-1 rounded-md bg-white text-error-1 hover:bg-red-50 focus:outline-none font-bold whitespace-nowrap transition-colors"
                     aria-label={`更新頻度 ${index + 1} を削除`}
                   >
                     削除
@@ -171,25 +197,11 @@ export default function OverviewTabContent({
             <button
               type="button"
               onClick={() =>
-                appendTable({ id: "", name: "", overview: "", unit: "" })
+                appendTable({ id: "", physicalName: "", logicalName: "", overview: "", unit: "" })
               }
-              className="mb-4 inline-flex items-center gap-2 px-4 py-2 border border-solid-gray-420 rounded-md bg-white text-gray-900 hover:bg-gray-50 font-bold text-sm"
+              className="mb-4 inline-flex items-center justify-center gap-2 rounded-md bg-white border border-[#0017C1] px-4 py-2 text-sm font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
-              <svg
-                aria-hidden="true"
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 4v16m8-8H4"
-                ></path>
-              </svg>
-              追加
+              ＋ テーブル定義と紐づける
             </button>
             <div className="space-y-8">
               {tableFields.map((field, index) => (
@@ -197,26 +209,56 @@ export default function OverviewTabContent({
                   key={field.id}
                   className="border border-gray-300 rounded-lg p-6 bg-gray-50 relative"
                 >
-                  <button
-                    type="button"
-                    onClick={() => removeTable(index)}
-                    className="absolute top-6 right-6 p-2 text-error-1 hover:text-red-800 focus:outline-none"
-                    aria-label={`テーブル ${index + 1} を削除`}
-                  >
-                    削除
-                  </button>
-                  <h4 className="text-lg text-gray-900 font-bold mb-4 border-l-4 border-[#0017C1] pl-3 pr-12">
-                    <label htmlFor={`table-${index}-name`} className="sr-only">
-                      テーブル名
-                    </label>
-                    <input
-                      type="text"
-                      id={`table-${index}-name`}
-                      placeholder="テーブル名"
-                      className="bg-transparent border-none focus:ring-0 p-0 w-full outline-none"
-                      {...register(`tables.${index}.name`)}
-                    />
-                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                    <div>
+                      <label
+                        htmlFor={`table-${index}-physicalName`}
+                        className={labelClass}
+                      >
+                        テーブル物理名
+                      </label>
+                      <div className="relative inline-block w-full">
+                        <select
+                          id={`table-${index}-physicalName`}
+                          className="block w-full h-12 appearance-none border border-gray-400 rounded-md bg-white pl-4 pr-10 text-sm text-gray-900 hover:border-black focus:outline focus:outline-2 focus:outline-black focus:outline-offset-[2px]"
+                          {...register(`tables.${index}.physicalName`)}
+                        >
+                          <option value="">選択してください</option>
+                          <option value="table_name">table_name</option>
+                          <option value="table_name2">table_name2</option>
+                          <option value="table_name3">table_name3</option>
+                        </select>
+                        <svg
+                          aria-hidden="true"
+                          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-900"
+                          fill="none"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          width="16"
+                        >
+                          <path
+                            d="M13.3344 4.40002L8.00104 9.73336L2.66771 4.40002L1.73438 5.33336L8.00104 11.6L14.2677 5.33336L13.3344 4.40002Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        htmlFor={`table-${index}-logicalName`}
+                        className={labelClass}
+                      >
+                        テーブル論理名
+                      </label>
+                      <input
+                        type="text"
+                        id={`table-${index}-logicalName`}
+                        placeholder="テーブル論理名"
+                        className={inputClass}
+                        {...register(`tables.${index}.logicalName`)}
+                      />
+                    </div>
+                  </div>
                   <div className="space-y-6">
                     <div>
                       <label
@@ -238,12 +280,26 @@ export default function OverviewTabContent({
                       >
                         格納単位
                       </label>
-                      <input
-                        type="text"
-                        id={`table-${index}-unit`}
-                        className={inputClass}
-                        {...register(`tables.${index}.unit`)}
-                      />
+                      <div className="flex gap-4 items-center">
+                        <div className="flex-1 w-full max-w-sm">
+                          <input
+                            type="text"
+                            id={`table-${index}-unit`}
+                            className={inputClass}
+                            {...register(`tables.${index}.unit`)}
+                          />
+                        </div>
+                        <div className="flex-1 flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => removeTable(index)}
+                            className="px-6 py-2 h-12 flex items-center justify-center border border-error-1 rounded-md bg-white text-error-1 hover:bg-red-50 focus:outline-none font-bold whitespace-nowrap transition-colors"
+                            aria-label={`テーブル ${index + 1} を削除`}
+                          >
+                            削除
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

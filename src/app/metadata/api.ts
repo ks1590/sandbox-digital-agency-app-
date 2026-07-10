@@ -34,8 +34,9 @@ const MOCK_DATA: MetadataResponse = {
     overviewText:
       "概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明 概要の説明",
     dataTypes: [{ id: "clinical", name: "臨床情報" }],
-    startYear: "2020年",
-    latestYear: "2026年",
+    startYear: "2020",
+    latestYear: "2026",
+    collectionFrequency: "年次",
     updateFrequencies: [
       { target: "項目名A", frequency: "年次" },
       { target: "項目名B", frequency: "月次" },
@@ -43,13 +44,15 @@ const MOCK_DATA: MetadataResponse = {
     tables: [
       {
         id: "table1",
-        name: "〇〇テーブル",
+        physicalName: "table_name",
+        logicalName: "〇〇テーブル",
         overview: "テーブル概要の説明...",
         unit: "レセプト",
       },
       {
         id: "table2",
-        name: "△△テーブル",
+        physicalName: "table_name2",
+        logicalName: "△△テーブル",
         overview: "テーブル概要の説明...",
         unit: "レセプト",
       },
