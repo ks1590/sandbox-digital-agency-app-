@@ -45,3 +45,6 @@ design-example
 
 #agent
 .agents
+
+# archives
+*.zip

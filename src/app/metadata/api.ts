@@ -67,6 +67,7 @@ const MOCK_DATA: MetadataResponse = {
     ],
     notesText: "留意事項を入力...",
     keyInfoText: "",
+    status: "draft",
   },
   tableDefs: {
     disease: generateMockTableDefRows(120),

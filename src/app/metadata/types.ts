@@ -82,6 +82,8 @@ export interface MetadataOverview {
   notesText: string;
   /** キー情報テキスト（Mermaid記法） */
   keyInfoText: string;
+  /** ステータス（仮登録 or 公開済み） */
+  status?: "draft" | "published";
 }
 
 /**
