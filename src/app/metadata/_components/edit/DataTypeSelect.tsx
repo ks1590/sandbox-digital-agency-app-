@@ -23,7 +23,7 @@ export default function DataTypeSelect() {
     <div className="mb-8">
       <label
         htmlFor="globalDataType"
-        className="block text-sm font-bold text-gray-900 mb-2"
+        className="block text-xl font-bold text-gray-900 mb-4"
       >
         データ種別
       </label>

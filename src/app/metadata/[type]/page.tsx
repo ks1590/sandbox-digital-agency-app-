@@ -79,7 +79,7 @@ export default async function MetadataTypePage({
           </div>
 
           <div className="mb-8">
-            <h3 className="block text-sm font-bold text-gray-900 mb-2">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
               データ種別
             </h3>
             <p className="text-base text-gray-900">

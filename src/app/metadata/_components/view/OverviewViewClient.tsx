@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DataTable } from "@/components/ui/DataTable/DataTable";
 import type { MetadataResponse } from "../../types";
 import type { MetadataFormData } from "../schema";
 
@@ -36,7 +37,7 @@ export default function OverviewViewClient({
   const notesText = sessionData?.notesText || apiData.overview.notesText;
 
   return (
-    <div className="space-y-10 p-8 text-gray-900 border border-gray-300 bg-transparent rounded-b-lg mt-[-1px]">
+    <div className="space-y-10 p-4 text-gray-900">
       <section>
         <h3 className="text-xl font-bold mb-4">概要</h3>
         <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
@@ -67,38 +68,15 @@ export default function OverviewViewClient({
       <section>
         <h3 className="text-xl font-bold mb-4">更新頻度</h3>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px] border-collapse text-sm">
-            <thead>
-              <tr className="bg-gray-100 border-b-2 border-gray-300">
-                <th className="py-3 px-4 text-left font-bold text-gray-900 border-r border-gray-300 w-1/2">
-                  対象項目
-                </th>
-                <th className="py-3 px-4 text-left font-bold text-gray-900 w-1/2">
-                  頻度
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {updateFrequencies.map(
-                (
-                  freq: { target: string; frequency: string },
-                  index: number,
-                ) => (
-                  <tr
-                    key={`${freq.target}-${index.toString()}`}
-                    className="border-b border-gray-200 hover:bg-gray-50"
-                  >
-                    <td className="py-3 px-4 text-gray-700 border-r border-gray-200">
-                      {freq.target}
-                    </td>
-                    <td className="py-3 px-4 text-gray-700">
-                      {freq.frequency}
-                    </td>
-                  </tr>
-                ),
-              )}
-            </tbody>
-          </table>
+          <DataTable
+            data={updateFrequencies}
+            columns={[
+              { key: "target", label: "対象項目", className: "w-1/2" },
+              { key: "frequency", label: "頻度", className: "w-1/2" },
+            ]}
+            rowKey={(row) => row.target}
+            hidePageSizeOptions={true}
+          />
         </div>
       </section>
 
@@ -106,7 +84,16 @@ export default function OverviewViewClient({
         <h3 className="text-xl font-bold mb-6">テーブル一覧</h3>
         <div className="space-y-8">
           {tables.map(
-            (table: { id: string; logicalName: string; physicalName: string; overview: string; unit: string }, index: number) => (
+            (
+              table: {
+                id: string;
+                logicalName: string;
+                physicalName: string;
+                overview: string;
+                unit: string;
+              },
+              index: number,
+            ) => (
               <div key={table.id || index.toString()}>
                 <h4 className="text-lg text-gray-900 mb-3">
                   {table.logicalName}

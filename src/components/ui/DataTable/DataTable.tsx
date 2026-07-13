@@ -26,6 +26,7 @@ export interface DataTableProps<T> {
   pageSizeOptions?: readonly number[];
   emptyMessage?: string;
   rowKey: (row: T) => string | number;
+  hidePageSizeOptions?: boolean;
 }
 
 /** ソートアイコン */
@@ -62,6 +63,7 @@ export function DataTable<T>({
   pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
   emptyMessage = "",
   rowKey,
+  hidePageSizeOptions = false,
 }: DataTableProps<T>) {
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -218,25 +220,29 @@ export function DataTable<T>({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-1 text-sm text-gray-700">
-          <span>表示件数</span>
-          {pageSizeOptions.map((size, i) => (
-            <Fragment key={size}>
-              <button
-                type="button"
-                className={`px-1 hover:underline ${
-                  pageSize === size
-                    ? "font-bold text-gray-900 no-underline"
-                    : "text-[#0017C1] underline"
-                }`}
-                onClick={() => handlePageSizeChange(size)}
-                aria-pressed={pageSize === size}
-              >
-                {size}件
-              </button>
-            </Fragment>
-          ))}
-        </div>
+        {!hidePageSizeOptions ? (
+          <div className="flex items-center gap-1 text-sm text-gray-700">
+            <span>表示件数</span>
+            {pageSizeOptions.map((size, i) => (
+              <Fragment key={size}>
+                <button
+                  type="button"
+                  className={`px-1 hover:underline ${
+                    pageSize === size
+                      ? "font-bold text-gray-900 no-underline"
+                      : "text-[#0017C1] underline"
+                  }`}
+                  onClick={() => handlePageSizeChange(size)}
+                  aria-pressed={pageSize === size}
+                >
+                  {size}件
+                </button>
+              </Fragment>
+            ))}
+          </div>
+        ) : (
+          <div />
+        )}
 
         {maxPage > 1 && (
           <Pagination>

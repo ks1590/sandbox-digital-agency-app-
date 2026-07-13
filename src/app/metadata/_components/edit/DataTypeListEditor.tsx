@@ -46,12 +46,14 @@ export default function DataTypeListEditor({
       <div className="space-y-4">
         {dataTypes.map((dt, idx) => (
           <div key={dt.id} className="flex items-center gap-4">
-            <input
-              type="text"
-              value={dt.name}
-              onChange={(e) => handleNameChange(idx, e.target.value)}
-              className={inputClass}
-            />
+            <div className="w-1/3">
+              <input
+                type="text"
+                value={dt.name}
+                onChange={(e) => handleNameChange(idx, e.target.value)}
+                className={inputClass}
+              />
+            </div>
             <Link
               href={`/metadata/${dt.id}?mode=edit`}
               className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border-2 border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap"
