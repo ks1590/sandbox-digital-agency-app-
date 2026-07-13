@@ -27,7 +27,7 @@ export default function DataTypeSelect() {
       >
         データ種別
       </label>
-      <div className="relative w-full md:w-1/2 lg:w-1/3">
+      <div className="relative w-1/2 md:w-1/4 lg:w-1/6">
         <select
           id="globalDataType"
           className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
