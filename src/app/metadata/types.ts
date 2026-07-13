@@ -80,7 +80,7 @@ export interface MetadataOverview {
   tables: TableInfo[];
   /** 留意事項 */
   notesText: string;
-  /** キー情報テキスト（Mermaid記法） */
+  /** キー情報テキスト */
   keyInfoText: string;
   /** ステータス（仮登録 or 公開済み） */
   status?: "draft" | "published";
