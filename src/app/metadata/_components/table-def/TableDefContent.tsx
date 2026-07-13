@@ -8,6 +8,7 @@ import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import LinkCard from "@/components/ui/LinkCard";
 import type { TableDefRow } from "../../types";
 import type { MetadataFormData } from "../schema";
+import TextPopover from "./TextPopover";
 
 function PopoverTextarea({
   name,
@@ -128,17 +129,29 @@ export function TableDefGrid({
       label: "項番",
       render: (_row, idx) => idx + 1,
     },
-    { key: "physicalName", label: "物理名", className: "min-w-[200px]" },
+    {
+      key: "physicalName",
+      label: "物理名",
+      className: "min-w-[200px]",
+      render: (row) => (
+        <TextPopover text={String(row.physicalName || "")} maxLength={20} />
+      ),
+    },
     { key: "dataType", label: "データ型" },
     { key: "length", label: "桁数" },
-    { key: "required", label: "必須/任意" },
+    {
+      key: "required",
+      label: "必須/任意",
+      render: (row) => (
+        <TextPopover text={String(row.required || "")} maxLength={20} />
+      ),
+    },
     {
       key: "logicalName",
       label: "論理名",
       render: (row, idx) => (
         <Input
           blockSize="md"
-          placeholder="入力テキスト"
           className="min-w-[160px]"
           aria-label={`論理名（項番${row.id}）`}
           {...register(`tableDefs.${subtab}.${idx}.logicalName` as const)}
@@ -148,13 +161,14 @@ export function TableDefGrid({
     {
       key: "description",
       label: "項目説明",
+      className: "min-w-[350px]",
       render: (row, idx) => {
         return (
           <PopoverTextarea
             name={`tableDefs.${subtab}.${idx}.description`}
             defaultValue={row.description}
             placeholder="項目説明を入力"
-            className="min-w-[250px]"
+            className="min-w-[350px]"
             ariaLabel={`項目説明（項番${row.id}）`}
           />
         );
@@ -166,7 +180,6 @@ export function TableDefGrid({
       render: (row, idx) => (
         <Input
           blockSize="md"
-          placeholder="入力テキスト"
           className="min-w-[160px]"
           aria-label={`外部キー（項番${row.id}）`}
           {...register(`tableDefs.${subtab}.${idx}.foreignKey` as const)}
@@ -179,7 +192,6 @@ export function TableDefGrid({
       render: (row, idx) => (
         <Input
           blockSize="md"
-          placeholder="入力テキスト"
           className="min-w-[160px]"
           aria-label={`マスタ種別（項番${row.id}）`}
           {...register(`tableDefs.${subtab}.${idx}.masterType` as const)}
@@ -189,13 +201,14 @@ export function TableDefGrid({
     {
       key: "sampleData",
       label: "サンプルデータ",
+      className: "min-w-[350px]",
       render: (row, idx) => {
         return (
           <PopoverTextarea
             name={`tableDefs.${subtab}.${idx}.sampleData`}
             defaultValue={row.sampleData}
             placeholder="サンプルデータを入力"
-            className="min-w-[250px]"
+            className="min-w-[350px]"
             ariaLabel={`サンプルデータ（項番${row.id}）`}
             align="right"
           />

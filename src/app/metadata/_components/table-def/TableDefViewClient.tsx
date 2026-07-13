@@ -7,16 +7,35 @@ import TextPopover from "./TextPopover";
 
 const tableColumns: ColumnDef<TableDefRow>[] = [
   { key: "id", label: "項番" },
-  { key: "physicalName", label: "物理名" },
+  {
+    key: "physicalName",
+    label: "物理名",
+    render: (row) => (
+      <TextPopover text={String(row.physicalName || "")} maxLength={20} />
+    ),
+  },
   { key: "dataType", label: "データ型" },
   { key: "length", label: "桁数" },
-  { key: "required", label: "必須/任意" },
-  { key: "logicalName", label: "論理名" },
+  {
+    key: "required",
+    label: "必須/任意",
+    render: (row) => (
+      <TextPopover text={String(row.required || "")} maxLength={20} />
+    ),
+  },
+  {
+    key: "logicalName",
+    label: "論理名",
+    render: (row) => (
+      <TextPopover text={String(row.logicalName || "")} maxLength={20} />
+    ),
+  },
   {
     key: "description",
     label: "項目説明",
+    className: "min-w-[350px]",
     render: (row) => (
-      <TextPopover text={String(row.description || "")} maxLength={20} />
+      <TextPopover text={String(row.description || "")} maxLength={40} />
     ),
   },
   { key: "foreignKey", label: "外部キー" },
@@ -24,8 +43,9 @@ const tableColumns: ColumnDef<TableDefRow>[] = [
   {
     key: "sampleData",
     label: "サンプルデータ",
+    className: "min-w-[350px]",
     render: (row) => (
-      <TextPopover text={String(row.sampleData || "")} maxLength={20} />
+      <TextPopover text={String(row.sampleData || "")} maxLength={40} />
     ),
   },
 ];
