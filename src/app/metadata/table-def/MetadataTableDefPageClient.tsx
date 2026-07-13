@@ -1,17 +1,21 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
-import Header from "@/components/layout/Header";
 import { TableDefGrid } from "../_components/table-def/TableDefContent";
 import { SortableTableWithColumns } from "../_components/table-def/TableDefViewClient";
 import MetadataViewTabs from "../_components/view/MetadataViewTabs";
 import PublishButtonClient from "../_components/view/PublishButtonClient";
 import type { MetadataResponse } from "../types";
 
-export default function MetadataTableDefPageClient({ data }: { data: MetadataResponse }) {
+export default function MetadataTableDefPageClient({
+  data,
+}: {
+  data: MetadataResponse;
+}) {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab") || "disease";
   const isEditMode = searchParams.get("mode") === "edit";

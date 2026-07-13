@@ -7,24 +7,6 @@ import type { MetadataResponse, TableDefRow } from "./types";
  */
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-/**
- * モック用のテーブル定義ダミー行データを生成する
- */
-function generateMockTableDefRows(count: number): TableDefRow[] {
-  return Array.from({ length: count }).map((_, i) => ({
-    id: i + 1,
-    physicalName: "sample",
-    dataType: "VARCHAR",
-    length: 100,
-    required: "必須",
-    logicalName: "サンプル",
-    description: "これはデザインの見本",
-    foreignKey: "キー",
-    masterType: "",
-    sampleData: "",
-  }));
-}
-
 const EXAMINATION_MOCK_DATA: TableDefRow[] = [
   {
     id: 1,

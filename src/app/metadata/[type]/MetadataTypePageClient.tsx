@@ -1,7 +1,7 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
@@ -44,10 +44,16 @@ export default function MetadataTypePageClient({
             <NotificationBanner
               bannerStyle="standard"
               type="success"
-              title={publishSuccess ? "公開しました" : "ビジネスメタデータを仮登録しました"}
+              title={
+                publishSuccess
+                  ? "公開しました"
+                  : "ビジネスメタデータを仮登録しました"
+              }
             >
               <NotificationBannerBody>
-                {publishSuccess ? "メタデータの公開処理が正常に完了しました。" : "入力された情報が正しく保存されました。"}
+                {publishSuccess
+                  ? "メタデータの公開処理が正常に完了しました。"
+                  : "入力された情報が正しく保存されました。"}
               </NotificationBannerBody>
             </NotificationBanner>
           </div>
