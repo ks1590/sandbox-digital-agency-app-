@@ -146,34 +146,34 @@ const MOCK_DATA: MetadataResponse = {
     latestYear: "2026",
     collectionFrequency: "年次",
     updateFrequencies: [
-      { target: "傷病情報", frequency: "月次" },
-      { target: "アレルギー情報", frequency: "月次" },
-      { target: "検査結果", frequency: "日次" },
+      { target: "項目1", frequency: "月次" },
+      { target: "項目2", frequency: "月次" },
+      { target: "項目3", frequency: "日次" },
     ],
     tables: [
       {
         id: "disease",
         physicalName: "trn_disease",
-        logicalName: "傷病テーブル",
+        logicalName: "傷病",
         overview:
           "患者の傷病履歴を管理するテーブル。受診時の診断名やICD-10コード、発症日などを保持します。",
-        unit: "患者",
+        unit: "レセプト",
       },
       {
         id: "allergy",
         physicalName: "trn_allergy",
-        logicalName: "アレルギーテーブル",
+        logicalName: "薬剤・その他アレルギー等",
         overview:
           "患者のアレルギー情報（薬剤アレルギー、食物アレルギー等）を管理するテーブル。アレルゲンや重症度などを保持します。",
-        unit: "患者",
+        unit: "レセプト",
       },
       {
         id: "examination",
         physicalName: "trn_examination",
-        logicalName: "検査結果テーブル",
+        logicalName: "感染症・検査",
         overview:
           "血液検査、尿検査などの各種検査結果を管理するテーブル。検査項目、基準値、結果値などを保持します。",
-        unit: "検査項目",
+        unit: "レセプト",
       },
     ],
     notesText: "留意事項を入力...",

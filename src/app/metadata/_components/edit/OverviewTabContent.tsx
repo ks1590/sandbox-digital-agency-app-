@@ -150,10 +150,10 @@ export default function OverviewTabContent({
               {freqFields.map((field, index) => (
                 <div
                   key={field.id}
-                  className="flex flex-col sm:flex-row gap-4 items-center"
+                  className={`flex flex-col sm:flex-row gap-4 ${index === 0 ? "items-end" : "items-center"}`}
                 >
                   <div className="flex-1 w-full">
-                    <label htmlFor={`freq-target-${index}`} className="sr-only">
+                    <label htmlFor={`freq-target-${index}`} className={index === 0 ? labelClass : "sr-only"}>
                       対象項目
                     </label>
                     <input
@@ -167,17 +167,34 @@ export default function OverviewTabContent({
                   <div className="flex-1 w-full">
                     <label
                       htmlFor={`freq-frequency-${index}`}
-                      className="sr-only"
+                      className={index === 0 ? labelClass : "sr-only"}
                     >
                       頻度
                     </label>
-                    <input
-                      type="text"
-                      id={`freq-frequency-${index}`}
-                      placeholder="頻度（例: 月1回）"
-                      className={inputClass}
-                      {...register(`updateFrequencies.${index}.frequency`)}
-                    />
+                    <div className="relative inline-block w-full">
+                      <select
+                        id={`freq-frequency-${index}`}
+                        className="block w-full h-12 appearance-none border border-gray-400 rounded-md bg-white pl-4 pr-10 text-sm text-gray-900 hover:border-black focus:outline focus:outline-2 focus:outline-black focus:outline-offset-[2px]"
+                        {...register(`updateFrequencies.${index}.frequency`)}
+                      >
+                        <option value="">選択してください</option>
+                        <option value="月次">月次</option>
+                        <option value="年次">年次</option>
+                      </select>
+                      <svg
+                        aria-hidden="true"
+                        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-900"
+                        fill="none"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                      >
+                        <path
+                          d="M13.3344 4.40002L8.00104 9.73336L2.66771 4.40002L1.73438 5.33336L8.00104 11.6L14.2677 5.33336L13.3344 4.40002Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
                   </div>
                   <button
                     type="button"
