@@ -161,14 +161,14 @@ export function TableDefGrid({
     {
       key: "description",
       label: "項目説明",
-      className: "min-w-[350px]",
+      className: "w-[400px] min-w-[400px] max-w-[400px]",
       render: (row, idx) => {
         return (
           <PopoverTextarea
             name={`tableDefs.${subtab}.${idx}.description`}
             defaultValue={row.description}
             placeholder="項目説明を入力"
-            className="min-w-[350px]"
+            className="w-full"
             ariaLabel={`項目説明（項番${row.id}）`}
           />
         );
@@ -201,14 +201,14 @@ export function TableDefGrid({
     {
       key: "sampleData",
       label: "サンプルデータ",
-      className: "min-w-[350px]",
+      className: "w-[400px] min-w-[400px] max-w-[400px]",
       render: (row, idx) => {
         return (
           <PopoverTextarea
             name={`tableDefs.${subtab}.${idx}.sampleData`}
             defaultValue={row.sampleData}
             placeholder="サンプルデータを入力"
-            className="min-w-[350px]"
+            className="w-full"
             ariaLabel={`サンプルデータ（項番${row.id}）`}
             align="right"
           />

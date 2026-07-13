@@ -33,7 +33,7 @@ const tableColumns: ColumnDef<TableDefRow>[] = [
   {
     key: "description",
     label: "項目説明",
-    className: "min-w-[350px]",
+    className: "w-[400px] min-w-[400px] max-w-[400px]",
     render: (row) => (
       <TextPopover text={String(row.description || "")} maxLength={40} />
     ),
@@ -43,7 +43,7 @@ const tableColumns: ColumnDef<TableDefRow>[] = [
   {
     key: "sampleData",
     label: "サンプルデータ",
-    className: "min-w-[350px]",
+    className: "w-[400px] min-w-[400px] max-w-[400px]",
     render: (row) => (
       <TextPopover text={String(row.sampleData || "")} maxLength={40} />
     ),

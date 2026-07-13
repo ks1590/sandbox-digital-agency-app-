@@ -12,7 +12,7 @@ export default function TextPopover({
   maxLength = 20,
 }: TextPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
   const triggerRef = useRef<HTMLButtonElement>(null);
   const hoverTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -23,11 +23,17 @@ export default function TextPopover({
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
+      // 親セル（td）の幅を取得してツールチップの幅に使う
+      const parentCell = triggerRef.current.closest("td");
+      const cellWidth = parentCell
+        ? parentCell.getBoundingClientRect().width
+        : rect.width;
       const maxLeft =
-        typeof window !== "undefined" ? window.innerWidth - 320 : 0;
+        typeof window !== "undefined" ? window.innerWidth - cellWidth - 16 : 0;
       setPosition({
         top: rect.top - 4, // 少し上に被せる
         left: Math.min(rect.left - 8, maxLeft > 0 ? maxLeft : rect.left),
+        width: cellWidth,
       });
       setIsOpen(true);
     }
@@ -61,7 +67,7 @@ export default function TextPopover({
   }, [isOpen]);
 
   if (!isTruncated) {
-    return <span>{text}</span>;
+    return <span className="block truncate max-w-full">{text}</span>;
   }
 
   return (
@@ -73,7 +79,7 @@ export default function TextPopover({
         onMouseLeave={handleMouseLeave}
         onFocus={handleMouseEnter}
         onBlur={handleMouseLeave}
-        className="cursor-default outline-none text-left"
+        className="cursor-default outline-none text-left block truncate max-w-full"
       >
         {displayText}
       </button>
@@ -85,8 +91,8 @@ export default function TextPopover({
           onFocus={handleTooltipMouseEnter}
           onBlur={handleTooltipMouseLeave}
           role="tooltip"
-          className="fixed z-[100] bg-white border border-gray-900 p-2 text-sm text-gray-900 shadow-md whitespace-pre-wrap break-all max-w-[400px]"
-          style={{ top: position.top, left: position.left }}
+          className="fixed z-[100] bg-white border border-gray-900 p-2 text-sm text-gray-900 shadow-md whitespace-pre-wrap break-all"
+          style={{ top: position.top, left: position.left, minWidth: position.width }}
         >
           {text}
         </div>
