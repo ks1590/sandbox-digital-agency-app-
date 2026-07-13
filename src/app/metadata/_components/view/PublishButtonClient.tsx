@@ -45,7 +45,7 @@ export default function PublishButtonClient() {
       <button
         type="button"
         onClick={handleOpen}
-        className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-green-600 px-4 py-2 text-base font-bold text-white transition-colors hover:bg-green-700 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+        className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-green-600 px-4 py-2 text-base font-bold text-white transition-colors hover:bg-green-700 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
       >
         公開
       </button>
@@ -59,14 +59,14 @@ export default function PublishButtonClient() {
             <button
               type="button"
               onClick={handleClose}
-              className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] border border-solid border-gray-600 bg-white px-4 py-2 text-base font-bold text-gray-900 transition-colors hover:bg-gray-100 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+              className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-solid border-gray-600 bg-white px-4 py-2 text-base font-bold text-gray-900 transition-colors hover:bg-gray-100 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
               キャンセル
             </button>
             <button
               type="button"
               onClick={handlePublish}
-              className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-[#0017C1] px-4 py-2 text-base font-bold text-white transition-colors hover:bg-[#1A30C9] focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+              className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-[#0017C1] px-4 py-2 text-base font-bold text-white transition-colors hover:bg-[#1A30C9] focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
               公開する
             </button>

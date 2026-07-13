@@ -142,7 +142,7 @@ export default function OverviewTabContent({
             <button
               type="button"
               onClick={() => appendFreq({ target: "", frequency: "" })}
-              className="mb-4 inline-flex items-center justify-center gap-2 rounded-md bg-white border border-[#0017C1] px-4 py-2 text-sm font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+              className="mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
               ＋ 対象項目・頻度を追加
             </button>
@@ -182,7 +182,7 @@ export default function OverviewTabContent({
                   <button
                     type="button"
                     onClick={() => removeFreq(index)}
-                    className="px-6 py-2 h-12 flex items-center justify-center border border-error-1 rounded-md bg-white text-error-1 hover:bg-red-50 focus:outline-none font-bold whitespace-nowrap transition-colors"
+                    className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-error-1 px-4 py-2 text-base font-bold text-error-1 underline-offset-[3px] transition-colors hover:bg-red-50 hover:underline active:bg-red-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap"
                     aria-label={`更新頻度 ${index + 1} を削除`}
                   >
                     削除
@@ -199,7 +199,7 @@ export default function OverviewTabContent({
               onClick={() =>
                 appendTable({ id: "", physicalName: "", logicalName: "", overview: "", unit: "" })
               }
-              className="mb-4 inline-flex items-center justify-center gap-2 rounded-md bg-white border border-[#0017C1] px-4 py-2 text-sm font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+              className="mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
               ＋ テーブル定義と紐づける
             </button>
@@ -293,7 +293,7 @@ export default function OverviewTabContent({
                           <button
                             type="button"
                             onClick={() => removeTable(index)}
-                            className="px-6 py-2 h-12 flex items-center justify-center border border-error-1 rounded-md bg-white text-error-1 hover:bg-red-50 focus:outline-none font-bold whitespace-nowrap transition-colors"
+                            className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-error-1 px-4 py-2 text-base font-bold text-error-1 underline-offset-[3px] transition-colors hover:bg-red-50 hover:underline active:bg-red-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap"
                             aria-label={`テーブル ${index + 1} を削除`}
                           >
                             削除
