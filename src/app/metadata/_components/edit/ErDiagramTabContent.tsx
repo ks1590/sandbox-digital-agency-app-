@@ -81,15 +81,9 @@ export default function ErDiagramTabContent() {
   return (
     <div className="py-6 flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <Label id={labelId} htmlFor={inputId}>
-          参照する画像・ドキュメント
-          <RequirementBadge isOptional>※任意</RequirementBadge>
-        </Label>
-        <SupportText id={supportTextId}>
-          対応ファイル：PNG/JPEG形式の画像
-          <br />
-          1ファイルまで選択可能。1ファイルあたり5MB（5,242,880バイト）まで
-        </SupportText>
+        <h3 className="block text-base font-bold text-gray-900 mb-2">
+          ファイルアップロード
+        </h3>
         <FileUpload
           className="mt-2"
           maxFiles={1}
@@ -163,7 +157,7 @@ export default function ErDiagramTabContent() {
               </p>
             </FileUploadDropArea>
 
-            {files.length > 0 && (
+            {files.length > 0 ? (
               <FileUploadFileList>
                 {files.map((file, index) => {
                   const hasFileError = file.errors && file.errors.length > 0;
@@ -206,6 +200,10 @@ export default function ErDiagramTabContent() {
                   );
                 })}
               </FileUploadFileList>
+            ) : (
+              <div className="mt-6 text-sm text-gray-700">
+                ファイルが選択されていません
+              </div>
             )}
           </div>
 
