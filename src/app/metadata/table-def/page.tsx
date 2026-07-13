@@ -149,7 +149,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                 href={`/metadata/${fromType}?tab=table-def`}
                 className="inline-flex items-center justify-center min-w-[136px] min-h-[56px] rounded-[8px] border border-gray-400 bg-white px-4 py-3 text-base font-bold text-gray-900 underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
               >
-                戻る
+                データ種別に関する情報に戻る
               </Link>
             </div>
           )}
