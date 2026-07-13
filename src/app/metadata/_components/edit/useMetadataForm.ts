@@ -4,9 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { saveMetadataAction } from "../../actions";
 import type { MetadataResponse } from "../../types";
 import { type MetadataFormData, metadataSchema } from "../schema";
+
+async function saveMetadataAction(data: MetadataFormData) {
+  console.info("保存リクエストを受信しました", {
+    dataType: data.dataType,
+    tablesCount: data.tables?.length,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  return { success: true };
+}
 
 /** 通知バナーの状態型 */
 export type NotificationState = {

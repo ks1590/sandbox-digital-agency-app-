@@ -1,15 +1,32 @@
 "use client";
 
-import { useActionState } from "react";
-import { login } from "@/actions/auth";
+import { useState } from "react";
+import { login } from "@/lib/auth";
 import { TextInput } from "@/components/form/TextInput";
 import { ErrorText } from "@/components/ui/ErrorText";
 
 export default function LoginForm() {
-  const [state, formAction, isPending] = useActionState(login, null);
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPending(true);
+    setError(null);
+    
+    const formData = new FormData(e.currentTarget);
+    const loginId = formData.get("loginId") as string;
+    const password = formData.get("password") as string;
+    
+    const result = await login(loginId, password);
+    if (result.error) {
+      setError(result.error);
+      setIsPending(false);
+    }
+  };
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-blue-50 border border-blue-200 text-blue-900 px-4 py-3 rounded-md text-sm">
         <p className="font-bold mb-1">【開発用ダミーアカウント】</p>
         <p>
@@ -40,9 +57,9 @@ export default function LoginForm() {
       />
 
       <div className="pt-4">
-        {state?.error && (
+        {error && (
           <ErrorText className="mb-4 font-bold text-center">
-            {state.error}
+            {error}
           </ErrorText>
         )}
         <button
@@ -50,7 +67,7 @@ export default function LoginForm() {
           disabled={isPending}
           className="inline-flex w-full items-center justify-center min-h-[56px] rounded-[8px] border-4 border-double border-transparent bg-[#0017C1] text-white px-4 py-3 text-base font-bold underline-offset-[3px] transition-colors hover:bg-blue-900 hover:underline active:bg-blue-950 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300 disabled:opacity-50"
         >
-          ログイン
+          {isPending ? "ログイン中..." : "ログイン"}
         </button>
       </div>
     </form>

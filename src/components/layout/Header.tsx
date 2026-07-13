@@ -2,11 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { logout } from "../../actions/auth";
+import { logout } from "../../lib/auth";
 
-export default function Header({ userId }: { userId?: string }) {
+export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const id = localStorage.getItem("login-user-id");
+    setUserId(id);
+  }, []);
 
   // 外側クリックでメニューを閉じる処理
   useEffect(() => {

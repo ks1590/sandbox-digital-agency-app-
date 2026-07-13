@@ -1,19 +1,15 @@
-import { cookies } from "next/headers";
 import Header from "@/components/layout/Header";
 import { fetchDataProfile } from "./api";
 import DataProfileContent from "./DataProfileContent";
 
 export default async function DataProfilePage() {
-  const cookieStore = await cookies();
-  const userId = cookieStore.get("login-user-id")?.value;
-
   // サーバー側（Lambda）でGoのAPIを叩いてデータを取得します。
   // ここで取得するため、ブラウザ側でのCORSは発生しません。
   const data = await fetchDataProfile();
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Header userId={userId} />
+      <Header />
 
       <main className="page-bg flex-1">
         <div className="page-container">

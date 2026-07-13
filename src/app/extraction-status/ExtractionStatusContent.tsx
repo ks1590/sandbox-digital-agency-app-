@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import {
   DatePicker,
   DatePickerMonth,
@@ -17,6 +17,7 @@ import {
   ModalDialogHeader,
   ModalDialogHeading,
 } from "@/components/ui/ModalDialog";
+import { fetchExtractionStatus } from "./api";
 import type { ExtractionRequest } from "./types";
 
 function formatTimestamp(isoStr: string): string {
@@ -51,24 +52,38 @@ function formatJsonSafe(json: string): string {
   }
 }
 
-export default function ExtractionStatusContent({
-  data: filteredData,
-  initialYear,
-  initialMonth,
-}: {
-  data: ExtractionRequest[];
-  initialYear?: string;
-  initialMonth?: string;
-}) {
-  const router = useRouter();
+export default function ExtractionStatusContent() {
+  const searchParams = useSearchParams();
+  const initialYear = searchParams.get("year") || "";
+  const initialMonth = searchParams.get("month") || "";
+
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [modalState, setModalState] = useState<{ title: string; content: string } | null>(null);
 
-  const hasSearched = initialYear !== undefined || initialMonth !== undefined;
-  const displayData = hasSearched ? filteredData : [];
+  const [filteredData, setFilteredData] = useState<ExtractionRequest[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [yearInput, setYearInput] = useState(initialYear || "");
-  const [monthInput, setMonthInput] = useState(initialMonth || "");
+  const hasSearched = initialYear !== "" || initialMonth !== "";
+
+  const [yearInput, setYearInput] = useState(initialYear);
+  const [monthInput, setMonthInput] = useState(initialMonth);
+
+  useEffect(() => {
+    async function loadData() {
+      if (hasSearched) {
+        setIsLoading(true);
+        try {
+          const data = await fetchExtractionStatus({ year: initialYear, month: initialMonth });
+          setFilteredData(data);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+    loadData();
+  }, [hasSearched, initialYear, initialMonth]);
 
   const handleOpenModal = useCallback((title: string, content: string) => {
     setModalState({ title, content });
@@ -81,12 +96,27 @@ export default function ExtractionStatusContent({
   };
 
   const handleSearch = () => {
-    const params = new URLSearchParams();
-    if (yearInput) params.set("year", yearInput);
-    if (monthInput) params.set("month", monthInput);
+    const params = new URLSearchParams(window.location.search);
+    if (yearInput) {
+      params.set("year", yearInput);
+    } else {
+      params.delete("year");
+    }
+    
+    if (monthInput) {
+      params.set("month", monthInput);
+    } else {
+      params.delete("month");
+    }
 
-    // URLのクエリパラメータを更新することでServer Componentに再フェッチさせる
-    router.push(`?${params.toString()}`);
+    // ブラウザのURLを更新 (静的エクスポート用)
+    window.history.pushState(null, "", `?${params.toString()}`);
+    // Stateを更新して再フェッチをトリガー
+    setIsLoading(true);
+    fetchExtractionStatus({ year: yearInput, month: monthInput }).then((data) => {
+      setFilteredData(data);
+      setIsLoading(false);
+    });
   };
 
   const columns: ColumnDef<ExtractionRequest>[] = useMemo(
@@ -225,20 +255,20 @@ export default function ExtractionStatusContent({
                 </>
               )}
             </DatePicker>
-            <Button onClick={handleSearch} size="md" variant="solid-fill">
-              検索
+            <Button onClick={handleSearch} size="md" variant="solid-fill" disabled={isLoading}>
+              {isLoading ? "検索中..." : "検索"}
             </Button>
           </div>
         </div>
 
         {/* 総件数 */}
         <p className="text-sm text-gray-700 mb-2">
-          総件数：{displayData.length}件
+          総件数：{filteredData.length}件
         </p>
 
         {/* テーブル */}
         <DataTable
-          data={displayData}
+          data={filteredData}
           columns={columns}
           rowKey={(row) => row.requestId}
         />

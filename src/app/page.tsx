@@ -1,14 +1,10 @@
-import { cookies } from "next/headers";
 import Header from "@/components/layout/Header";
 import LinkCard from "@/components/ui/LinkCard";
 
 export default async function PortalPage() {
-  const cookieStore = await cookies();
-  const userId = cookieStore.get("login-user-id")?.value;
-
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Header userId={userId} />
+      <Header />
 
       <main className="portal-main" id="mainContainer">
         <section className="portal-cards-section" id="portal-cards">
