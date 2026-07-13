@@ -92,7 +92,7 @@ export default function TextPopover({
           onBlur={handleTooltipMouseLeave}
           role="tooltip"
           className="fixed z-[100] bg-white border border-gray-900 p-2 text-sm text-gray-900 shadow-md whitespace-pre-wrap break-all"
-          style={{ top: position.top, left: position.left, minWidth: position.width }}
+          style={{ top: position.top, left: position.left, width: position.width }}
         >
           {text}
         </div>

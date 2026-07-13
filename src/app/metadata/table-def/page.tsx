@@ -1,9 +1,12 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
+import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import Header from "@/components/layout/Header";
 import { TableDefGrid } from "../_components/table-def/TableDefContent";
 import { SortableTableWithColumns } from "../_components/table-def/TableDefViewClient";
 import MetadataViewTabs from "../_components/view/MetadataViewTabs";
+import PublishButtonClient from "../_components/view/PublishButtonClient";
 import { fetchMetadata } from "../api";
 
 type Props = {
@@ -18,6 +21,8 @@ export default async function TableDefPage({ searchParams }: Props) {
   const tabParam = typeof params.tab === "string" ? params.tab : "disease";
   const isEditMode = params.mode === "edit";
   const fromType = typeof params.from === "string" ? params.from : "clinical";
+  const publishSuccess = params.publish_success === "true";
+  const publishError = params.publish_error === "true";
 
   let defaultIndex = 0;
   if (tabParam === "allergy") defaultIndex = 1;
@@ -30,6 +35,34 @@ export default async function TableDefPage({ searchParams }: Props) {
       <Header userId={userId} />
 
       <main className="page-bg flex-1">
+        {publishSuccess && (
+          <div className="page-container py-4">
+            <NotificationBanner
+              bannerStyle="standard"
+              type="success"
+              title="公開しました"
+            >
+              <NotificationBannerBody>
+                メタデータの公開処理が正常に完了しました。
+              </NotificationBannerBody>
+            </NotificationBanner>
+          </div>
+        )}
+
+        {publishError && (
+          <div className="page-container py-4">
+            <NotificationBanner
+              bannerStyle="standard"
+              type="error"
+              title="公開に失敗しました"
+            >
+              <NotificationBannerBody>
+                エラーが発生しました。再度お試しください。
+              </NotificationBannerBody>
+            </NotificationBanner>
+          </div>
+        )}
+
         <div className="page-container">
           <div className="mb-6 flex items-center justify-between gap-4">
             <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
@@ -41,14 +74,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                 >
                   編集
                 </Link>
-                {data.overview.status === "draft" && (
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-green-600 px-4 py-2 text-base font-bold text-white transition-colors hover:bg-green-700 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
-                  >
-                    公開
-                  </button>
-                )}
+                {data.overview.status === "draft" && <PublishButtonClient />}
               </div>
             )}
           </div>

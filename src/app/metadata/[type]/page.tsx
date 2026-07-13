@@ -7,6 +7,7 @@ import LinkCard from "@/components/ui/LinkCard";
 import MetadataEdit from "../_components/edit/MetadataEdit";
 import MetadataViewTabs from "../_components/view/MetadataViewTabs";
 import OverviewViewClient from "../_components/view/OverviewViewClient";
+import PublishButtonClient from "../_components/view/PublishButtonClient";
 import { fetchMetadata } from "../api";
 
 type Props = {
@@ -26,6 +27,8 @@ export default async function MetadataTypePage({
   const tabParam = typeof query.tab === "string" ? query.tab : "overview";
   const isEditMode = query.mode === "edit";
   const isSuccess = query.success === "true";
+  const publishSuccess = query.publish_success === "true";
+  const publishError = query.publish_error === "true";
 
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
@@ -43,15 +46,29 @@ export default async function MetadataTypePage({
       <Header userId={userId} />
 
       <main className="page-bg flex-1">
-        {isSuccess && (
+        {(isSuccess || publishSuccess) && (
           <div className="page-container py-4">
             <NotificationBanner
               bannerStyle="standard"
               type="success"
-              title="ビジネスメタデータを仮登録しました"
+              title={publishSuccess ? "公開しました" : "ビジネスメタデータを仮登録しました"}
             >
               <NotificationBannerBody>
-                入力された情報が正しく保存されました。
+                {publishSuccess ? "メタデータの公開処理が正常に完了しました。" : "入力された情報が正しく保存されました。"}
+              </NotificationBannerBody>
+            </NotificationBanner>
+          </div>
+        )}
+
+        {publishError && (
+          <div className="page-container py-4">
+            <NotificationBanner
+              bannerStyle="standard"
+              type="error"
+              title="公開に失敗しました"
+            >
+              <NotificationBannerBody>
+                エラーが発生しました。再度お試しください。
               </NotificationBannerBody>
             </NotificationBanner>
           </div>
@@ -67,14 +84,7 @@ export default async function MetadataTypePage({
               >
                 編集
               </Link>
-              {data.overview.status === "draft" && (
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-green-600 px-4 py-2 text-base font-bold text-white transition-colors hover:bg-green-700 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
-                >
-                  公開
-                </button>
-              )}
+              {data.overview.status === "draft" && <PublishButtonClient />}
             </div>
           </div>
 
