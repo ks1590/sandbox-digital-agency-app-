@@ -49,7 +49,7 @@ export default function SubtabSection({
             ),
           },
           {
-            label: "アレルギー",
+            label: "薬剤・その他アレルギー等",
             id: "subtab-allergy",
             content: (
               <div className="py-6">
@@ -58,7 +58,7 @@ export default function SubtabSection({
             ),
           },
           {
-            label: "検査",
+            label: "感染症・検査",
             id: "subtab-examination",
             content: (
               <div className="py-6">

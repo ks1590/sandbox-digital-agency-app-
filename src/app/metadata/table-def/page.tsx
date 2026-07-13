@@ -81,7 +81,7 @@ export default async function TableDefPage({ searchParams }: Props) {
 
           {!isEditMode && (
             <div className="mb-8">
-              <h3 className="block text-sm font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
                 データ種別
               </h3>
               <p className="text-base text-gray-900">
@@ -117,7 +117,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                   ),
                 },
                 {
-                  label: "アレルギー",
+                  label: "薬剤・その他アレルギー等",
                   id: "tab-allergy",
                   content: (
                     <div className="py-6">
@@ -133,7 +133,7 @@ export default async function TableDefPage({ searchParams }: Props) {
                   ),
                 },
                 {
-                  label: "検査",
+                  label: "感染症・検査",
                   id: "tab-examination",
                   content: (
                     <div className="py-6">
