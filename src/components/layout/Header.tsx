@@ -2,11 +2,21 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { logout } from "../../actions/auth";
+import { useRouter } from "next/navigation";
 
-export default function Header({ userId }: { userId?: string }) {
+export default function Header() {
+  const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // クライアントサイドでローカルストレージから取得
+    const storedUserId = localStorage.getItem("login-user-id");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+  }, []);
 
   // 外側クリックでメニューを閉じる処理
   useEffect(() => {
@@ -22,6 +32,13 @@ export default function Header({ userId }: { userId?: string }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMenuOpen]);
+
+  const handleLogout = () => {
+    setIsMenuOpen(false);
+    localStorage.removeItem("auth-token");
+    localStorage.removeItem("login-user-id");
+    router.replace("/login");
+  };
 
   return (
     <header className="portal-header" id="portal-header">
@@ -145,10 +162,7 @@ export default function Header({ userId }: { userId?: string }) {
                       <button
                         type="button"
                         className="w-full text-left block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                        onClick={async () => {
-                          setIsMenuOpen(false);
-                          await logout();
-                        }}
+                        onClick={handleLogout}
                       >
                         ログアウト
                       </button>

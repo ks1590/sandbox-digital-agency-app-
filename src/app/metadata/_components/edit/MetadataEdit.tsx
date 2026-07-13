@@ -15,10 +15,8 @@ import SubtabSection from "./SubtabSection";
 import { useMetadataForm } from "./useMetadataForm";
 
 export default function MetadataEdit({
-  userId,
   data: apiData,
 }: {
-  userId?: string;
   data: MetadataResponse;
 }) {
   const {
@@ -38,7 +36,7 @@ export default function MetadataEdit({
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Header userId={userId} />
+      <Header />
 
       {notification && (
         <div className="w-full bg-white border-b border-gray-200">

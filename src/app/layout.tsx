@@ -1,3 +1,4 @@
+import AuthGuard from "@/components/layout/AuthGuard";
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
@@ -24,7 +25,7 @@ export default function RootLayout({
         className="min-h-screen"
         style={{ fontFamily: "var(--font-noto-sans-jp), sans-serif" }}
       >
-        {children}
+        <AuthGuard>{children}</AuthGuard>
       </body>
     </html>
   );

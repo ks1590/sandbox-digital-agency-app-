@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import {
   DatePicker,
   DatePickerMonth,
@@ -52,23 +52,41 @@ function formatJsonSafe(json: string): string {
 }
 
 export default function ExtractionStatusContent({
-  data: filteredData,
-  initialYear,
-  initialMonth,
+  data: allData,
 }: {
   data: ExtractionRequest[];
-  initialYear?: string;
-  initialMonth?: string;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const initialYear = searchParams.get("year") || "";
+  const initialMonth = searchParams.get("month") || "";
+
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [modalState, setModalState] = useState<{ title: string; content: string } | null>(null);
 
-  const hasSearched = initialYear !== undefined || initialMonth !== undefined;
-  const displayData = hasSearched ? filteredData : [];
+  const hasSearched = initialYear !== "" || initialMonth !== "";
+  
+  const displayData = useMemo(() => {
+    if (!hasSearched) return [];
+    let result = allData;
+    if (initialYear) {
+      result = result.filter((req) => req.receptionTimestamp.startsWith(initialYear));
+    }
+    if (initialMonth) {
+      const formattedMonth = initialMonth.padStart(2, "0");
+      result = result.filter((req) => req.receptionTimestamp.substring(5, 7) === formattedMonth);
+    }
+    return result;
+  }, [allData, hasSearched, initialYear, initialMonth]);
 
-  const [yearInput, setYearInput] = useState(initialYear || "");
-  const [monthInput, setMonthInput] = useState(initialMonth || "");
+  const [yearInput, setYearInput] = useState(initialYear);
+  const [monthInput, setMonthInput] = useState(initialMonth);
+
+  useEffect(() => {
+    setYearInput(initialYear);
+    setMonthInput(initialMonth);
+  }, [initialYear, initialMonth]);
 
   const handleOpenModal = useCallback((title: string, content: string) => {
     setModalState({ title, content });
