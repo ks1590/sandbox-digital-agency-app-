@@ -79,9 +79,7 @@ export default async function MetadataTypePage({
           </div>
 
           <div className="mb-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
-              データ種別
-            </h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">データ種別</h3>
             <p className="text-base text-gray-900">
               {type === "clinical"
                 ? "臨床情報"
@@ -114,18 +112,18 @@ export default async function MetadataTypePage({
                   label: "テーブル定義",
                   id: "tab-table-def",
                   content: (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
                       <LinkCard
                         href={`/metadata/table-def?tab=disease&from=${type}`}
                         title="傷病"
                       />
                       <LinkCard
                         href={`/metadata/table-def?tab=allergy&from=${type}`}
-                        title="アレルギー"
+                        title="薬剤・その他アレルギー等"
                       />
                       <LinkCard
                         href={`/metadata/table-def?tab=examination&from=${type}`}
-                        title="検査"
+                        title="感染症・検査"
                       />
                     </div>
                   ),

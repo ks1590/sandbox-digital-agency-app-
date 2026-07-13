@@ -32,6 +32,8 @@ export default function MetadataEdit({
     handleErrorSubmit,
     handleTabChange,
     cancelHref,
+    returnHref,
+    returnText,
   } = useMetadataForm(apiData);
 
   return (
@@ -110,6 +112,8 @@ export default function MetadataEdit({
               <EditFormFooter
                 cancelHref={cancelHref}
                 onErrorTest={handleErrorSubmit}
+                returnHref={returnHref}
+                returnText={returnText}
               />
             </form>
           </FormProvider>

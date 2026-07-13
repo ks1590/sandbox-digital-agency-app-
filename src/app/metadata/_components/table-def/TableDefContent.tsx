@@ -226,8 +226,8 @@ export default function TableDefContent() {
   > = {
     clinical: [
       { id: "disease", title: "傷病" },
-      { id: "allergy", title: "アレルギー" },
-      { id: "examination", title: "検査" },
+      { id: "allergy", title: "薬剤・その他アレルギー等" },
+      { id: "examination", title: "感染症・検査" },
     ],
     // その他のデータ種別（デモ用）
     document: [
@@ -248,18 +248,14 @@ export default function TableDefContent() {
   const currentCards = LINK_CARDS_BY_DATA_TYPE[dataType] || [];
 
   return (
-    <div className="py-6">
-      {/* セレクトボックスは共通要素として親（MetadataEdit）に移動しました */}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4 border-t border-gray-200">
-        {currentCards.map((card) => (
-          <LinkCard
-            key={card.id}
-            href={`${pathname}?mode=edit&tab=table-def&subtab=${card.id}`}
-            title={card.title}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
+      {currentCards.map((card) => (
+        <LinkCard
+          key={card.id}
+          href={`${pathname}?mode=edit&tab=table-def&subtab=${card.id}`}
+          title={card.title}
+        />
+      ))}
     </div>
   );
 }

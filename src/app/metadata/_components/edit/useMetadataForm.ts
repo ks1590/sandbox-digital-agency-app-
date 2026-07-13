@@ -134,8 +134,21 @@ export function useMetadataForm(apiData: MetadataResponse) {
   const cancelHref = isTopPage
     ? "/metadata"
     : subtabParam
-      ? `/metadata/table-def?tab=${subtabParam}&from=${pathname.split("/").pop()}`
+      ? `/metadata/table-def?tab=${subtabParam}&from=${searchParams.get("from") || "clinical"}`
       : `${pathname}?tab=${tabParam}`;
+
+  const fromType = searchParams.get("from") || "clinical";
+  const returnHref = isTopPage
+    ? null
+    : subtabParam
+      ? `/metadata/${fromType}?mode=edit&tab=table-def`
+      : `/metadata?mode=edit`;
+
+  const returnText = isTopPage
+    ? null
+    : subtabParam
+      ? "データ種別に関する情報に戻る"
+      : "データベース全体の情報に戻る";
 
   return {
     methods,
@@ -148,5 +161,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
     handleErrorSubmit,
     handleTabChange,
     cancelHref,
+    returnHref,
+    returnText,
   };
 }

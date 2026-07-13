@@ -29,7 +29,13 @@ import { SupportText } from "@/components/ui/SupportText";
  * 画像プレビュー表示を担当する。
  * FileUpload関連のstate・hookをすべて内包する。
  */
-export default function ErDiagramTabContent() {
+interface ErDiagramTabContentProps {
+  initialImageUrl?: string;
+}
+
+export default function ErDiagramTabContent({
+  initialImageUrl,
+}: ErDiagramTabContentProps = {}) {
   const {
     files,
     errors,
@@ -66,6 +72,7 @@ export default function ErDiagramTabContent() {
   const labelId = useId();
   const supportTextId = useId();
 
+  const [isExistingRemoved, setIsExistingRemoved] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -74,9 +81,15 @@ export default function ErDiagramTabContent() {
       setPreviewUrl(url);
       return () => URL.revokeObjectURL(url);
     } else {
-      setPreviewUrl(null);
+      if (initialImageUrl && !isExistingRemoved) {
+        setPreviewUrl(initialImageUrl);
+      } else {
+        setPreviewUrl(null);
+      }
     }
-  }, [files]);
+  }, [files, initialImageUrl, isExistingRemoved]);
+
+  const showDeleteButton = previewUrl && files.length === 0 && initialImageUrl && !isExistingRemoved;
 
   return (
     <div className="py-6 flex flex-col gap-6">
@@ -202,7 +215,11 @@ export default function ErDiagramTabContent() {
               </FileUploadFileList>
             ) : (
               <div className="mt-6 text-sm text-gray-700">
-                ファイルが選択されていません
+                {!isExistingRemoved && initialImageUrl ? (
+                  <span>既にファイルが登録されています</span>
+                ) : (
+                  <span>ファイルが選択されていません</span>
+                )}
               </div>
             )}
           </div>
@@ -224,13 +241,26 @@ export default function ErDiagramTabContent() {
       </div>
 
       {previewUrl && (
-        <div className="mt-6 border border-gray-300 rounded-lg p-4 bg-gray-50 flex justify-center items-center">
-          {/* biome-ignore lint/performance/noImgElement: intentional for previewing uploaded files */}
-          <img
-            src={previewUrl}
-            alt="ER図プレビュー"
-            className="max-w-full h-auto object-contain max-h-[600px] border border-gray-200"
-          />
+        <div className="mt-6 flex flex-col gap-4">
+          <div className="border border-gray-300 rounded-lg p-4 bg-gray-50 flex justify-center items-center">
+            {/* biome-ignore lint/performance/noImgElement: intentional for previewing uploaded files */}
+            <img
+              src={previewUrl}
+              alt="ER図プレビュー"
+              className="max-w-full h-auto object-contain max-h-[600px] border border-gray-200"
+            />
+          </div>
+          {showDeleteButton && (
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsExistingRemoved(true)}
+                className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border border-error-1 px-4 py-2 text-base font-bold text-error-1 transition-colors hover:bg-red-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+              >
+                削除
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
