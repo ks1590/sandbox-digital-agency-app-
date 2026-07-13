@@ -107,15 +107,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
     }
   };
 
-  /** エラー表示ハンドラ */
-  const handleErrorSubmit = () => {
-    setNotification({
-      type: "error",
-      title: "操作を完了できませんでした",
-      message: "入力内容に誤りがあります。エラーメッセージを確認してください。",
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+
 
   /** タブ切替ハンドラ */
   const handleTabChange = (index: number) => {
@@ -158,7 +150,6 @@ export function useMetadataForm(apiData: MetadataResponse) {
     pathname,
     defaultIndex,
     handleSubmit,
-    handleErrorSubmit,
     handleTabChange,
     cancelHref,
     returnHref,
