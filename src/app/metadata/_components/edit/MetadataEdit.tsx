@@ -21,6 +21,7 @@ export default function MetadataEdit({
 }) {
   const {
     methods,
+    isInitialized,
     notification,
     isTopPage,
     subtabParam,
@@ -64,8 +65,9 @@ export default function MetadataEdit({
             フォーム全体でTabを囲むことで、
             どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
           */}
-          <FormProvider {...methods}>
-            <form
+          {isInitialized ? (
+            <FormProvider {...methods}>
+              <form
               onSubmit={methods.handleSubmit(handleSubmit)}
               className="text-gray-900"
             >
@@ -112,7 +114,12 @@ export default function MetadataEdit({
                 returnText={returnText}
               />
             </form>
-          </FormProvider>
+            </FormProvider>
+          ) : (
+            <div className="flex items-center justify-center p-12">
+              <div className="text-gray-500">データを読み込み中...</div>
+            </div>
+          )}
         </div>
       </main>
     </div>

@@ -46,6 +46,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
     },
   });
 
+  const [isInitialized, setIsInitialized] = useState(false);
+
   // APIデータが取得できたらフォームの初期値としてリセット
   useEffect(() => {
     if (!apiData) return;
@@ -56,6 +58,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       try {
         const parsed = JSON.parse(saved);
         methods.reset(parsed);
+        setIsInitialized(true);
         return;
       } catch (e) {
         console.error("Failed to parse sessionStorage data", e);
@@ -68,6 +71,19 @@ export function useMetadataForm(apiData: MetadataResponse) {
 収集開始年度
 最新の提供可能年度
 収集頻度
+
+## 更新頻度
+対象項目
+
+## テーブル一覧
+※以下はテーブルレイアウトにしたい
+| テーブル物理名 | テーブル論理名 | 概要 | 格納単位 |
+| --- | --- | --- | --- |
+| | | | |
+
+## 留意事項
+
+## キー情報
 `;
 
     // sessionStorageにデータがなければAPIデータを使用しつつ、overviewTextはテンプレートを使用
@@ -83,6 +99,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       keyInfoText: apiData.overview.keyInfoText,
       tableDefs: apiData.tableDefs,
     });
+    setIsInitialized(true);
   }, [apiData, methods]);
 
   // タブのデフォルトインデックス算出
@@ -152,6 +169,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
   return {
     methods,
+    isInitialized,
     notification,
     isTopPage,
     subtabParam,
