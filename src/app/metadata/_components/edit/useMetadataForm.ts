@@ -53,7 +53,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
     if (!apiData) return;
 
     // sessionStorageに保存済みデータがあればそちらを優先
-    const saved = sessionStorage.getItem("metadata_clinical");
+    const storageKey = isTopPage ? "metadata_top" : "metadata_clinical";
+    const saved = sessionStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -100,7 +101,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       tableDefs: apiData.tableDefs,
     });
     setIsInitialized(true);
-  }, [apiData, methods]);
+  }, [apiData, methods, isTopPage]);
 
   // タブのデフォルトインデックス算出
   let defaultIndex = 0;
@@ -116,7 +117,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
     // 今回はバックエンド（DB）が存在しないモック環境のため、
     // 画面リロード時に編集内容が消えないようにセッションストレージにも保存しておく
-    sessionStorage.setItem("metadata_clinical", JSON.stringify(data));
+    const storageKey = isTopPage ? "metadata_top" : "metadata_clinical";
+    sessionStorage.setItem(storageKey, JSON.stringify(data));
 
     if (isTopPage) {
       router.push("/metadata?success=true");
