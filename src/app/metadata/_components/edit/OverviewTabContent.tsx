@@ -6,6 +6,7 @@ import type { MetadataFormData } from "../schema";
 import { inputClass, labelClass, textareaClass } from "../styles";
 import DataTypeListEditor from "./DataTypeListEditor";
 import KeyInfoSection from "./KeyInfoSection";
+import TableDefinitionLinks from "./TableDefinitionLinks";
 
 const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
   ssr: false,
@@ -68,6 +69,9 @@ export default function OverviewTabContent({
           onChange={(val) => setValue("dataTypes", val, { shouldDirty: true })}
         />
       )}
+
+      {/* テーブル定義と紐づける（子ページのみ） */}
+      {!isTopPage && <TableDefinitionLinks />}
     </div>
   );
 }
