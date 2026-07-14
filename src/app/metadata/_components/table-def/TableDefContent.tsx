@@ -10,89 +10,7 @@ import type { TableDefRow } from "../../types";
 import type { MetadataFormData } from "../schema";
 import TextPopover from "./TextPopover";
 
-function PopoverTextarea({
-  name,
-  defaultValue,
-  placeholder,
-  ariaLabel,
-  className,
-  align = "left",
-}: {
-  name: string;
-  defaultValue: string;
-  placeholder: string;
-  ariaLabel: string;
-  className?: string;
-  align?: "left" | "right";
-}) {
-  const [expanded, setExpanded] = useState(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const { watch, setValue } = useFormContext();
 
-  const value = watch(name) ?? defaultValue;
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
-    setValue(name, e.target.value, { shouldDirty: true, shouldTouch: true });
-  };
-
-  React.useEffect(() => {
-    if (!expanded) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setExpanded(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [expanded]);
-
-  return (
-    <div className={`relative ${className}`} ref={containerRef}>
-      <Input
-        blockSize="md"
-        value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
-        aria-label={ariaLabel}
-        className="w-full pr-8"
-        onFocus={() => setExpanded(true)}
-      />
-      {/* 展開アイコン（ヒント用） */}
-      <svg
-        className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-        />
-      </svg>
-
-      {expanded && (
-        <textarea
-          className={`absolute top-0 ${align === "right" ? "right-0" : "left-0"} w-full min-h-[160px] resize-y bg-white rounded-[8px] border border-solid-gray-600 px-4 py-3 text-base text-gray-900 shadow-xl z-50 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-2 focus:ring-2 focus:ring-yellow-300`}
-          value={value}
-          onChange={handleChange}
-          placeholder={placeholder}
-          aria-label={ariaLabel}
-          // biome-ignore lint/a11y/noAutofocus: intentional for popover textarea
-          autoFocus
-          onBlur={() => setExpanded(false)}
-        />
-      )}
-    </div>
-  );
-}
 
 export const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map(
   (_, i) => ({
@@ -162,17 +80,15 @@ export function TableDefGrid({
       key: "description",
       label: "項目説明",
       className: "w-[400px] min-w-[400px] max-w-[400px]",
-      render: (row, idx) => {
-        return (
-          <PopoverTextarea
-            name={`tableDefs.${subtab}.${idx}.description`}
-            defaultValue={row.description}
-            placeholder="項目説明を入力"
-            className="w-full"
-            ariaLabel={`項目説明（項番${row.id}）`}
-          />
-        );
-      },
+      render: (row, idx) => (
+        <Input
+          blockSize="md"
+          className="w-full"
+          placeholder="項目説明を入力"
+          aria-label={`項目説明（項番${row.id}）`}
+          {...register(`tableDefs.${subtab}.${idx}.description` as const)}
+        />
+      ),
     },
     {
       key: "foreignKey",
@@ -202,18 +118,15 @@ export function TableDefGrid({
       key: "sampleData",
       label: "サンプルデータ",
       className: "w-[400px] min-w-[400px] max-w-[400px]",
-      render: (row, idx) => {
-        return (
-          <PopoverTextarea
-            name={`tableDefs.${subtab}.${idx}.sampleData`}
-            defaultValue={row.sampleData}
-            placeholder="サンプルデータを入力"
-            className="w-full"
-            ariaLabel={`サンプルデータ（項番${row.id}）`}
-            align="right"
-          />
-        );
-      },
+      render: (row, idx) => (
+        <Input
+          blockSize="md"
+          className="w-full"
+          placeholder="サンプルデータを入力"
+          aria-label={`サンプルデータ（項番${row.id}）`}
+          {...register(`tableDefs.${subtab}.${idx}.sampleData` as const)}
+        />
+      ),
     },
   ];
 
