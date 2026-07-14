@@ -4,7 +4,10 @@ import {
   BlockTypeSelect,
   BoldItalicUnderlineToggles,
   CreateLink,
+  codeBlockPlugin,
+  codeMirrorPlugin,
   headingsPlugin,
+  InsertCodeBlock,
   InsertTable,
   InsertThematicBreak,
   ListsToggle,
@@ -48,6 +51,8 @@ const translationDict: Record<string, string> = {
   "Heading 5": "見出し 5",
   "Heading 6": "見出し 6",
   "Code block": "コードブロック",
+  "Insert code block": "コードブロックを挿入",
+  "Insert Code Block": "コードブロックを挿入",
   "Insert table": "テーブルを挿入",
   "Insert Table": "テーブルを挿入",
   "Insert link": "リンクを挿入",
@@ -118,6 +123,7 @@ export default forwardRef<MDXEditorMethods, MDXEditorProps>(
                         <CreateLink />
                         <InsertTable />
                         <InsertThematicBreak />
+                        <InsertCodeBlock />
                       </div>
                     ),
                   }),
@@ -131,6 +137,12 @@ export default forwardRef<MDXEditorMethods, MDXEditorProps>(
             linkPlugin(),
             linkDialogPlugin(),
             tablePlugin(),
+            codeBlockPlugin({ codeBlockEditorDescriptors: [] }),
+            codeMirrorPlugin({
+              codeBlockLanguages: {
+                "": "コードブロック",
+              },
+            }),
             ...(props.plugins || []),
           ]}
           {...props}
