@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "@digital-go-jp/tailwind-theme-plugin/v4";
 @plugin "@tailwindcss/container-queries";
-@plugin "@tailwindcss/typography";
 
 /* Ubuntu + Chromeなどのタッチデバイス環境でhoverが無効化されるのを防ぐための設定 */
 @custom-variant hover (&:hover);

@@ -1,15 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import type { MetadataFormData } from "../schema";
 import { inputClass, labelClass, textareaClass } from "../styles";
 import DataTypeListEditor from "./DataTypeListEditor";
 import KeyInfoSection from "./KeyInfoSection";
-
-const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
-  ssr: false,
-});
 
 interface OverviewTabContentProps {
   /** /metadata 直下の編集画面かどうか */
@@ -56,15 +51,10 @@ export default function OverviewTabContent({
         <label htmlFor="overviewText" className="sr-only">
           概要の説明
         </label>
-        <Controller
-          name="overviewText"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <MarkdownEditor
-              markdown={value || ""}
-              onChange={onChange}
-            />
-          )}
+        <textarea
+          id="overviewText"
+          className={textareaClass}
+          {...register("overviewText")}
         />
       </section>
 
