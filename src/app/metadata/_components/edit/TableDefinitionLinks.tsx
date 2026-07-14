@@ -14,29 +14,36 @@ export default function TableDefinitionLinks() {
     ]);
   };
 
+  const handleRemoveTable = (id: number) => {
+    setLinkedTables(linkedTables.filter((table) => table.id !== id));
+  };
+
   return (
-    <div>
+    <div className="w-full max-w-[50%]">
       <button
         type="button"
         onClick={handleAddTable}
-        className="mb-4 inline-flex items-center rounded bg-white px-4 py-2 text-sm font-bold text-blue-700 border border-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-[#0017C1] bg-white px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
       >
-        <span className="mr-1 text-lg font-normal">＋</span> テーブル定義と紐づける
+        <span className="mr-1 text-lg font-normal">＋</span>{" "}
+        テーブル定義と紐づける
       </button>
 
       {linkedTables.length > 0 && (
         <div className="space-y-4">
-          {linkedTables.map((table) => (
+          {linkedTables.map((table, index) => (
             <div key={table.id}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* テーブル物理名 */}
                 <div>
-                  <label
-                    htmlFor={`physical-name-${table.id}`}
-                    className="mb-2 block text-sm font-bold text-gray-900"
-                  >
-                    テーブル物理名
-                  </label>
+                  {index === 0 && (
+                    <label
+                      htmlFor={`physical-name-${table.id}`}
+                      className="mb-2 block text-sm font-bold text-gray-900"
+                    >
+                      テーブル物理名
+                    </label>
+                  )}
                   <div className="relative">
                     <select
                       id={`physical-name-${table.id}`}
@@ -62,18 +69,29 @@ export default function TableDefinitionLinks() {
 
                 {/* テーブル論理名 */}
                 <div>
-                  <label
-                    htmlFor={`logical-name-${table.id}`}
-                    className="mb-2 block text-sm font-bold text-gray-900"
-                  >
-                    テーブル論理名
-                  </label>
-                  <input
-                    id={`logical-name-${table.id}`}
-                    type="text"
-                    defaultValue={table.logicalName}
-                    className="w-full rounded-[4px] border border-gray-400 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
+                  {index === 0 && (
+                    <label
+                      htmlFor={`logical-name-${table.id}`}
+                      className="mb-2 block text-sm font-bold text-gray-900"
+                    >
+                      テーブル論理名
+                    </label>
+                  )}
+                  <div className="flex items-center gap-4">
+                    <input
+                      id={`logical-name-${table.id}`}
+                      type="text"
+                      defaultValue={table.logicalName}
+                      className="w-full rounded-[4px] border border-gray-400 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTable(table.id)}
+                      className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-red-600 bg-white px-4 py-2 text-base font-bold text-red-600 underline-offset-[3px] transition-colors hover:bg-red-50 hover:underline active:bg-red-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300 shrink-0"
+                    >
+                      削除
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
