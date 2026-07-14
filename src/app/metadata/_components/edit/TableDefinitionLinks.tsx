@@ -4,7 +4,9 @@ import { useState } from "react";
 
 export default function TableDefinitionLinks() {
   const [linkedTables, setLinkedTables] = useState([
-    { id: 1, physicalName: "", logicalName: "傷病" },
+    { id: 1, physicalName: "disease", logicalName: "傷病" },
+    { id: 2, physicalName: "allergy", logicalName: "薬剤・その他アレルギー等" },
+    { id: 3, physicalName: "examination", logicalName: "感染症・検査" },
   ]);
 
   const handleAddTable = () => {
@@ -47,13 +49,13 @@ export default function TableDefinitionLinks() {
                   <div className="relative">
                     <select
                       id={`physical-name-${table.id}`}
-                      className="w-full appearance-none rounded-[4px] border border-gray-400 bg-white px-4 py-2 pr-10 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
                       defaultValue={table.physicalName}
                     >
                       <option value="">選択してください</option>
-                      <option value="disease">disease</option>
-                      <option value="allergy">allergy</option>
-                      <option value="examination">examination</option>
+                      <option value="disease">condtion_table</option>
+                      <option value="allergy">allergyIntoLerance_table</option>
+                      <option value="examination">observation_table</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                       <svg
@@ -82,7 +84,7 @@ export default function TableDefinitionLinks() {
                       id={`logical-name-${table.id}`}
                       type="text"
                       defaultValue={table.logicalName}
-                      className="w-full rounded-[4px] border border-gray-400 bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
                     />
                     <button
                       type="button"

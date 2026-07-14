@@ -66,25 +66,28 @@ export function useMetadataForm(apiData: MetadataResponse) {
       }
     }
 
-    const OVERVIEW_TEMPLATE = `## 概要
-
+    const OVERVIEW_TEMPLATE = `
+## データ説明情報
+- 
 ## 収集期間
-収集開始年度
-最新の提供可能年度
-収集頻度
+| 項目 | 内容 |
+| --- | --- |
+| 収集開始年度 | |
+| 最新の提供可能年度 | |
+| 収集頻度 | |
 
 ## 更新頻度
 対象項目
 
 ## テーブル一覧
-※以下はテーブルレイアウトにしたい
-| テーブル物理名 | テーブル論理名 | 概要 | 格納単位 |
-| --- | --- | --- | --- |
-| | | | |
+テーブル論理名 | 概要 | 格納単位 |
+| --- | --- | --- |
+| | | |
 
 ## 留意事項
-
+-
 ## キー情報
+-
 `;
 
     // sessionStorageにデータがなければAPIデータを使用しつつ、overviewTextはテンプレートを使用
@@ -133,8 +136,6 @@ export function useMetadataForm(apiData: MetadataResponse) {
       router.push(`${pathname}?${viewParams.toString()}`);
     }
   };
-
-
 
   /** タブ切替ハンドラ */
   const handleTabChange = (index: number) => {

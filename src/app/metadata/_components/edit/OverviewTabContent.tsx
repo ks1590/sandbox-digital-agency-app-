@@ -48,6 +48,9 @@ export default function OverviewTabContent({
 
   return (
     <div className="space-y-10 py-6">
+      {/* テーブル定義と紐づける（子ページのみ） */}
+      {!isTopPage && <TableDefinitionLinks />}
+
       {/* 概要 */}
       <section>
         <label htmlFor="overviewText" className="sr-only">
@@ -69,9 +72,6 @@ export default function OverviewTabContent({
           onChange={(val) => setValue("dataTypes", val, { shouldDirty: true })}
         />
       )}
-
-      {/* テーブル定義と紐づける（子ページのみ） */}
-      {!isTopPage && <TableDefinitionLinks />}
     </div>
   );
 }
