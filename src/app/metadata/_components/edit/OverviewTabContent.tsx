@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+// import { generateMarkdown } from "../generateMarkdown";
 import type { MetadataFormData } from "../schema";
 import { inputClass, labelClass, textareaClass } from "../styles";
 import DataTypeListEditor from "./DataTypeListEditor";
@@ -17,8 +19,17 @@ interface OverviewTabContentProps {
 export default function OverviewTabContent({
   isTopPage,
 }: OverviewTabContentProps) {
-  const { register, control, watch, setValue } =
+  const { register, control, watch, setValue, getValues } =
     useFormContext<MetadataFormData>();
+
+  // 検証用：生成されたマークダウンを保持するステート
+  const [previewMarkdown, setPreviewMarkdown] = useState<string | null>(null);
+
+  const handlePreview = () => {
+    // const data = getValues();
+    // const md = generateMarkdown(data);
+    // setPreviewMarkdown(md);
+  };
 
   const dataTypes = watch("dataTypes") || [];
 
@@ -349,6 +360,31 @@ export default function OverviewTabContent({
 
       {/* キー情報（共通） */}
       <KeyInfoSection />
+
+      {/* テンプレートリテラルの検証用プレビューエリア */}
+      {/* <section className="mt-12 p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-gray-800">
+            [検証用] マークダウンプレビュー
+          </h3>
+          <button
+            type="button"
+            onClick={handlePreview}
+            className="inline-flex items-center justify-center rounded-[8px] bg-black px-6 py-2 text-sm font-bold text-white transition-colors hover:bg-gray-800"
+          >
+            マークダウンを生成する
+          </button>
+        </div>
+
+        {previewMarkdown && (
+          <div className="mt-4">
+            <p className="text-sm text-gray-600 mb-2">生成結果：</p>
+            <pre className="p-4 bg-white border border-gray-300 rounded-lg overflow-x-auto text-sm text-gray-800 whitespace-pre-wrap">
+              {previewMarkdown}
+            </pre>
+          </div>
+        )}
+      </section> */}
     </div>
   );
 }
