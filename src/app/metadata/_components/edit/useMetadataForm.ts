@@ -62,18 +62,10 @@ export function useMetadataForm(apiData: MetadataResponse) {
       }
     }
 
-    const OVERVIEW_TEMPLATE = `## 概要
-
-## 収集期間
-収集開始年度
-最新の提供可能年度
-収集頻度
-`;
-
-    // sessionStorageにデータがなければAPIデータを使用しつつ、overviewTextはテンプレートを使用
+    // sessionStorageにデータがなければAPIデータを使用
     methods.reset({
       dataType: "clinical",
-      overviewText: OVERVIEW_TEMPLATE,
+      overviewText: apiData.overview.overviewText,
       dataTypes: apiData.overview.dataTypes,
       startYear: apiData.overview.startYear,
       latestYear: apiData.overview.latestYear,

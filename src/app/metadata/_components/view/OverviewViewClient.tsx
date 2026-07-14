@@ -1,14 +1,9 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/DataTable/DataTable";
 import type { MetadataResponse } from "../../types";
 import type { MetadataFormData } from "../schema";
-
-const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
-  ssr: false,
-});
 
 export default function OverviewViewClient({
   data: apiData,
@@ -45,13 +40,9 @@ export default function OverviewViewClient({
     <div className="space-y-10 p-4 text-gray-900">
       <section>
         <h3 className="text-xl font-bold mb-4">概要</h3>
-        {overviewText ? (
-          <MarkdownEditor markdown={overviewText} readOnly={true} />
-        ) : (
-          <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
-            データがありません
-          </p>
-        )}
+        <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
+          {overviewText}
+        </p>
       </section>
 
       <section>
