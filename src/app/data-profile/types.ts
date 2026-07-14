@@ -4,7 +4,8 @@
  */
 export interface DataProfileRow {
   id: number;
-  columnName: string;
+  physicalName: string;
+  logicalName: string;
   maxLength: number;
   avgLength: number;
   distinctCount: number;

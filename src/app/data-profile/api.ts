@@ -1,4 +1,5 @@
 import type { DataProfileResponse, DataProfileRow } from "./types";
+import { EXAMINATION_MOCK_DATA } from "../metadata/api";
 
 /**
  * APIのベースURL
@@ -10,13 +11,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 /**
  * モック用のダミー行データを生成する
  */
-function generateMockRows(
-  count: number,
-  prefix: string = "sample",
-): DataProfileRow[] {
-  return Array.from({ length: count }).map((_, i) => ({
+function generateMockRows(): DataProfileRow[] {
+  return EXAMINATION_MOCK_DATA.map((col, i) => ({
     id: i + 1,
-    columnName: `${prefix}_${i + 1}`,
+    logicalName: col.logicalName,
+    physicalName: col.physicalName,
     maxLength: 10,
     avgLength: 10,
     distinctCount: 100,
@@ -41,17 +40,17 @@ const MOCK_DATA: DataProfileResponse = {
     {
       categoryId: "disease",
       label: "傷病名",
-      rows: generateMockRows(120, "傷病名"),
+      rows: generateMockRows(),
     },
     {
       categoryId: "allergy",
       label: "薬剤・その他アレルギー等",
-      rows: generateMockRows(120, "アレルギー"),
+      rows: generateMockRows(),
     },
     {
       categoryId: "examination",
       label: "感染症・検査",
-      rows: generateMockRows(120, "検査"),
+      rows: generateMockRows(),
     },
   ],
 };
