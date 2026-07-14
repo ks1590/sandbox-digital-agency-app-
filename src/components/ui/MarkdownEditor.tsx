@@ -86,29 +86,43 @@ const jaTranslation = (
 export default forwardRef<MDXEditorMethods, MDXEditorProps>(
   function MarkdownEditor(props, ref) {
     return (
-      <div className="border border-gray-400 rounded-md overflow-hidden bg-white">
+      <div
+        className={
+          props.readOnly
+            ? ""
+            : "border border-gray-400 rounded-md overflow-hidden bg-white"
+        }
+      >
         <MDXEditor
           ref={ref}
           translation={jaTranslation}
-          contentEditableClassName="prose max-w-none p-4 min-h-[33vh] outline-none"
+          contentEditableClassName={
+            props.readOnly
+              ? "prose max-w-none outline-none"
+              : "prose max-w-none p-4 min-h-[33vh] outline-none"
+          }
           plugins={[
-            toolbarPlugin({
-              toolbarContents: () => (
-                <div className="flex flex-wrap items-center gap-1">
-                  <UndoRedo />
-                  <div className="w-px h-4 bg-gray-300 mx-1" />
-                  <BlockTypeSelect />
-                  <div className="w-px h-4 bg-gray-300 mx-1" />
-                  <BoldItalicUnderlineToggles />
-                  <div className="w-px h-4 bg-gray-300 mx-1" />
-                  <ListsToggle />
-                  <div className="w-px h-4 bg-gray-300 mx-1" />
-                  <CreateLink />
-                  <InsertTable />
-                  <InsertThematicBreak />
-                </div>
-              ),
-            }),
+            ...(!props.readOnly
+              ? [
+                  toolbarPlugin({
+                    toolbarContents: () => (
+                      <div className="flex flex-wrap items-center gap-1">
+                        <UndoRedo />
+                        <div className="w-px h-4 bg-gray-300 mx-1" />
+                        <BlockTypeSelect />
+                        <div className="w-px h-4 bg-gray-300 mx-1" />
+                        <BoldItalicUnderlineToggles />
+                        <div className="w-px h-4 bg-gray-300 mx-1" />
+                        <ListsToggle />
+                        <div className="w-px h-4 bg-gray-300 mx-1" />
+                        <CreateLink />
+                        <InsertTable />
+                        <InsertThematicBreak />
+                      </div>
+                    ),
+                  }),
+                ]
+              : []),
             headingsPlugin({ allowedHeadingLevels: [1, 2, 3, 4] }),
             listsPlugin(),
             quotePlugin(),
