@@ -268,7 +268,11 @@ export default function ExtractionStatusContent({
         aria-labelledby="info-modal-title"
         className="m-auto"
       >
-        <ModalDialogContent className="!w-[40vw] !max-w-none !h-[90vh]">
+        <ModalDialogContent
+          className={`!w-[40vw] !max-w-none ${
+            modalState?.title === "エラー内容" ? "!h-[45vh]" : "!h-[90vh]"
+          }`}
+        >
           <ModalDialogHeader className="border-none px-6 pt-5 pb-2 shrink-0">
             <ModalDialogHeading
               id="info-modal-title"
