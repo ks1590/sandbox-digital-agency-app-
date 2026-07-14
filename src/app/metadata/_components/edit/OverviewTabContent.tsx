@@ -153,7 +153,10 @@ export default function OverviewTabContent({
                   className={`flex flex-col sm:flex-row gap-4 ${index === 0 ? "items-end" : "items-center"}`}
                 >
                   <div className="flex-1 w-full">
-                    <label htmlFor={`freq-target-${index}`} className={index === 0 ? labelClass : "sr-only"}>
+                    <label
+                      htmlFor={`freq-target-${index}`}
+                      className={index === 0 ? labelClass : "sr-only"}
+                    >
                       対象項目
                     </label>
                     <input
@@ -214,7 +217,13 @@ export default function OverviewTabContent({
             <button
               type="button"
               onClick={() =>
-                appendTable({ id: "", physicalName: "", logicalName: "", overview: "", unit: "" })
+                appendTable({
+                  id: "",
+                  physicalName: "",
+                  logicalName: "",
+                  overview: "",
+                  unit: "",
+                })
               }
               className="mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
