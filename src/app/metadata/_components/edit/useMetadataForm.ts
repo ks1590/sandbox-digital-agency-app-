@@ -66,7 +66,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       }
     }
 
-    const OVERVIEW_TEMPLATE = `
+    const CHILD_OVERVIEW_TEMPLATE = `
 ## データ説明情報
 - 
 ## 収集期間
@@ -89,6 +89,16 @@ export function useMetadataForm(apiData: MetadataResponse) {
 ## キー情報
 -
 `;
+
+    const TOP_OVERVIEW_TEMPLATE = `
+## データ説明情報
+- 
+## キー情報
+- 
+`;
+
+    const OVERVIEW_TEMPLATE = isTopPage ? TOP_OVERVIEW_TEMPLATE : CHILD_OVERVIEW_TEMPLATE;
+
 
     // sessionStorageにデータがなければAPIデータを使用しつつ、overviewTextはテンプレートを使用
     methods.reset({
