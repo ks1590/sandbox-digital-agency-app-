@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { saveMetadataAction } from "../../actions";
 import type { MetadataResponse } from "../../types";
@@ -46,9 +46,13 @@ export function useMetadataForm(apiData: MetadataResponse) {
     },
   });
 
+  const isInitialized = useRef(false);
+
   // APIデータが取得できたらフォームの初期値としてリセット
   useEffect(() => {
-    if (!apiData) return;
+    if (!apiData || isInitialized.current) return;
+    
+    isInitialized.current = true;
 
     // sessionStorageに保存済みデータがあればそちらを優先
     const saved = sessionStorage.getItem("metadata_clinical");

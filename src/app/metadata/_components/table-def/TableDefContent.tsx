@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { Input } from "@/components/form/Input";
 import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import LinkCard from "@/components/ui/LinkCard";
@@ -112,7 +112,7 @@ export const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map(
 export function TableDefGrid({
   subtab,
 }: {
-  subtab: "disease" | "allergy" | "examination";
+  subtab: string;
 }) {
   const { register, control } = useFormContext<MetadataFormData>();
 
@@ -226,13 +226,13 @@ export function TableDefGrid({
 
 export default function TableDefContent() {
   const pathname = usePathname();
-  const { watch } = useFormContext<MetadataFormData>();
+  const { control } = useFormContext<MetadataFormData>();
 
-  const dataTypes = watch("dataTypes") || [];
-  const dataType = watch("dataType") || "clinical";
+  const dataTypes = useWatch({ control, name: "dataTypes" }) || [];
+  const dataType = useWatch({ control, name: "dataType" }) || "clinical";
+  const tables = useWatch({ control, name: "tables" }) || [];
 
-  // データ種別に応じたリンクカードの定義
-  // ※ 将来的にはAPIから取得したデータを利用することを想定
+  // データ種別に応じたリンクカードの定義（デフォルト値）
   const LINK_CARDS_BY_DATA_TYPE: Record<
     string,
     { id: string; title: string }[]
@@ -249,16 +249,14 @@ export default function TableDefContent() {
     ],
   };
 
-  // セレクトボックスの選択肢（APIデータがない場合のフォールバック含む）
-  const options =
-    dataTypes.length > 0
-      ? dataTypes
-      : [
-          { id: "clinical", name: "臨床情報" },
-          { id: "document", name: "ドキュメント" },
-        ];
-
-  const currentCards = LINK_CARDS_BY_DATA_TYPE[dataType] || [];
+  // テーブル一覧に登録されている内容からリンクカードを生成
+  // 何も登録されていない場合はデフォルトのカードを表示
+  const currentCards = tables.length > 0
+    ? tables.map((t, idx) => ({
+        id: t.id || t.physicalName || `table-${idx}`,
+        title: t.logicalName || `テーブル ${idx + 1}`
+      }))
+    : (LINK_CARDS_BY_DATA_TYPE[dataType] || []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">

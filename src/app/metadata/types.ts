@@ -55,9 +55,7 @@ export interface TableDefRow {
  * テーブル定義のカテゴリ別データ
  */
 export interface TableDefCategory {
-  disease: TableDefRow[];
-  allergy: TableDefRow[];
-  examination: TableDefRow[];
+  [key: string]: TableDefRow[];
 }
 
 /**

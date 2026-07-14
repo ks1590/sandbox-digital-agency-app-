@@ -38,9 +38,24 @@ export default function MetadataTableDefPageClient({
     }
   }, [publishSuccess, searchParams, pathname, router]);
 
-  let defaultIndex = 0;
-  if (tabParam === "allergy") defaultIndex = 1;
-  else if (tabParam === "examination") defaultIndex = 2;
+  const tables = data.overview.tables || [];
+  const DEFAULT_SUBTABS = [
+    { id: "disease", label: "傷病" },
+    { id: "allergy", label: "薬剤・その他アレルギー等" },
+    { id: "examination", label: "感染症・検査" },
+  ];
+
+  const subtabs = tables.length > 0
+    ? tables.map((t, idx) => ({
+        id: t.id || t.physicalName || `table-${idx}`,
+        label: t.logicalName || `テーブル ${idx + 1}`
+      }))
+    : DEFAULT_SUBTABS;
+
+  const defaultIndex = Math.max(
+    0,
+    subtabs.findIndex((tab) => tab.id === tabParam)
+  );
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -110,57 +125,23 @@ export default function MetadataTableDefPageClient({
             <MetadataViewTabs
               headingId="table-def-tabs-heading"
               defaultIndex={defaultIndex}
-              tabMap={["disease", "allergy", "examination"]}
-              items={[
-                {
-                  label: "傷病",
-                  id: "tab-disease",
-                  content: (
-                    <div className="py-6">
-                      {isEditMode ? (
-                        <TableDefGrid subtab="disease" />
-                      ) : (
-                        <SortableTableWithColumns
-                          subtab="disease"
-                          data={data}
-                        />
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  label: "薬剤・その他アレルギー等",
-                  id: "tab-allergy",
-                  content: (
-                    <div className="py-6">
-                      {isEditMode ? (
-                        <TableDefGrid subtab="allergy" />
-                      ) : (
-                        <SortableTableWithColumns
-                          subtab="allergy"
-                          data={data}
-                        />
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  label: "感染症・検査",
-                  id: "tab-examination",
-                  content: (
-                    <div className="py-6">
-                      {isEditMode ? (
-                        <TableDefGrid subtab="examination" />
-                      ) : (
-                        <SortableTableWithColumns
-                          subtab="examination"
-                          data={data}
-                        />
-                      )}
-                    </div>
-                  ),
-                },
-              ]}
+              tabMap={subtabs.map(t => t.id)}
+              items={subtabs.map(tab => ({
+                label: tab.label,
+                id: `tab-${tab.id}`,
+                content: (
+                  <div className="py-6">
+                    {isEditMode ? (
+                      <TableDefGrid subtab={tab.id} />
+                    ) : (
+                      <SortableTableWithColumns
+                        subtab={tab.id}
+                        data={data}
+                      />
+                    )}
+                  </div>
+                ),
+              }))}
             />
           </div>
 

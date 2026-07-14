@@ -54,7 +54,7 @@ export function SortableTableWithColumns({
   subtab,
   data: apiData,
 }: {
-  subtab: "disease" | "allergy" | "examination";
+  subtab: string;
   data: MetadataResponse;
 }) {
   const [sessionOverride, setSessionOverride] = useState<TableDefRow[] | null>(
@@ -77,7 +77,7 @@ export function SortableTableWithColumns({
   }, [subtab]);
 
   // sessionStorageに編集済みデータがあればそちらを優先
-  const data = sessionOverride || apiData.tableDefs[subtab];
+  const data = sessionOverride || apiData.tableDefs?.[subtab] || [];
 
   return (
     <DataTable
