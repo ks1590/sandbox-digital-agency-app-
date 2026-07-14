@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { TextInput } from "@/components/form/TextInput";
 import { ErrorText } from "@/components/ui/ErrorText";
 
@@ -61,21 +61,19 @@ export default function LoginForm() {
         id="loginId"
         name="loginId"
         type="text"
-        required
+        // required
       />
       <TextInput
         label="パスワード"
         id="password"
         name="password"
         type="password"
-        required
+        // required
       />
 
       <div className="pt-4">
         {error && (
-          <ErrorText className="mb-4 font-bold text-center">
-            {error}
-          </ErrorText>
+          <ErrorText className="mb-4 font-bold text-center">{error}</ErrorText>
         )}
         <button
           type="submit"

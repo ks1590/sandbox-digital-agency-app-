@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 export default function Header() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export default function Header() {
         <div className="portal-header__logo">
           <Link href="/" className="flex items-center gap-[14px]">
             <div>
-              <h1 className="portal-header__title">公的DB</h1>
+              <h1 className="portal-header__title">診療情報DB</h1>
             </div>
           </Link>
         </div>

@@ -1,6 +1,6 @@
-import AuthGuard from "@/components/layout/AuthGuard";
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
+import AuthGuard from "@/components/layout/AuthGuard";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
@@ -11,7 +11,7 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "公的DB",
+  title: "診療情報DB",
 };
 
 export default function RootLayout({
