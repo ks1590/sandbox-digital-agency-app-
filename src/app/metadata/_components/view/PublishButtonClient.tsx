@@ -44,13 +44,13 @@ export default function PublishButtonClient() {
     <>
       <button
         type="button"
-        onClick={handleOpen}
+        // onClick={handleOpen} sagemakerの挙動を検証の上、実装検討
         className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-green-600 px-4 py-2 text-base font-bold text-white transition-colors hover:bg-green-700 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
       >
         公開
       </button>
 
-      <ModalDialog ref={dialogRef} className="m-auto">
+      {/* <ModalDialog ref={dialogRef} className="m-auto">
         <ModalDialogContent>
           <ModalDialogBody className="text-center pt-8 font-bold text-lg">
             このメタデータを公開します。よろしいですか？
@@ -72,7 +72,7 @@ export default function PublishButtonClient() {
             </button>
           </div>
         </ModalDialogContent>
-      </ModalDialog>
+      </ModalDialog> */}
     </>
   );
 }

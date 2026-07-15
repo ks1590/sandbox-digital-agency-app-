@@ -31,22 +31,18 @@ export default function TableDefinitionLinks() {
     });
   };
 
-  const canAddMore = fields.length < PHYSICAL_NAME_OPTIONS.length;
-
   return (
     <div className="w-full max-w-3xl">
-      {canAddMore && (
-        <button
-          type="button"
-          onClick={handleAddTable}
-          className="group mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-[#0017C1] bg-white px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 active:bg-gray-100 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
-        >
-          <span className="mr-1 text-lg font-normal">＋</span>{" "}
-          <span className="underline-offset-[3px] group-hover:underline group-active:underline">
-            テーブル定義と紐づける
-          </span>
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={handleAddTable}
+        className="group mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-[#0017C1] bg-white px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 active:bg-gray-100 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
+      >
+        <span className="mr-1 text-lg font-normal">＋</span>{" "}
+        <span className="underline-offset-[3px] group-hover:underline group-active:underline">
+          テーブル定義と紐づける
+        </span>
+      </button>
 
       {fields.length > 0 && (
         <div className="space-y-4">
