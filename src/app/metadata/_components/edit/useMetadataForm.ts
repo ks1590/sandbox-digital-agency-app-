@@ -111,6 +111,16 @@ export function useMetadataForm(apiData: MetadataResponse) {
     setIsInitialized(true);
   }, [apiData, methods, isTopPage, isInitialized]);
 
+  // フォームの値が変更されたら、自動でsessionStorageに保存する
+  useEffect(() => {
+    if (!isInitialized) return;
+    const subscription = methods.watch(() => {
+      const storageKey = isTopPage ? "metadata_top" : "metadata_clinical";
+      sessionStorage.setItem(storageKey, JSON.stringify(methods.getValues()));
+    });
+    return () => subscription.unsubscribe();
+  }, [methods, isInitialized, isTopPage]);
+
   // タブのデフォルトインデックス算出
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;

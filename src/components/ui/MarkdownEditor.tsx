@@ -95,7 +95,7 @@ export default forwardRef<MDXEditorMethods, MDXEditorProps>(
         className={
           props.readOnly
             ? ""
-            : "border border-gray-400 rounded-md overflow-hidden bg-white"
+            : "border border-gray-400 rounded-md bg-white"
         }
       >
         <MDXEditor

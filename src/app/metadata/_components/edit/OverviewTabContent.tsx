@@ -32,9 +32,53 @@ export default function OverviewTabContent({
 
       {/* 概要 */}
       <section>
-        <label htmlFor="overviewText" className="sr-only">
-          概要の説明
-        </label>
+        <div className="flex items-center justify-end mb-2">
+          <label htmlFor="overviewText" className="sr-only">
+            概要の説明
+          </label>
+          <div className="group relative flex items-center text-sm text-[#0017C1] font-bold cursor-pointer hover:underline">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span>記入項目</span>
+            <div className="absolute right-0 top-full pt-2 hidden group-hover:block z-50">
+              <div className="w-[400px] p-4 bg-gray-800 text-white font-normal rounded shadow-lg border border-gray-700 cursor-auto">
+                <div className="font-bold mb-2 border-b border-gray-600 pb-1">記入項目</div>
+                {isTopPage ? (
+                  <ul className="list-disc pl-5 space-y-1 text-sm">
+                    <li>データ説明情報</li>
+                    <li>キー情報</li>
+                  </ul>
+                ) : (
+                  <ul className="list-disc pl-5 space-y-1 text-sm">
+                    <li>データ説明情報</li>
+                    <li>
+                      収集期間
+                      <ul className="list-[circle] pl-5 mt-1 space-y-1 text-gray-300">
+                        <li>収集開始年度</li>
+                        <li>最新の提供可能年度</li>
+                        <li>収集頻度</li>
+                      </ul>
+                    </li>
+                    <li>更新頻度</li>
+                    <li>
+                      テーブル一覧
+                      <ul className="list-[circle] pl-5 mt-1 space-y-1 text-gray-300">
+                        <li>テーブル物理名</li>
+                        <li>テーブル論理名</li>
+                        <li>概要</li>
+                        <li>格納単位</li>
+                      </ul>
+                    </li>
+                    <li>留意事項</li>
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
         <Controller
           name="overviewText"
           control={control}
