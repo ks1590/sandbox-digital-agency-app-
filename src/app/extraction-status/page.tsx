@@ -1,7 +1,7 @@
+import { Suspense } from "react";
 import Header from "@/components/layout/Header";
 import { fetchExtractionStatus } from "./api";
 import ExtractionStatusContent from "./ExtractionStatusContent";
-import { Suspense } from "react";
 
 export default async function ExtractionStatusPage() {
   // サーバー側（ビルド時）は全件取得する
@@ -20,9 +20,7 @@ export default async function ExtractionStatusPage() {
           </div>
 
           <Suspense fallback={<div>Loading...</div>}>
-            <ExtractionStatusContent
-              data={data}
-            />
+            <ExtractionStatusContent data={data} />
           </Suspense>
         </div>
       </main>
