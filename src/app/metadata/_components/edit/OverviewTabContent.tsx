@@ -44,19 +44,19 @@ export default function OverviewTabContent({
             </svg>
             <span>記入項目</span>
             <div className="absolute right-0 top-full pt-2 hidden group-hover:block z-50">
-              <div className="w-[400px] p-4 bg-gray-800 text-white font-normal rounded shadow-lg border border-gray-700 cursor-auto">
-                <div className="font-bold mb-2 border-b border-gray-600 pb-1">記入項目</div>
+              <div className="w-[400px] p-2 bg-white border border-gray-900 text-sm font-normal text-gray-900 shadow-md cursor-auto">
+                <div className="font-bold mb-2 border-b border-gray-900 pb-1">記入項目</div>
                 {isTopPage ? (
-                  <ul className="list-disc pl-5 space-y-1 text-sm">
+                  <ul className="list-disc pl-5 space-y-1">
                     <li>データ説明情報</li>
                     <li>キー情報</li>
                   </ul>
                 ) : (
-                  <ul className="list-disc pl-5 space-y-1 text-sm">
+                  <ul className="list-disc pl-5 space-y-1">
                     <li>データ説明情報</li>
                     <li>
                       収集期間
-                      <ul className="list-[circle] pl-5 mt-1 space-y-1 text-gray-300">
+                      <ul className="list-[circle] pl-5 mt-1 space-y-1 text-gray-600">
                         <li>収集開始年度</li>
                         <li>最新の提供可能年度</li>
                         <li>収集頻度</li>
@@ -65,7 +65,7 @@ export default function OverviewTabContent({
                     <li>更新頻度</li>
                     <li>
                       テーブル一覧
-                      <ul className="list-[circle] pl-5 mt-1 space-y-1 text-gray-300">
+                      <ul className="list-[circle] pl-5 mt-1 space-y-1 text-gray-600">
                         <li>テーブル物理名</li>
                         <li>テーブル論理名</li>
                         <li>概要</li>
