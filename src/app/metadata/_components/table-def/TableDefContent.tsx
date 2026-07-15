@@ -11,7 +11,6 @@ import type { TableDefRow } from "../../types";
 import type { MetadataFormData } from "../schema";
 import TextPopover from "./TextPopover";
 
-// PopoverTextarea has been removed as per user request
 export const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map(
   (_, i) => ({
     id: i + 1,
@@ -170,7 +169,7 @@ export default function TableDefContent() {
   const tables = watch("tables") || [];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
+    <div className="flex flex-wrap gap-6 py-8">
       {tables.map((table) => {
         // 物理名が未入力の場合はカードを生成しない、もしくはデフォルト値を設定するなど
         if (!table.physicalName) return null;

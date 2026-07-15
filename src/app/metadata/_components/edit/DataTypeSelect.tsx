@@ -7,9 +7,10 @@ import type { MetadataFormData } from "../schema";
  * データ種別セレクトボックス
  * 配下ページ（!isTopPage）の編集画面で表示されるデータ種別の選択UI
  */
-export default function DataTypeSelect() {
+export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
   const { register, watch } = useFormContext<MetadataFormData>();
   const watchDataTypes = watch("dataTypes");
+  const currentDataType = watch("dataType");
 
   const options =
     watchDataTypes && watchDataTypes.length > 0
@@ -18,6 +19,18 @@ export default function DataTypeSelect() {
           { id: "clinical", name: "臨床情報" },
           { id: "document", name: "ドキュメント" },
         ];
+
+  if (readonly) {
+    const selectedOption = options.find((opt) => opt.id === currentDataType);
+    return (
+      <div className="mb-8">
+        <p className="block text-xl font-bold text-gray-900 mb-2">データ種別</p>
+        <p className="text-base text-gray-900">
+          {selectedOption ? selectedOption.name : currentDataType}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="mb-8">
