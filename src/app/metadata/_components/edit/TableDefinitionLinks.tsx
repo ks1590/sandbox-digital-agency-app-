@@ -3,6 +3,12 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import type { MetadataFormData } from "../schema";
 
+const PHYSICAL_NAME_OPTIONS = [
+  "condtion_table",
+  "allergyIntolerance_table",
+  "observation_table",
+];
+
 export default function TableDefinitionLinks() {
   const { register, control } = useFormContext<MetadataFormData>();
   const { fields, append, remove } = useFieldArray({
@@ -21,7 +27,7 @@ export default function TableDefinitionLinks() {
   };
 
   return (
-    <div className="w-full max-w-[50%]">
+    <div className="w-full max-w-3xl">
       <button
         type="button"
         onClick={handleAddTable}
@@ -53,9 +59,11 @@ export default function TableDefinitionLinks() {
                       {...register(`tables.${index}.physicalName` as const)}
                     >
                       <option value="">選択してください</option>
-                      <option value="condtion_table">condtion_table</option>
-                      <option value="allergyIntolerance_table">allergyIntolerance_table</option>
-                      <option value="observation_table">observation_table</option>
+                      {PHYSICAL_NAME_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                       <svg

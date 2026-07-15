@@ -1,11 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import type { MetadataFormData } from "../schema";
-import { inputClass, labelClass, textareaClass } from "../styles";
 import DataTypeListEditor from "./DataTypeListEditor";
-import KeyInfoSection from "./KeyInfoSection";
 import TableDefinitionLinks from "./TableDefinitionLinks";
 
 const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
@@ -23,28 +21,9 @@ interface OverviewTabContentProps {
 export default function OverviewTabContent({
   isTopPage,
 }: OverviewTabContentProps) {
-  const { register, control, watch, setValue } =
-    useFormContext<MetadataFormData>();
+  const { control, watch, setValue } = useFormContext<MetadataFormData>();
 
   const dataTypes = watch("dataTypes") || [];
-
-  const {
-    fields: freqFields,
-    append: appendFreq,
-    remove: removeFreq,
-  } = useFieldArray({
-    control,
-    name: "updateFrequencies",
-  });
-
-  const {
-    fields: tableFields,
-    append: appendTable,
-    remove: removeTable,
-  } = useFieldArray({
-    control,
-    name: "tables",
-  });
 
   return (
     <div className="space-y-10 py-6">

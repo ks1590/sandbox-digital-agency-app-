@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { MetadataFormData } from "../schema";
 
@@ -11,7 +10,6 @@ import type { MetadataFormData } from "../schema";
 export default function DataTypeSelect() {
   const { register, watch } = useFormContext<MetadataFormData>();
   const watchDataTypes = watch("dataTypes");
-
 
   const options =
     watchDataTypes && watchDataTypes.length > 0
@@ -51,8 +49,6 @@ export default function DataTypeSelect() {
           </svg>
         </div>
       </div>
-
-
     </div>
   );
 }
