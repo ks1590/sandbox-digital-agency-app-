@@ -132,18 +132,21 @@ export default function MetadataTypePageClient({
                   id: "tab-table-def",
                   content: (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
-                      <LinkCard
-                        href={`/metadata/table-def?tab=disease&from=${type}`}
-                        title="傷病"
-                      />
-                      <LinkCard
-                        href={`/metadata/table-def?tab=allergy&from=${type}`}
-                        title="薬剤・その他アレルギー等"
-                      />
-                      <LinkCard
-                        href={`/metadata/table-def?tab=examination&from=${type}`}
-                        title="感染症・検査"
-                      />
+                      {data.overview.tables.map((table) => {
+                        if (!table.physicalName) return null;
+                        return (
+                          <LinkCard
+                            key={table.id || table.physicalName}
+                            href={`/metadata/table-def?tab=${table.physicalName}&from=${type}`}
+                            title={table.logicalName || table.physicalName}
+                          />
+                        );
+                      })}
+                      {data.overview.tables.length === 0 && (
+                        <div className="col-span-3 text-center text-gray-500">
+                          テーブル定義が紐付けられていません。
+                        </div>
+                      )}
                     </div>
                   ),
                 },

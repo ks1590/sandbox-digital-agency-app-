@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
@@ -21,7 +21,6 @@ export default function MetadataTableDefPageClient({
   const router = useRouter();
   const pathname = usePathname();
 
-  const tabParam = searchParams.get("tab") || "disease";
   const isEditMode = searchParams.get("mode") === "edit";
   const fromType = searchParams.get("from") || "clinical";
   const publishSuccess = searchParams.get("publish_success") === "true";
@@ -32,17 +31,18 @@ export default function MetadataTableDefPageClient({
       const timer = setTimeout(() => {
         const newParams = new URLSearchParams(searchParams.toString());
         newParams.delete("publish_success");
-        router.replace(`${pathname}?${newParams.toString()}`, {
-          scroll: false,
-        });
+        router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
       }, 3000);
       return () => clearTimeout(timer);
     }
   }, [publishSuccess, searchParams, pathname, router]);
 
-  let defaultIndex = 0;
-  if (tabParam === "allergy") defaultIndex = 1;
-  else if (tabParam === "examination") defaultIndex = 2;
+  const validTables = data.overview.tables.filter((t) => t.physicalName);
+  const fallbackTab = validTables.length > 0 ? validTables[0].physicalName : "disease";
+  const tabParam = searchParams.get("tab") || fallbackTab;
+
+  const activeIndex = validTables.findIndex((t) => t.physicalName === tabParam);
+  const defaultIndex = activeIndex !== -1 ? activeIndex : 0;
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -112,57 +112,23 @@ export default function MetadataTableDefPageClient({
             <MetadataViewTabs
               headingId="table-def-tabs-heading"
               defaultIndex={defaultIndex}
-              tabMap={["disease", "allergy", "examination"]}
-              items={[
-                {
-                  label: "傷病",
-                  id: "tab-disease",
-                  content: (
-                    <div className="py-6">
-                      {isEditMode ? (
-                        <TableDefGrid subtab="disease" />
-                      ) : (
-                        <SortableTableWithColumns
-                          subtab="disease"
-                          data={data}
-                        />
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  label: "薬剤・その他アレルギー等",
-                  id: "tab-allergy",
-                  content: (
-                    <div className="py-6">
-                      {isEditMode ? (
-                        <TableDefGrid subtab="allergy" />
-                      ) : (
-                        <SortableTableWithColumns
-                          subtab="allergy"
-                          data={data}
-                        />
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  label: "感染症・検査",
-                  id: "tab-examination",
-                  content: (
-                    <div className="py-6">
-                      {isEditMode ? (
-                        <TableDefGrid subtab="examination" />
-                      ) : (
-                        <SortableTableWithColumns
-                          subtab="examination"
-                          data={data}
-                        />
-                      )}
-                    </div>
-                  ),
-                },
-              ]}
+              tabMap={validTables.map((t) => t.physicalName)}
+              items={validTables.map((table) => ({
+                label: table.logicalName || table.physicalName,
+                id: `tab-${table.physicalName}`,
+                content: (
+                  <div className="py-6">
+                    {isEditMode ? (
+                      <TableDefGrid subtab={table.physicalName} />
+                    ) : (
+                      <SortableTableWithColumns
+                        subtab={table.physicalName}
+                        data={data}
+                      />
+                    )}
+                  </div>
+                ),
+              }))}
             />
           </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Input } from "@/components/form/Input";
 import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
@@ -26,7 +26,7 @@ function PopoverTextarea({
   align?: "left" | "right";
 }) {
   const [expanded, setExpanded] = useState(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { watch, setValue } = useFormContext();
 
   const value = watch(name) ?? defaultValue;
@@ -37,7 +37,7 @@ function PopoverTextarea({
     setValue(name, e.target.value, { shouldDirty: true, shouldTouch: true });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!expanded) return;
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -109,17 +109,20 @@ export const DUMMY_DATA: TableDefRow[] = Array.from({ length: 120 }).map(
   }),
 );
 
-export function TableDefGrid({
-  subtab,
-}: {
-  subtab: "disease" | "allergy" | "examination";
-}) {
+export function TableDefGrid({ subtab }: { subtab: string }) {
   const { register, control } = useFormContext<MetadataFormData>();
 
-  const { fields } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: `tableDefs.${subtab}`,
   });
+
+  useEffect(() => {
+    if (fields.length === 0 && subtab) {
+      // 物理名が変更されてデータがない場合はダミーデータを初期表示する
+      append(DUMMY_DATA.slice(0, 10)); // 120件は多いので最初の10件をセット
+    }
+  }, [fields.length, subtab, append]);
 
   // DataTableが要求するデータ型に合わせてfieldsを使用
   // ただし各行のレンダリング時にはreact-hook-formのregisterを使用する
@@ -228,47 +231,26 @@ export default function TableDefContent() {
   const pathname = usePathname();
   const { watch } = useFormContext<MetadataFormData>();
 
-  const dataTypes = watch("dataTypes") || [];
-  const dataType = watch("dataType") || "clinical";
-
-  // データ種別に応じたリンクカードの定義
-  // ※ 将来的にはAPIから取得したデータを利用することを想定
-  const LINK_CARDS_BY_DATA_TYPE: Record<
-    string,
-    { id: string; title: string }[]
-  > = {
-    clinical: [
-      { id: "disease", title: "傷病" },
-      { id: "allergy", title: "薬剤・その他アレルギー等" },
-      { id: "examination", title: "感染症・検査" },
-    ],
-    // その他のデータ種別（デモ用）
-    document: [
-      { id: "prescription", title: "処方箋" },
-      { id: "referral", title: "紹介状" },
-    ],
-  };
-
-  // セレクトボックスの選択肢（APIデータがない場合のフォールバック含む）
-  const options =
-    dataTypes.length > 0
-      ? dataTypes
-      : [
-          { id: "clinical", name: "臨床情報" },
-          { id: "document", name: "ドキュメント" },
-        ];
-
-  const currentCards = LINK_CARDS_BY_DATA_TYPE[dataType] || [];
+  const tables = watch("tables") || [];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
-      {currentCards.map((card) => (
-        <LinkCard
-          key={card.id}
-          href={`${pathname}?mode=edit&tab=table-def&subtab=${card.id}`}
-          title={card.title}
-        />
-      ))}
+      {tables.map((table) => {
+        // 物理名が未入力の場合はカードを生成しない、もしくはデフォルト値を設定するなど
+        if (!table.physicalName) return null;
+        return (
+          <LinkCard
+            key={table.id || table.physicalName}
+            href={`${pathname}?mode=edit&tab=table-def&subtab=${table.physicalName}`}
+            title={table.logicalName || table.physicalName}
+          />
+        );
+      })}
+      {tables.length === 0 && (
+        <div className="col-span-3 text-center text-gray-500">
+          テーブル定義が紐付けられていません。「概要」タブでテーブルを追加してください。
+        </div>
+      )}
     </div>
   );
 }

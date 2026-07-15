@@ -38,11 +38,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       tables: [],
       notesText: "",
       keyInfoText: "",
-      tableDefs: {
-        disease: [],
-        allergy: [],
-        examination: [],
-      },
+      tableDefs: {},
     },
   });
 
@@ -50,7 +46,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
   // APIデータが取得できたらフォームの初期値としてリセット
   useEffect(() => {
-    if (!apiData) return;
+    if (!apiData || isInitialized) return;
 
     // sessionStorageに保存済みデータがあればそちらを優先
     const storageKey = isTopPage ? "metadata_top" : "metadata_clinical";
@@ -114,7 +110,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       tableDefs: apiData.tableDefs,
     });
     setIsInitialized(true);
-  }, [apiData, methods, isTopPage]);
+  }, [apiData, methods, isTopPage, isInitialized]);
 
   // タブのデフォルトインデックス算出
   let defaultIndex = 0;

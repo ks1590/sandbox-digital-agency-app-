@@ -53,13 +53,7 @@ export const metadataSchema = z.object({
 
   keyInfoText: z.string().optional(),
 
-  tableDefs: z
-    .object({
-      disease: z.array(tableDefRowSchema).optional(),
-      allergy: z.array(tableDefRowSchema).optional(),
-      examination: z.array(tableDefRowSchema).optional(),
-    })
-    .optional(),
+  tableDefs: z.record(z.string(), z.array(tableDefRowSchema)).optional(),
 });
 
 export type MetadataFormData = z.infer<typeof metadataSchema>;

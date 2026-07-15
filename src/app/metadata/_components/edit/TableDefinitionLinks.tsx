@@ -1,23 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import type { MetadataFormData } from "../schema";
 
 export default function TableDefinitionLinks() {
-  const [linkedTables, setLinkedTables] = useState([
-    { id: 1, physicalName: "disease", logicalName: "傷病" },
-    { id: 2, physicalName: "allergy", logicalName: "薬剤・その他アレルギー等" },
-    { id: 3, physicalName: "examination", logicalName: "感染症・検査" },
-  ]);
+  const { register, control } = useFormContext<MetadataFormData>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "tables",
+  });
 
   const handleAddTable = () => {
-    setLinkedTables([
-      ...linkedTables,
-      { id: Date.now(), physicalName: "", logicalName: "" },
-    ]);
-  };
-
-  const handleRemoveTable = (id: number) => {
-    setLinkedTables(linkedTables.filter((table) => table.id !== id));
+    append({
+      id: String(Date.now()),
+      physicalName: "",
+      logicalName: "",
+      overview: "",
+      unit: "",
+    });
   };
 
   return (
@@ -31,16 +31,16 @@ export default function TableDefinitionLinks() {
         テーブル定義と紐づける
       </button>
 
-      {linkedTables.length > 0 && (
+      {fields.length > 0 && (
         <div className="space-y-4">
-          {linkedTables.map((table, index) => (
-            <div key={table.id}>
+          {fields.map((field, index) => (
+            <div key={field.id}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* テーブル物理名 */}
                 <div>
                   {index === 0 && (
                     <label
-                      htmlFor={`physical-name-${table.id}`}
+                      htmlFor={`physical-name-${field.id}`}
                       className="mb-2 block text-sm font-bold text-gray-900"
                     >
                       テーブル物理名
@@ -48,14 +48,14 @@ export default function TableDefinitionLinks() {
                   )}
                   <div className="relative">
                     <select
-                      id={`physical-name-${table.id}`}
+                      id={`physical-name-${field.id}`}
                       className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
-                      defaultValue={table.physicalName}
+                      {...register(`tables.${index}.physicalName` as const)}
                     >
                       <option value="">選択してください</option>
-                      <option value="disease">condtion_table</option>
-                      <option value="allergy">allergyIntoLerance_table</option>
-                      <option value="examination">observation_table</option>
+                      <option value="condtion_table">condtion_table</option>
+                      <option value="allergyIntolerance_table">allergyIntolerance_table</option>
+                      <option value="observation_table">observation_table</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                       <svg
@@ -73,7 +73,7 @@ export default function TableDefinitionLinks() {
                 <div>
                   {index === 0 && (
                     <label
-                      htmlFor={`logical-name-${table.id}`}
+                      htmlFor={`logical-name-${field.id}`}
                       className="mb-2 block text-sm font-bold text-gray-900"
                     >
                       テーブル論理名
@@ -81,14 +81,14 @@ export default function TableDefinitionLinks() {
                   )}
                   <div className="flex items-center gap-4">
                     <input
-                      id={`logical-name-${table.id}`}
+                      id={`logical-name-${field.id}`}
                       type="text"
-                      defaultValue={table.logicalName}
                       className="w-full rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
+                      {...register(`tables.${index}.logicalName` as const)}
                     />
                     <button
                       type="button"
-                      onClick={() => handleRemoveTable(table.id)}
+                      onClick={() => remove(index)}
                       className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-red-600 bg-white px-4 py-2 text-base font-bold text-red-600 underline-offset-[3px] transition-colors hover:bg-red-50 hover:underline active:bg-red-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300 shrink-0"
                     >
                       削除

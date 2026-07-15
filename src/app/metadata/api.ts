@@ -153,7 +153,7 @@ const MOCK_DATA: MetadataResponse = {
     tables: [
       {
         id: "disease",
-        physicalName: "trn_disease",
+        physicalName: "condtion_table",
         logicalName: "傷病",
         overview:
           "患者の傷病履歴を管理するテーブル。受診時の診断名やICD-10コード、発症日などを保持します。",
@@ -161,7 +161,7 @@ const MOCK_DATA: MetadataResponse = {
       },
       {
         id: "allergy",
-        physicalName: "trn_allergy",
+        physicalName: "allergyIntolerance_table",
         logicalName: "薬剤・その他アレルギー等",
         overview:
           "患者のアレルギー情報（薬剤アレルギー、食物アレルギー等）を管理するテーブル。アレルゲンや重症度などを保持します。",
@@ -169,7 +169,7 @@ const MOCK_DATA: MetadataResponse = {
       },
       {
         id: "examination",
-        physicalName: "trn_examination",
+        physicalName: "observation_table",
         logicalName: "感染症・検査",
         overview:
           "血液検査、尿検査などの各種検査結果を管理するテーブル。検査項目、基準値、結果値などを保持します。",
@@ -181,9 +181,9 @@ const MOCK_DATA: MetadataResponse = {
     status: "draft",
   },
   tableDefs: {
-    disease: EXAMINATION_MOCK_DATA,
-    allergy: EXAMINATION_MOCK_DATA,
-    examination: EXAMINATION_MOCK_DATA,
+    condtion_table: EXAMINATION_MOCK_DATA,
+    allergyIntolerance_table: EXAMINATION_MOCK_DATA,
+    observation_table: EXAMINATION_MOCK_DATA,
   },
 };
 

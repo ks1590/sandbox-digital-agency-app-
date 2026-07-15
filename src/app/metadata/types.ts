@@ -53,12 +53,9 @@ export interface TableDefRow {
 
 /**
  * テーブル定義のカテゴリ別データ
+ * 物理名（physicalName）をキーにして行データの配列を格納する
  */
-export interface TableDefCategory {
-  disease: TableDefRow[];
-  allergy: TableDefRow[];
-  examination: TableDefRow[];
-}
+export type TableDefCategory = Record<string, TableDefRow[]>;
 
 /**
  * メタデータの概要情報
