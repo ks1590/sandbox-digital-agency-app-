@@ -40,8 +40,7 @@ const translationDict: Record<string, string> = {
   "Numbered list": "番号付きリスト",
   "Check list": "チェックリスト",
   Table: "テーブル",
-  Undo: "元に戻す",
-  Redo: "やり直す",
+  "Select block type": "ブロックの種類を選択",
   Heading: "見出し",
   Paragraph: "段落",
   "Heading 1": "見出し 1",
@@ -112,8 +111,6 @@ export default forwardRef<MDXEditorMethods, MDXEditorProps>(
                   toolbarPlugin({
                     toolbarContents: () => (
                       <div className="flex flex-wrap items-center gap-1">
-                        <UndoRedo />
-                        <div className="w-px h-4 bg-gray-300 mx-1" />
                         <BlockTypeSelect />
                         <div className="w-px h-4 bg-gray-300 mx-1" />
                         <BoldItalicUnderlineToggles />

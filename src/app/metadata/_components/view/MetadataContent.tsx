@@ -58,7 +58,7 @@ export default function MetadataContent({ data }: { data: MetadataResponse }) {
         <h3 className="text-xl font-bold text-gray-900 mb-4">データ種別</h3>
         <div className="flex flex-wrap gap-6 py-4">
           {dataTypes.map((dt) => (
-            <LinkCard key={dt.id} href={`/metadata/${dt.id}`} title={dt.name} />
+            <LinkCard key={dt.id} href={`/metadata/detail?type=${dt.id}`} title={dt.name} />
           ))}
         </div>
       </section>

@@ -13,7 +13,7 @@ import OverviewViewClient from "../_components/view/OverviewViewClient";
 import PublishButtonClient from "../_components/view/PublishButtonClient";
 import type { MetadataResponse } from "../types";
 
-export default function MetadataTypePageClient({
+export default function MetadataDetailPageClient({
   data,
   type,
 }: {
@@ -89,7 +89,7 @@ export default function MetadataTypePageClient({
             <div className="flex items-center gap-4">
               {data.overview.status === "draft" && <PublishButtonClient />}
               <Link
-                href={`/metadata/${type}?mode=edit&tab=${tabParam}`}
+                href={`/metadata/detail?type=${type}&mode=edit&tab=${tabParam}`}
                 className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-[#0017C1] px-4 py-2 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
               >
                 編集
