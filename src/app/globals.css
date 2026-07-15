@@ -123,6 +123,7 @@ body {
 .portal-cards-stack {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 16px;
 }
 
@@ -131,6 +132,8 @@ body {
 .link-card {
   display: block;
   flex: 1;
+  min-width: 280px;
+  max-width: 400px;
   background: #ffffff;
   border: 1px solid #d9d9db;
   border-radius: 1.5rem;

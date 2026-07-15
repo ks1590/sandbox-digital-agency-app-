@@ -3,35 +3,17 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, type Mock, vi } from "vitest";
 import LoginForm from "./LoginForm";
 
-vi.mock("@/actions/auth", () => ({
-  login: vi.fn(),
+const mockReplace = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    replace: mockReplace,
+  }),
 }));
 
-vi.mock("react", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("react")>();
-  return {
-    ...actual,
-    useActionState: vi.fn(),
-  };
-});
-
-import { useActionState } from "react";
-
-const mockUseActionState = useActionState as Mock;
-
-function setupMockActionState(
-  state: { error: string } | null = null,
-  isPending = false,
-) {
-  const mockFormAction = vi.fn();
-  mockUseActionState.mockReturnValue([state, mockFormAction, isPending]);
-  return mockFormAction;
-}
-
 describe("LoginForm", () => {
-  describe("正常系", () => {
+  describe("レンダリング", () => {
     it("フォームが正しくレンダリングされること", () => {
-      setupMockActionState();
       render(<LoginForm />);
 
       expect(screen.getByLabelText(/ログインID/)).toBeInTheDocument();
@@ -41,19 +23,21 @@ describe("LoginForm", () => {
       ).toBeInTheDocument();
     });
 
-    it("開発用ダミーアカウント情報が表示されること", () => {
-      setupMockActionState();
+    it("テストユーザー用のログインボタンが表示されること", () => {
       render(<LoginForm />);
 
+      expect(screen.getByText("テストユーザーログイン")).toBeInTheDocument();
       expect(
-        screen.getByText("【開発用ダミーアカウント】"),
+        screen.getByRole("button", { name: /ユーザーAでログイン/ }),
       ).toBeInTheDocument();
-      expect(screen.getByText("admin")).toBeInTheDocument();
-      expect(screen.getByText("password")).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /ユーザーBでログイン/ }),
+      ).toBeInTheDocument();
     });
+  });
 
-    it("各入力欄に値を入力できること", async () => {
-      setupMockActionState();
+  describe("ログインアクション", () => {
+    it("通常のログインを試行するとエラーメッセージが表示されること", async () => {
       const user = userEvent.setup();
       render(<LoginForm />);
 
@@ -61,39 +45,36 @@ describe("LoginForm", () => {
       const passwordInput = screen.getByLabelText(/パスワード/);
 
       await user.type(loginIdInput, "admin");
-      expect(loginIdInput).toHaveValue("admin");
-
       await user.type(passwordInput, "password");
-      expect(passwordInput).toHaveValue("password");
-    });
-
-    it("フォーム送信時に formAction が呼び出されること", async () => {
-      const mockFormAction = setupMockActionState();
-      render(<LoginForm />);
-
-      const form = screen
-        .getByRole("button", { name: "ログイン" })
-        .closest("form");
-      expect(form).toBeInTheDocument();
-      expect(mockFormAction).toBeDefined();
-    });
-  });
-
-  describe("異常系", () => {
-    it("Server Action がエラーを返した場合、エラーメッセージが表示されること", () => {
-      const errorMessage = "ログインIDまたはパスワードが間違っています。";
-      setupMockActionState({ error: errorMessage });
-      render(<LoginForm />);
-
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    });
-
-    it("送信中（isPending）にログインボタンが無効化されること", () => {
-      setupMockActionState(null, true);
-      render(<LoginForm />);
 
       const submitButton = screen.getByRole("button", { name: "ログイン" });
-      expect(submitButton).toBeDisabled();
+      await user.click(submitButton);
+
+      expect(
+        screen.getByText("ログインIDまたはパスワードが間違っています。"),
+      ).toBeInTheDocument();
+    });
+
+    it("ユーザーAでログインボタンを押下すると、localStorageに保存され、遷移すること", async () => {
+      const user = userEvent.setup();
+      render(<LoginForm />);
+
+      const userAButton = screen.getByRole("button", { name: /ユーザーAでログイン/ });
+      await user.click(userAButton);
+
+      expect(localStorage.getItem("login-user-id")).toBe("test-userA");
+      expect(mockReplace).toHaveBeenCalledWith("/");
+    });
+
+    it("ユーザーBでログインボタンを押下すると、localStorageに保存され、遷移すること", async () => {
+      const user = userEvent.setup();
+      render(<LoginForm />);
+
+      const userBButton = screen.getByRole("button", { name: /ユーザーBでログイン/ });
+      await user.click(userBButton);
+
+      expect(localStorage.getItem("login-user-id")).toBe("test-userB");
+      expect(mockReplace).toHaveBeenCalledWith("/");
     });
   });
 });

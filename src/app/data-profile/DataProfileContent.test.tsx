@@ -15,7 +15,8 @@ const mockData: DataProfileResponse = {
       rows: [
         {
           id: 1,
-          columnName: "傷病名_1",
+          physicalName: "傷病名_1_physical",
+          logicalName: "傷病名_1_logical",
           maxLength: 10,
           avgLength: 10,
           distinctCount: 100,
@@ -55,7 +56,7 @@ describe("DataProfileContent", () => {
   it("データプロファイル行が正しくレンダリングされること", () => {
     render(<DataProfileContent data={mockData} />);
 
-    expect(screen.getByText("傷病名_1")).toBeInTheDocument();
+    expect(screen.getByText("傷病名_1_physical")).toBeInTheDocument();
     expect(screen.getByText("99.8%")).toBeInTheDocument();
   });
 });

@@ -131,33 +131,39 @@ export default function Header() {
               {isMenuOpen && (
                 <div className="absolute right-6 top-full mt-2 w-64 bg-white border border-gray-400 shadow-lg rounded-md z-50 overflow-hidden">
                   <ul className="flex flex-col">
-                    <li>
-                      <Link
-                        href="/extraction-status"
-                        className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        抽出状況検索
-                      </Link>
-                    </li>
-                    <li className="border-t border-gray-200">
-                      <Link
-                        href="/metadata"
-                        className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        メタデータ参照・登録
-                      </Link>
-                    </li>
-                    <li className="border-t border-gray-200">
-                      <Link
-                        href="/data-profile"
-                        className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        データプロファイル参照
-                      </Link>
-                    </li>
+                    {userId === "test-userA" && (
+                      <li>
+                        <Link
+                          href="/extraction-status"
+                          className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          抽出状況検索
+                        </Link>
+                      </li>
+                    )}
+                    {userId === "test-userB" && (
+                      <>
+                        <li className="border-t border-gray-200">
+                          <Link
+                            href="/metadata"
+                            className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            メタデータ参照・登録
+                          </Link>
+                        </li>
+                        <li className="border-t border-gray-200">
+                          <Link
+                            href="/data-profile"
+                            className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            データプロファイル参照
+                          </Link>
+                        </li>
+                      </>
+                    )}
                     <li className="border-t border-gray-200">
                       <button
                         type="button"
