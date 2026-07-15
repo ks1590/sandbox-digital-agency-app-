@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, type Mock, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import LoginForm from "./LoginForm";
 
 const mockReplace = vi.fn();
@@ -28,10 +28,10 @@ describe("LoginForm", () => {
 
       expect(screen.getByText("テストユーザーログイン")).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /ユーザーAでログイン/ }),
+        screen.getByRole("button", { name: /業務運営事業者/ }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /ユーザーBでログイン/ }),
+        screen.getByRole("button", { name: /診療情報DB管理担当課/ }),
       ).toBeInTheDocument();
     });
   });
@@ -55,22 +55,26 @@ describe("LoginForm", () => {
       ).toBeInTheDocument();
     });
 
-    it("ユーザーAでログインボタンを押下すると、localStorageに保存され、遷移すること", async () => {
+    it("業務運営事業者でログインボタンを押下すると、localStorageに保存され、遷移すること", async () => {
       const user = userEvent.setup();
       render(<LoginForm />);
 
-      const userAButton = screen.getByRole("button", { name: /ユーザーAでログイン/ });
+      const userAButton = screen.getByRole("button", {
+        name: /業務運営事業者/,
+      });
       await user.click(userAButton);
 
       expect(localStorage.getItem("login-user-id")).toBe("test-userA");
       expect(mockReplace).toHaveBeenCalledWith("/");
     });
 
-    it("ユーザーBでログインボタンを押下すると、localStorageに保存され、遷移すること", async () => {
+    it("診療情報DB管理担当課でログインボタンを押下すると、localStorageに保存され、遷移すること", async () => {
       const user = userEvent.setup();
       render(<LoginForm />);
 
-      const userBButton = screen.getByRole("button", { name: /ユーザーBでログイン/ });
+      const userBButton = screen.getByRole("button", {
+        name: /診療情報DB管理担当課/,
+      });
       await user.click(userBButton);
 
       expect(localStorage.getItem("login-user-id")).toBe("test-userB");
