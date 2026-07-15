@@ -1,7 +1,7 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
 
 // 各ユーザーがアクセス可能なパスのプレフィックス
 const allowedPaths: Record<string, string[]> = {
@@ -33,11 +33,14 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         // ポータルトップ(/)は全員アクセス可能
         if (pathname !== "/") {
           // 権限チェック
-          const userAllowedPaths = userId && allowedPaths[userId] ? allowedPaths[userId] : [];
-          
+          const userAllowedPaths =
+            userId && allowedPaths[userId] ? allowedPaths[userId] : [];
+
           // 現在のパスが許可されたパスのいずれかで始まっているか確認
-          const isAllowed = userAllowedPaths.some((allowedPath) => pathname.startsWith(allowedPath));
-          
+          const isAllowed = userAllowedPaths.some((allowedPath) =>
+            pathname.startsWith(allowedPath),
+          );
+
           if (!isAllowed) {
             // 権限がないパスへのアクセスはポータルトップへリダイレクト
             router.replace("/");
