@@ -131,7 +131,7 @@ export default function MetadataTypePageClient({
                   label: "テーブル定義",
                   id: "tab-table-def",
                   content: (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
+                    <div className="flex flex-wrap gap-6 p-8">
                       {data.overview.tables.map((table) => {
                         if (!table.physicalName) return null;
                         return (
