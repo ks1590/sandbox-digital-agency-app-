@@ -139,8 +139,7 @@ export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
  */
 const MOCK_DATA: MetadataResponse = {
   overview: {
-    overviewText:
-      "本データベースは、全国の医療機関から収集した患者の臨床情報（傷病履歴、アレルギー、検査結果等）を統合的に管理・提供するプラットフォームです。\n研究機関や医療政策の立案における基礎データとして活用されることを目的としています。",
+    overviewText: "\n## データ説明情報\n- \n## キー情報\n- \n",
     dataTypes: [{ id: "clinical", name: "臨床情報" }],
     startYear: "2020",
     latestYear: "2026",
@@ -195,7 +194,17 @@ const MOCK_DATA: MetadataResponse = {
  *
  * @returns メタデータのレスポンス
  */
-export async function fetchMetadata(): Promise<MetadataResponse> {
+export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
+  const getMockData = (type?: string): MetadataResponse => {
+    const data = { ...MOCK_DATA };
+    if (type) {
+      data.overview = {
+        ...data.overview,
+        overviewText: "\n## データ説明情報\n- \n## 収集期間\n| 項目 | 内容 |\n| --- | --- |\n| 収集開始年度 | |\n| 最新の提供可能年度 | |\n| 収集頻度 | |\n\n## 更新頻度\n対象項目\n\n## テーブル一覧\nテーブル論理名 | 概要 | 格納単位 |\n| --- | --- | --- |\n| | | |\n\n## 留意事項\n-\n## キー情報\n-\n"
+      };
+    }
+    return data;
+  };
   // API URLが設定されている場合はAPIから取得を試みる
   if (API_BASE_URL) {
     try {
@@ -222,7 +231,7 @@ export async function fetchMetadata(): Promise<MetadataResponse> {
         error,
       );
       // APIエラー時はモックデータにフォールバック
-      return MOCK_DATA;
+      return getMockData(type);
     }
   }
 
@@ -230,5 +239,5 @@ export async function fetchMetadata(): Promise<MetadataResponse> {
   console.info(
     "NEXT_PUBLIC_API_BASE_URL が未設定のため、モックデータを使用します。",
   );
-  return MOCK_DATA;
+  return getMockData(type);
 }

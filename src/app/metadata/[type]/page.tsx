@@ -12,7 +12,7 @@ export function generateStaticParams() {
 
 export default async function MetadataTypePage({ params }: Props) {
   const { type } = await params;
-  const data = await fetchMetadata();
+  const data = await fetchMetadata(type);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
