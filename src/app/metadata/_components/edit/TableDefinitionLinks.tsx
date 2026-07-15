@@ -10,11 +10,16 @@ const PHYSICAL_NAME_OPTIONS = [
 ];
 
 export default function TableDefinitionLinks() {
-  const { register, control } = useFormContext<MetadataFormData>();
+  const { register, control, watch } = useFormContext<MetadataFormData>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tables",
   });
+
+  const watchTables = watch("tables") || [];
+  const selectedPhysicalNames = watchTables
+    .map((t) => t.physicalName)
+    .filter(Boolean);
 
   const handleAddTable = () => {
     append({
@@ -26,16 +31,20 @@ export default function TableDefinitionLinks() {
     });
   };
 
+  const canAddMore = fields.length < PHYSICAL_NAME_OPTIONS.length;
+
   return (
     <div className="w-full max-w-3xl">
-      <button
-        type="button"
-        onClick={handleAddTable}
-        className="mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-[#0017C1] bg-white px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
-      >
-        <span className="mr-1 text-lg font-normal">＋</span>{" "}
-        テーブル定義と紐づける
-      </button>
+      {canAddMore && (
+        <button
+          type="button"
+          onClick={handleAddTable}
+          className="mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-[#0017C1] bg-white px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
+        >
+          <span className="mr-1 text-lg font-normal">＋</span>{" "}
+          テーブル定義と紐づける
+        </button>
+      )}
 
       {fields.length > 0 && (
         <div className="space-y-4">
@@ -59,7 +68,11 @@ export default function TableDefinitionLinks() {
                       {...register(`tables.${index}.physicalName` as const)}
                     >
                       <option value="">選択してください</option>
-                      {PHYSICAL_NAME_OPTIONS.map((option) => (
+                      {PHYSICAL_NAME_OPTIONS.filter(
+                        (opt) =>
+                          !selectedPhysicalNames.includes(opt) ||
+                          watchTables[index]?.physicalName === opt
+                      ).map((option) => (
                         <option key={option} value={option}>
                           {option}
                         </option>
