@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
@@ -32,7 +32,9 @@ export default function MetadataTableDefPageClient({
       const timer = setTimeout(() => {
         const newParams = new URLSearchParams(searchParams.toString());
         newParams.delete("publish_success");
-        router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
+        router.replace(`${pathname}?${newParams.toString()}`, {
+          scroll: false,
+        });
       }, 3000);
       return () => clearTimeout(timer);
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
@@ -26,21 +26,21 @@ export default function MetadataTypePageClient({
 
   const tabParam = searchParams.get("tab") || "overview";
   const isEditMode = searchParams.get("mode") === "edit";
-  const isSuccess = searchParams.get("success") === "true";
   const publishSuccess = searchParams.get("publish_success") === "true";
   const publishError = searchParams.get("publish_error") === "true";
 
   useEffect(() => {
-    if (isSuccess || publishSuccess) {
+    if (publishSuccess) {
       const timer = setTimeout(() => {
         const newParams = new URLSearchParams(searchParams.toString());
-        newParams.delete("success");
         newParams.delete("publish_success");
-        router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
-      }, 3000);
+        router.replace(`${pathname}?${newParams.toString()}`, {
+          scroll: false,
+        });
+      }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [isSuccess, publishSuccess, searchParams, pathname, router]);
+  }, [publishSuccess, searchParams, pathname, router]);
 
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
@@ -55,7 +55,7 @@ export default function MetadataTypePageClient({
       <Header />
 
       <main className="page-bg flex-1">
-        {(isSuccess || publishSuccess) && (
+        {publishSuccess && (
           <div className="page-container py-4">
             <NotificationBanner
               bannerStyle="standard"
@@ -63,9 +63,7 @@ export default function MetadataTypePageClient({
               title="完了通知"
             >
               <NotificationBannerBody>
-                {publishSuccess
-                  ? "メタデータの公開処理が正常に完了しました。"
-                  : "メタデータを仮登録しました。"}
+                メタデータの公開処理が正常に完了しました。
               </NotificationBannerBody>
             </NotificationBanner>
           </div>

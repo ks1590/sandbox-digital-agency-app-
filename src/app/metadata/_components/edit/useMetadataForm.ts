@@ -134,15 +134,14 @@ export function useMetadataForm(apiData: MetadataResponse) {
     sessionStorage.setItem(storageKey, JSON.stringify(data));
 
     if (isTopPage) {
-      router.push("/metadata?success=true");
+      router.push("/metadata");
     } else if (subtabParam) {
       router.push(
-        `/metadata/table-def?tab=${subtabParam}&from=${pathname.split("/").pop()}&success=true`,
+        `/metadata/table-def?tab=${subtabParam}&from=${pathname.split("/").pop()}`,
       );
     } else {
       const viewParams = new URLSearchParams();
       viewParams.set("tab", tabParam);
-      viewParams.set("success", "true");
       router.push(`${pathname}?${viewParams.toString()}`);
     }
   };
