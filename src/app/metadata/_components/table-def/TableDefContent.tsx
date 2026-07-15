@@ -117,12 +117,27 @@ export function TableDefGrid({ subtab }: { subtab: string }) {
       key: "masterType",
       label: "マスタ種別",
       render: (row, idx) => (
-        <Input
-          blockSize="md"
-          className="min-w-[160px]"
-          aria-label={`マスタ種別（項番${row.id}）`}
-          {...register(`tableDefs.${subtab}.${idx}.masterType` as const)}
-        />
+        <div className="relative min-w-[200px]">
+          <select
+            className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-2 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
+            aria-label={`マスタ種別（項番${row.id}）`}
+            {...register(`tableDefs.${subtab}.${idx}.masterType` as const)}
+          >
+            <option value="">選択してください</option>
+            <option value="医療機関等マスタ">医療機関等マスタ</option>
+            <option value="傷病名マスタ">傷病名マスタ</option>
+            <option value="医薬品マスタ">医薬品マスタ</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+            <svg
+              className="h-4 w-4 fill-current"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            </svg>
+          </div>
+        </div>
       ),
     },
     {

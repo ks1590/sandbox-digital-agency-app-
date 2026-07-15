@@ -54,7 +54,7 @@ export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     logicalName: "記録の状態",
     description: "この患者の記録が積極的に使用されているかどうか",
     foreignKey: "はい",
-    masterType: "マスタサンプル",
+    masterType: "医療機関等マスタ",
     sampleData: "true",
   },
   {
@@ -66,7 +66,7 @@ export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     logicalName: "性別",
     description: "性別を表記 (male | female | other | unknown)",
     foreignKey: "はい",
-    masterType: "マスタサンプル",
+    masterType: "医療機関等マスタ",
     sampleData: "female",
   },
   {
