@@ -179,7 +179,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
   const returnHref = isTopPage
     ? null
     : subtabParam
-      ? `/metadata/${fromType}?mode=edit&tab=table-def`
+      ? `/metadata/detail?type=${fromType}&mode=edit&tab=table-def`
       : `/metadata?mode=edit`;
 
   const returnText = isTopPage
