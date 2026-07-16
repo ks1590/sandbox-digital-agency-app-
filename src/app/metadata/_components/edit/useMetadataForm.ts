@@ -44,12 +44,15 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
   const [isInitialized, setIsInitialized] = useState(false);
 
+  const typeParam = searchParams.get("type") || 
+    (pathname !== "/metadata" && pathname !== "/metadata/detail" ? pathname.split("/").pop() : "clinical");
+
   // APIデータが取得できたらフォームの初期値としてリセット
   useEffect(() => {
     if (!apiData || isInitialized) return;
 
     // sessionStorageに保存済みデータがあればそちらを優先
-    const storageKey = isTopPage ? "metadata_top" : "metadata_clinical";
+    const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
     const saved = sessionStorage.getItem(storageKey);
     if (saved) {
       try {
@@ -98,7 +101,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
     // sessionStorageにデータがなければAPIデータを使用しつつ、overviewTextはテンプレートを使用
     methods.reset({
-      dataType: "clinical",
+      dataType: typeParam || "clinical",
       overviewText: OVERVIEW_TEMPLATE,
       dataTypes: apiData.overview.dataTypes,
       startYear: apiData.overview.startYear,
@@ -110,17 +113,17 @@ export function useMetadataForm(apiData: MetadataResponse) {
       tableDefs: apiData.tableDefs,
     });
     setIsInitialized(true);
-  }, [apiData, methods, isTopPage, isInitialized]);
+  }, [apiData, methods, isTopPage, isInitialized, typeParam]);
 
   // フォームの値が変更されたら、自動でsessionStorageに保存する
   useEffect(() => {
     if (!isInitialized) return;
     const subscription = methods.watch(() => {
-      const storageKey = isTopPage ? "metadata_top" : "metadata_clinical";
+      const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
       sessionStorage.setItem(storageKey, JSON.stringify(methods.getValues()));
     });
     return () => subscription.unsubscribe();
-  }, [methods, isInitialized, isTopPage]);
+  }, [methods, isInitialized, isTopPage, typeParam]);
 
   // タブのデフォルトインデックス算出
   let defaultIndex = 0;
@@ -136,7 +139,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
     // 今回はバックエンド（DB）が存在しないモック環境のため、
     // 画面リロード時に編集内容が消えないようにセッションストレージにも保存しておく
-    const storageKey = isTopPage ? "metadata_top" : "metadata_clinical";
+    const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
     sessionStorage.setItem(storageKey, JSON.stringify(data));
 
     if (isTopPage) {

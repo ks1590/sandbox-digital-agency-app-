@@ -202,6 +202,11 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
         ...data.overview,
         overviewText: "\n## データ説明情報\n- \n## 収集期間\n| 項目 | 内容 |\n| --- | --- |\n| 収集開始年度 | |\n| 最新の提供可能年度 | |\n| 収集頻度 | |\n\n## 更新頻度\n対象項目\n\n## テーブル一覧\nテーブル論理名 | 概要 | 格納単位 |\n| --- | --- | --- |\n| | | |\n\n## 留意事項\n-\n## キー情報\n-\n"
       };
+
+      if (type.startsWith("type-")) {
+        data.overview.tables = [];
+        data.tableDefs = {};
+      }
     }
     return data;
   };

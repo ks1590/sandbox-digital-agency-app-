@@ -22,10 +22,12 @@ import {
   tablePlugin,
   thematicBreakPlugin,
   toolbarPlugin,
-  UndoRedo,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 import { forwardRef } from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeSanitize from "rehype-sanitize";
+import remarkGfm from "remark-gfm";
 
 const translationDict: Record<string, string> = {
   Bold: "太字",
@@ -89,43 +91,59 @@ const jaTranslation = (
 // Next.js dynamic import 用に default export するためのラッパー
 export default forwardRef<MDXEditorMethods, MDXEditorProps>(
   function MarkdownEditor(props, ref) {
+    if (props.readOnly) {
+      return (
+        <div className="prose max-w-none">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeSanitize]}
+            components={{
+              table: ({ node, ...props }) => (
+                <table
+                  className="border-collapse border border-gray-300 w-full my-4"
+                  {...props}
+                />
+              ),
+              th: ({ node, ...props }) => (
+                <th
+                  className="border border-gray-300 px-4 py-2 bg-white text-left font-semibold"
+                  {...props}
+                />
+              ),
+              td: ({ node, ...props }) => (
+                <td className="border border-gray-300 px-4 py-2" {...props} />
+              ),
+            }}
+          >
+            {props.markdown}
+          </ReactMarkdown>
+        </div>
+      );
+    }
+
     return (
-      <div
-        className={
-          props.readOnly
-            ? ""
-            : "border border-gray-400 rounded-md bg-white"
-        }
-      >
+      <div className="border border-gray-400 rounded-md bg-white">
         <MDXEditor
           ref={ref}
           translation={jaTranslation}
-          contentEditableClassName={
-            props.readOnly
-              ? "prose max-w-none outline-none"
-              : "prose max-w-none p-4 min-h-[33vh] outline-none"
-          }
+          contentEditableClassName="prose max-w-none p-4 min-h-[33vh] outline-none"
           plugins={[
-            ...(!props.readOnly
-              ? [
-                  toolbarPlugin({
-                    toolbarContents: () => (
-                      <div className="flex flex-wrap items-center gap-1">
-                        <BlockTypeSelect />
-                        <div className="w-px h-4 bg-gray-300 mx-1" />
-                        <BoldItalicUnderlineToggles />
-                        <div className="w-px h-4 bg-gray-300 mx-1" />
-                        <ListsToggle />
-                        <div className="w-px h-4 bg-gray-300 mx-1" />
-                        <CreateLink />
-                        <InsertTable />
-                        <InsertThematicBreak />
-                        <InsertCodeBlock />
-                      </div>
-                    ),
-                  }),
-                ]
-              : []),
+            toolbarPlugin({
+              toolbarContents: () => (
+                <div className="flex flex-wrap items-center gap-1">
+                  <BlockTypeSelect />
+                  <div className="w-px h-4 bg-gray-300 mx-1" />
+                  <BoldItalicUnderlineToggles />
+                  <div className="w-px h-4 bg-gray-300 mx-1" />
+                  <ListsToggle />
+                  <div className="w-px h-4 bg-gray-300 mx-1" />
+                  <CreateLink />
+                  <InsertTable />
+                  <InsertThematicBreak />
+                  <InsertCodeBlock />
+                </div>
+              ),
+            }),
             headingsPlugin({ allowedHeadingLevels: [1, 2, 3, 4] }),
             listsPlugin(),
             quotePlugin(),
