@@ -10,6 +10,7 @@ import { TableDefGrid } from "../_components/table-def/TableDefContent";
 import { SortableTableWithColumns } from "../_components/table-def/TableDefViewClient";
 import MetadataViewTabs from "../_components/view/MetadataViewTabs";
 import PublishButtonClient from "../_components/view/PublishButtonClient";
+import { useDataTypes } from "../_components/useDataTypes";
 import type { MetadataResponse } from "../types";
 
 export default function MetadataTableDefPageClient({
@@ -43,6 +44,7 @@ export default function MetadataTableDefPageClient({
 
   const activeIndex = validTables.findIndex((t) => t.physicalName === tabParam);
   const defaultIndex = activeIndex !== -1 ? activeIndex : 0;
+  const { getDataTypeName } = useDataTypes(data.overview.dataTypes);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -99,11 +101,7 @@ export default function MetadataTableDefPageClient({
                 データ種別
               </h3>
               <p className="text-base text-gray-900">
-                {fromType === "clinical"
-                  ? "臨床情報"
-                  : fromType === "document"
-                    ? "ドキュメント"
-                    : fromType}
+                {getDataTypeName(fromType)}
               </p>
             </div>
           )}

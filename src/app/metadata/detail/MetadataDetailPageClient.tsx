@@ -8,6 +8,7 @@ import { NotificationBanner } from "@/components/layout/NotificationBanner/Notif
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import LinkCard from "@/components/ui/LinkCard";
 import MetadataEdit from "../_components/edit/MetadataEdit";
+import { useDataTypes } from "../_components/useDataTypes";
 import MetadataViewTabs from "../_components/view/MetadataViewTabs";
 import OverviewViewClient from "../_components/view/OverviewViewClient";
 import PublishButtonClient from "../_components/view/PublishButtonClient";
@@ -28,6 +29,7 @@ export default function MetadataDetailPageClient({
   const isEditMode = searchParams.get("mode") === "edit";
   const publishSuccess = searchParams.get("publish_success") === "true";
   const publishError = searchParams.get("publish_error") === "true";
+  const { getDataTypeName } = useDataTypes(data.overview.dataTypes);
 
   useEffect(() => {
     if (publishSuccess) {
@@ -99,13 +101,7 @@ export default function MetadataDetailPageClient({
 
           <div className="mb-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">データ種別</h3>
-            <p className="text-base text-gray-900">
-              {type === "clinical"
-                ? "臨床情報"
-                : type === "document"
-                  ? "ドキュメント"
-                  : type}
-            </p>
+            <p className="text-base text-gray-900">{getDataTypeName(type)}</p>
           </div>
 
           <div className="mb-12">

@@ -2,6 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 import type { MetadataFormData } from "../schema";
+import { useDataTypes } from "../useDataTypes";
 
 /**
  * データ種別セレクトボックス
@@ -9,19 +10,11 @@ import type { MetadataFormData } from "../schema";
  */
 export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
   const { register, watch } = useFormContext<MetadataFormData>();
-  const watchDataTypes = watch("dataTypes");
   const currentDataType = watch("dataType");
-
-  const options =
-    watchDataTypes && watchDataTypes.length > 0
-      ? watchDataTypes
-      : [
-          { id: "clinical", name: "臨床情報" },
-          { id: "document", name: "ドキュメント" },
-        ];
+  const { dataTypes } = useDataTypes();
 
   if (readonly) {
-    const selectedOption = options.find((opt) => opt.id === currentDataType);
+    const selectedOption = dataTypes.find((opt) => opt.id === currentDataType);
     return (
       <div className="mb-8">
         <p className="block text-xl font-bold text-gray-900 mb-2">データ種別</p>
@@ -46,7 +39,7 @@ export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
           className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
           {...register("dataType")}
         >
-          {options.map((dt) => (
+          {dataTypes.map((dt) => (
             <option key={dt.id} value={dt.id}>
               {dt.name}
             </option>
