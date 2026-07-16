@@ -113,6 +113,12 @@ export default forwardRef<MDXEditorMethods, MDXEditorProps>(
               td: ({ node, ...props }) => (
                 <td className="border border-gray-300 px-4 py-2" {...props} />
               ),
+              pre: ({ node, ...props }) => (
+                <pre className="!bg-white !text-gray-900 border border-gray-300 p-4 rounded-md my-4 overflow-auto" {...props} />
+              ),
+              code: ({ node, ...props }) => (
+                <code className="!bg-transparent !text-inherit" {...props} />
+              ),
             }}
           >
             {props.markdown}

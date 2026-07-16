@@ -251,3 +251,18 @@ body {
     padding: 16px 20px;
   }
 }
+
+/* Markdownのコードブロックの背景色を白にするための上書き */
+:root .prose pre,
+.prose pre {
+  background-color: #ffffff !important;
+  color: var(--foreground) !important;
+  border: 1px solid #d9d9db !important;
+}
+
+:root .prose pre code,
+.prose pre code {
+  color: inherit !important;
+  background-color: transparent !important;
+}
+
