@@ -1,13 +1,10 @@
+import dayjs from "dayjs";
+
 export function formatTimestamp(isoStr: string): string {
   if (!isoStr) return "";
-  const d = new Date(isoStr);
-  if (Number.isNaN(d.getTime())) return isoStr;
-  const y = d.getFullYear();
-  const mo = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  const h = String(d.getHours()).padStart(2, "0");
-  const min = String(d.getMinutes()).padStart(2, "0");
-  return `${y}-${mo}-${day} ${h}:${min}`;
+  const d = dayjs(isoStr);
+  if (!d.isValid()) return isoStr;
+  return d.format("YYYY-MM-DD HH:mm");
 }
 
 export function truncateInfo(json: string): string {

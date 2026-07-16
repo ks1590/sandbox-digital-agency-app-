@@ -1,5 +1,6 @@
 "use client";
 
+import dayjs from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -44,15 +45,17 @@ export default function ExtractionStatusContent({
     if (!hasSearched) return [];
     let result = allData;
     if (initialYear) {
-      result = result.filter((req) =>
-        req.receptionTimestamp.startsWith(initialYear),
-      );
+      result = result.filter((req) => {
+        const d = dayjs(req.receptionTimestamp);
+        return d.isValid() && d.year() === Number(initialYear);
+      });
     }
     if (initialMonth) {
-      const formattedMonth = initialMonth.padStart(2, "0");
-      result = result.filter(
-        (req) => req.receptionTimestamp.substring(5, 7) === formattedMonth,
-      );
+      result = result.filter((req) => {
+        const d = dayjs(req.receptionTimestamp);
+        // dayjs の month() は 0-indexed (0=1月) なので +1 して比較する
+        return d.isValid() && d.month() + 1 === Number(initialMonth);
+      });
     }
     return result;
   }, [allData, hasSearched, initialYear, initialMonth]);
