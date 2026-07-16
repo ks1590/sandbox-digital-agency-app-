@@ -48,3 +48,5 @@ design-example
 
 # archives
 *.zip
+
+/design-sample
