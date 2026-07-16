@@ -6,6 +6,7 @@ export interface ExtractionRequest {
   requestId: string;
   receptionId: string;
   dataCategory: string;
+  dataProvisionMethod: string;
   extractionDataInfo: string;
   extractionStatus: string;
   receptionTimestamp: string;

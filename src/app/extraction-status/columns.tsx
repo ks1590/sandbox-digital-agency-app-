@@ -21,6 +21,7 @@ export const getColumns = (
       </>
     ),
   },
+  { key: "dataProvisionMethod", label: "データ提供方法" },
   { key: "dataCategory", label: "データ分類" },
   {
     key: "extractionDataInfo",

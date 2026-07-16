@@ -3,7 +3,7 @@
     {
       "requestId": "id-a",
       "receptionId": "id-a-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "匿名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-01\", \"patient_count\": 1200, \"filters\": {\"age_range\": [20, 60], \"gender\": \"male\", \"diagnoses\": [\"E11\", \"I10\", \"E78\", \"J45\", \"K21\", \"M54\"], \"medications\": [\"Metformin\", \"Lisinopril\", \"Atorvastatin\", \"Amlodipine\", \"Omeprazole\", \"Albuterol\"], \"lab_results\": {\"HbA1c\": { \"operator\": \">=\", \"value\": 6.5 }, \"LDL\": { \"operator\": \">\", \"value\": 140 }, \"BMI\": { \"operator\": \">=\", \"value\": 25 }, \"eGFR\": { \"operator\": \"<\", \"value\": 60 } }, \"visit_types\": [\"outpatient\", \"telehealth\", \"inpatient_short_stay\"], \"departments\": [\"internal_medicine\", \"endocrinology\", \"cardiology\", \"gastroenterology\"], \"exclude_conditions\": [\"pregnancy\", \"cancer\", \"severe_dementia\"], \"include_demographics\": true, \"anonymization_level\": \"strict\", \"export_format\": \"csv_gzip\", \"notify_email\": \"admin@example.com\", \"remarks\": \"Monthly regular extraction job configured by system admin. Please ensure data quality checks are performed before delivering to the research team.\"}}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-01T09:00:00Z",
@@ -11,12 +11,13 @@
       "completionTimestamp": "2026-05-01T09:10:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:10:00",
-      "processingTimeSeconds": 600
+      "processingTimeSeconds": 600,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-b",
       "receptionId": "id-b-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "匿名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-02\", \"patient_count\": 980}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-01T09:15:00Z",
@@ -24,12 +25,13 @@
       "completionTimestamp": "2026-05-01T09:28:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:13:00",
-      "processingTimeSeconds": 780
+      "processingTimeSeconds": 780,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-c",
       "receptionId": "id-c-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "匿名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-03\", \"patient_count\": 1540}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-01T09:30:00Z",
@@ -37,12 +39,13 @@
       "completionTimestamp": "2026-05-01T09:46:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:16:00",
-      "processingTimeSeconds": 960
+      "processingTimeSeconds": 960,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-d",
       "receptionId": "id-d-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "匿名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-04\", \"patient_count\": 870}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-01T10:00:00Z",
@@ -50,12 +53,13 @@
       "completionTimestamp": "2026-05-01T10:08:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:08:00",
-      "processingTimeSeconds": 480
+      "processingTimeSeconds": 480,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-e",
       "receptionId": "id-e-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "匿名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-05\", \"patient_count\": 2100}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-01T10:20:00Z",
@@ -63,12 +67,13 @@
       "completionTimestamp": "2026-05-01T10:42:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:22:00",
-      "processingTimeSeconds": 1320
+      "processingTimeSeconds": 1320,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-f",
       "receptionId": "id-f-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "匿名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-06\", \"patient_count\": 1350}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-01T11:00:00Z",
@@ -76,12 +81,13 @@
       "completionTimestamp": "2026-05-01T11:15:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:15:00",
-      "processingTimeSeconds": 900
+      "processingTimeSeconds": 900,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-g",
       "receptionId": "id-g-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "仮名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-07\", \"patient_count\": 780}",
       "extractionStatus": "処理中",
       "receptionTimestamp": "2026-05-01T11:30:00Z",
@@ -89,12 +95,13 @@
       "completionTimestamp": "",
       "resultStatus": "",
       "processingTime": "",
-      "processingTimeSeconds": 0
+      "processingTimeSeconds": 0,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-h",
       "receptionId": "id-h-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "仮名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-08\", \"patient_count\": 1680}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-02T09:00:00Z",
@@ -102,12 +109,13 @@
       "completionTimestamp": "2026-05-02T09:21:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:21:00",
-      "processingTimeSeconds": 1260
+      "processingTimeSeconds": 1260,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-i",
       "receptionId": "id-i-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "仮名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-09\", \"patient_count\": 920}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-05-02T09:30:00Z",
@@ -115,12 +123,13 @@
       "completionTimestamp": "2026-05-02T09:40:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:10:00",
-      "processingTimeSeconds": 600
+      "processingTimeSeconds": 600,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-j",
       "receptionId": "id-j-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "仮名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-10\", \"patient_count\": 1100}",
       "extractionStatus": "エラー",
       "receptionTimestamp": "2026-05-02T10:00:00Z",
@@ -129,12 +138,13 @@
       "resultStatus": "エラー",
       "processingTime": "00:05:00",
       "processingTimeSeconds": 300,
-      "errorMessage": "データベース接続エラー: タイムアウトが発生しました。再試行してください。"
+      "errorMessage": "データベース接続エラー: タイムアウトが発生しました。再試行してください。",
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-k",
       "receptionId": "id-k-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "仮名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-11\", \"patient_count\": 1450}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-06-01T09:00:00Z",
@@ -142,12 +152,13 @@
       "completionTimestamp": "2026-06-01T09:18:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:18:00",
-      "processingTimeSeconds": 1080
+      "processingTimeSeconds": 1080,
+      "dataProvisionMethod": "パターン抽出"
     },
     {
       "requestId": "id-l",
       "receptionId": "id-l-111",
-      "dataCategory": "データ分類",
+      "dataCategory": "匿名化",
       "extractionDataInfo": "{\"target_data_type\": \"CLINICAL\", \"target_period\": \"2024-12\", \"patient_count\": 2300}",
       "extractionStatus": "完了",
       "receptionTimestamp": "2026-06-01T09:30:00Z",
@@ -155,7 +166,8 @@
       "completionTimestamp": "2026-06-01T10:05:00Z",
       "resultStatus": "正常終了",
       "processingTime": "00:35:00",
-      "processingTimeSeconds": 2100
+      "processingTimeSeconds": 2100,
+      "dataProvisionMethod": "特別抽出"
     }
   ]
 }
