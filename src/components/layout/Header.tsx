@@ -138,7 +138,7 @@ export default function Header() {
                           className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
                           onClick={() => setIsMenuOpen(false)}
                         >
-                          抽出状況検索
+                          月次抽出依頼検索
                         </Link>
                       </li>
                     )}

@@ -92,8 +92,9 @@ export function useMetadataForm(apiData: MetadataResponse) {
 - 
 `;
 
-    const OVERVIEW_TEMPLATE = isTopPage ? TOP_OVERVIEW_TEMPLATE : CHILD_OVERVIEW_TEMPLATE;
-
+    const OVERVIEW_TEMPLATE = isTopPage
+      ? TOP_OVERVIEW_TEMPLATE
+      : CHILD_OVERVIEW_TEMPLATE;
 
     // sessionStorageにデータがなければAPIデータを使用しつつ、overviewTextはテンプレートを使用
     methods.reset({
@@ -182,7 +183,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
     ? null
     : subtabParam
       ? "データ種別に関する情報に戻る"
-      : "データベース全体の情報に戻る";
+      : "データベース全体に関する情報に戻る";
 
   return {
     methods,

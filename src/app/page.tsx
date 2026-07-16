@@ -27,12 +27,15 @@ export default function PortalPage() {
 
             <div className="portal-cards-stack">
               {userId === "test-userA" && (
-                <LinkCard title="抽出状況検索" href="/extraction-status" />
+                <LinkCard title="月次抽出依頼検索" href="/extraction-status" />
               )}
               {userId === "test-userB" && (
                 <>
                   <LinkCard title="メタデータ参照・登録" href="/metadata" />
-                  <LinkCard title="データプロファイル参照" href="/data-profile" />
+                  <LinkCard
+                    title="データプロファイル参照"
+                    href="/data-profile"
+                  />
                 </>
               )}
               {/* For safety, if other users log in, you could show all or none */}
