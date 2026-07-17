@@ -146,11 +146,14 @@ export function useMetadataForm(apiData: MetadataResponse) {
       router.push("/metadata");
     } else if (subtabParam) {
       router.push(
-        `/metadata/table-def?tab=${subtabParam}&from=${pathname.split("/").pop()}`,
+        `/metadata/table-def?tab=${subtabParam}&from=${typeParam || "clinical"}`,
       );
     } else {
       const viewParams = new URLSearchParams();
       viewParams.set("tab", tabParam);
+      if (typeParam) {
+        viewParams.set("type", typeParam);
+      }
       router.push(`${pathname}?${viewParams.toString()}`);
     }
   };

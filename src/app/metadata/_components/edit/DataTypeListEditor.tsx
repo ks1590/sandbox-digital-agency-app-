@@ -96,7 +96,7 @@ export default function DataTypeListEditor({
                   disabled={isCreating}
                   className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isCreating ? "作成中..." : "ページを作成"}
+                  ページを作成
                 </button>
               ) : (
                 <Link
