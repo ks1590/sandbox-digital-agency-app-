@@ -115,15 +115,6 @@ export function useMetadataForm(apiData: MetadataResponse) {
     setIsInitialized(true);
   }, [apiData, methods, isTopPage, isInitialized, typeParam]);
 
-  // フォームの値が変更されたら、自動でsessionStorageに保存する
-  useEffect(() => {
-    if (!isInitialized) return;
-    const subscription = methods.watch(() => {
-      const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
-      sessionStorage.setItem(storageKey, JSON.stringify(methods.getValues()));
-    });
-    return () => subscription.unsubscribe();
-  }, [methods, isInitialized, isTopPage, typeParam]);
 
   // タブのデフォルトインデックス算出
   let defaultIndex = 0;
