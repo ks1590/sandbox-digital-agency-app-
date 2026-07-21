@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# sandbox-digital-agency-app
 
-## Getting Started
+## 1. プロジェクトの概要
+当プロジェクトは、最新の **Next.js (v16.2)** と **React 19** をベースにしたWebアプリケーションです。
+依存関係に `@digital-go-jp/design-tokens` や `@digital-go-jp/tailwind-theme-plugin` が含まれており、**日本のデジタル庁のデザインシステム**に準拠したUI構築を試みるためのサンドボックス（実験的アプリ）となっています。
 
-First, run the development server:
+### 主な技術スタック
+* **フレームワーク**: Next.js, React
+* **スタイリング**: Tailwind CSS (v4)
+* **フォームとバリデーション**: React Hook Form, Zod
+* **マークダウン処理**: `react-markdown`, `@mdxeditor/editor`
+* **ツールチェイン**: Biome (リンター/フォーマッター), Vitest, Testing Library
+
+---
+
+## 2. ディレクトリ構成
+主要なディレクトリおよびファイルの意味は以下の通りです。
+
+* **`src/`**: アプリケーションのメインソースコード
+  * **`src/app/`**: Next.js App Routerのルーティングおよびページコンポーネント
+  * **`src/components/`**: 再利用可能なReactコンポーネント
+  * **`src/actions/`**: Server Actionsなどのサーバーサイド処理
+* **`design-sample/`**: デジタル庁デザインシステムなどを活用したデザインのサンプルや実装例 (`design-example`)
+* **`public/`**: 静的アセット（画像、アイコンなど）
+* **`.agents/`**: AIエージェントの振る舞いをカスタマイズするための設定（ルールやSkills）が格納されたワークスペースルート
+* **`.next/`** / **`out/`**: Next.jsのビルド出力結果ディレクトリ
+* **`node_modules/`**: インストールされた依存パッケージ
+* **`package.json` / `pnpm-workspace.yaml`**: プロジェクト情報、実行スクリプト、パッケージ管理 (pnpm) の設定ファイル
+
+---
+
+## 3. AIエージェント用のSkills (拡張機能) について
+このプロジェクトでは、AIエージェントの能力を拡張する「Skills」が `.agents/skills/` ディレクトリ配下に追加されています。ここに追加されたSkillはAIエージェントによって自動検出され、開発時のサポートに反映されます。
+
+### Skillsの追加方法 (追加コマンド)
+
+https://www.skills.sh/
+
+新たなSkillを追加する際は、`npx skills add` コマンドを使用します。当プロジェクトに現在追加されているSkillは、過去に以下のコマンドを実行することで導入されました。
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Vercel公式のReact/Next.jsベストプラクティスのSkillを追加
+npx skills add vercel-labs/agent-skills
+
+# TypeScriptの専門的なサポートを行うSkillを追加
+npx skills add https://github.com/sickn33/antigravity-awesome-skills --skill typescript-expert
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+（※ 現在は `typescript-expert` と `vercel-react-best-practices` の2つのSkillが利用可能となっています。）
