@@ -1,0 +1,89 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
+import type { MetadataResponse, TableDefRow } from "../../types";
+import TextPopover from "./TextPopover";
+
+const tableColumns: ColumnDef<TableDefRow>[] = [
+  { key: "id", label: "項番" },
+  {
+    key: "physicalName",
+    label: "物理名",
+    render: (row) => (
+      <TextPopover text={String(row.physicalName || "")} maxLength={20} />
+    ),
+  },
+  { key: "dataType", label: "データ型" },
+  { key: "length", label: "桁数" },
+  {
+    key: "required",
+    label: "必須/任意",
+    render: (row) => (
+      <TextPopover text={String(row.required || "")} maxLength={20} />
+    ),
+  },
+  {
+    key: "logicalName",
+    label: "論理名",
+    render: (row) => (
+      <TextPopover text={String(row.logicalName || "")} maxLength={20} />
+    ),
+  },
+  {
+    key: "description",
+    label: "項目説明",
+    className: "w-[400px] min-w-[400px] max-w-[400px]",
+    render: (row) => (
+      <TextPopover text={String(row.description || "")} maxLength={40} />
+    ),
+  },
+  { key: "foreignKey", label: "外部キー" },
+  { key: "masterType", label: "マスタ種別" },
+  {
+    key: "sampleData",
+    label: "サンプルデータ",
+    className: "w-[400px] min-w-[400px] max-w-[400px]",
+    render: (row) => (
+      <TextPopover text={String(row.sampleData || "")} maxLength={40} />
+    ),
+  },
+];
+
+export function SortableTableWithColumns({
+  subtab,
+  data: apiData,
+}: {
+  subtab: string;
+  data: MetadataResponse;
+}) {
+  const [sessionOverride, setSessionOverride] = useState<TableDefRow[] | null>(
+    null,
+  );
+
+  // sessionStorageに編集済みデータがあれば優先する
+  useEffect(() => {
+    const saved = sessionStorage.getItem("metadata_clinical");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.tableDefs?.[subtab]) {
+          setSessionOverride(parsed.tableDefs[subtab]);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [subtab]);
+
+  // sessionStorageに編集済みデータがあればそちらを優先
+  const data = sessionOverride || apiData.tableDefs?.[subtab] || [];
+
+  return (
+    <DataTable
+      columns={tableColumns}
+      data={data}
+      rowKey={(row) => String(row.id)}
+    />
+  );
+}
