@@ -69,7 +69,7 @@ export default function TableDefinitionLinks() {
                       {PHYSICAL_NAME_OPTIONS.filter(
                         (opt) =>
                           !selectedPhysicalNames.includes(opt) ||
-                          watchTables[index]?.physicalName === opt
+                          watchTables[index]?.physicalName === opt,
                       ).map((option) => (
                         <option key={option} value={option}>
                           {option}

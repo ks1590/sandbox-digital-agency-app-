@@ -18,9 +18,6 @@ import { useFileUpload } from "@/components/form/FileUpload/hooks/useFileUpload"
 import { formatSize } from "@/components/form/FileUpload/utils";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { Label } from "@/components/ui/Label";
-import { RequirementBadge } from "@/components/ui/RequirementBadge";
-import { SupportText } from "@/components/ui/SupportText";
 
 /**
  * ER図タブのコンテンツ
@@ -70,7 +67,7 @@ export default function ErDiagramTabContent({
   const buttonId = useId();
   const inputId = useId();
   const labelId = useId();
-  const supportTextId = useId();
+  const _supportTextId = useId();
 
   const [isExistingRemoved, setIsExistingRemoved] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -89,7 +86,8 @@ export default function ErDiagramTabContent({
     }
   }, [files, initialImageUrl, isExistingRemoved]);
 
-  const showDeleteButton = previewUrl && files.length === 0 && initialImageUrl && !isExistingRemoved;
+  const showDeleteButton =
+    previewUrl && files.length === 0 && initialImageUrl && !isExistingRemoved;
 
   return (
     <div className="py-6 flex flex-col gap-6">

@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import Tab from "@/components/ui/Tab";
-import { TableDefGrid } from "../table-def/TableDefContent";
 import type { MetadataFormData } from "../schema";
+import { TableDefGrid } from "../table-def/TableDefContent";
 
 interface SubtabSectionProps {
   /** 現在のサブタブ（physicalName） */
