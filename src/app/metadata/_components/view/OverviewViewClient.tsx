@@ -12,17 +12,14 @@ const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
 
 export default function OverviewViewClient({
   data: apiData,
-  type,
 }: {
   data: MetadataResponse;
-  type?: string;
 }) {
   const [sessionData, setSessionData] = useState<MetadataFormData | null>(null);
 
   // sessionStorageに編集済みデータがあれば優先する
   useEffect(() => {
-    const key = type ? `metadata_${type}` : "metadata_top";
-    const saved = sessionStorage.getItem(key);
+    const saved = sessionStorage.getItem("metadata_clinical");
     if (saved) {
       try {
         setSessionData(JSON.parse(saved));
@@ -30,7 +27,7 @@ export default function OverviewViewClient({
         console.error(e);
       }
     }
-  }, [type]);
+  }, []);
 
   // sessionStorageに編集済みデータがあればそちらを優先、なければAPIデータを使用
   const overviewText =
