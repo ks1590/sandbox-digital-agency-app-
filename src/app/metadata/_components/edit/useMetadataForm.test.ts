@@ -1,12 +1,18 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  ReadonlyURLSearchParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { saveMetadataAction } from "../../actions";
 import type { MetadataResponse } from "../../types";
 import { useMetadataForm } from "./useMetadataForm";
 
 vi.mock("next/navigation", async () => {
-  const actual = await vi.importActual<typeof import("next/navigation")>("next/navigation");
+  const actual =
+    await vi.importActual<typeof import("next/navigation")>("next/navigation");
   return {
     ...actual,
     useRouter: vi.fn(),
@@ -52,7 +58,9 @@ describe("useMetadataForm", () => {
     vi.mocked(useRouter).mockReturnValue(mockRouter);
     vi.mocked(usePathname).mockReturnValue("/metadata/detail");
     vi.mocked(useSearchParams).mockReturnValue(
-      new ReadonlyURLSearchParams(new URLSearchParams("type=clinical&tab=overview")),
+      new ReadonlyURLSearchParams(
+        new URLSearchParams("type=clinical&tab=overview"),
+      ),
     );
     vi.mocked(saveMetadataAction).mockResolvedValue({ success: true });
   });
@@ -113,7 +121,9 @@ describe("useMetadataForm", () => {
 
   it("handleSubmit でトップページの場合は /metadata に遷移する", async () => {
     vi.mocked(usePathname).mockReturnValue("/metadata");
-    vi.mocked(useSearchParams).mockReturnValue(new ReadonlyURLSearchParams(new URLSearchParams("")));
+    vi.mocked(useSearchParams).mockReturnValue(
+      new ReadonlyURLSearchParams(new URLSearchParams("")),
+    );
 
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));

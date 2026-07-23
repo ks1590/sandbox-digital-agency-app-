@@ -3,7 +3,6 @@ import { fetchDataProfile } from "./api";
 import DataProfileContent from "./DataProfileContent";
 
 export default async function DataProfilePage() {
-
   // サーバー側（Lambda）でGoのAPIを叩いてデータを取得します。
   // ここで取得するため、ブラウザ側でのCORSは発生しません。
   const data = await fetchDataProfile();
