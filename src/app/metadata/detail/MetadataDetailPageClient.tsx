@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
@@ -43,21 +43,6 @@ export default function MetadataDetailPageClient({
       return () => clearTimeout(timer);
     }
   }, [publishSuccess, searchParams, pathname, router]);
-
-  const [sessionData, setSessionData] = useState<any>(null);
-
-  useEffect(() => {
-    const saved = sessionStorage.getItem(`metadata_${type}`);
-    if (saved) {
-      try {
-        setSessionData(JSON.parse(saved));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, [type]);
-
-  const displayTables = sessionData?.tables || data.overview.tables;
 
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
@@ -127,7 +112,7 @@ export default function MetadataDetailPageClient({
                 {
                   label: "概要",
                   id: "tab-overview",
-                  content: <OverviewViewClient data={data} type={type} />,
+                  content: <OverviewViewClient data={data} />,
                 },
                 {
                   label: "ER図",
@@ -143,7 +128,7 @@ export default function MetadataDetailPageClient({
                   id: "tab-table-def",
                   content: (
                     <div className="flex flex-wrap gap-6 p-8">
-                      {displayTables.map((table: any) => {
+                      {data.overview.tables.map((table) => {
                         if (!table.physicalName) return null;
                         return (
                           <LinkCard
@@ -153,7 +138,7 @@ export default function MetadataDetailPageClient({
                           />
                         );
                       })}
-                      {displayTables.length === 0 && (
+                      {data.overview.tables.length === 0 && (
                         <div className="col-span-3 text-center text-gray-500">
                           テーブル定義が紐付けられていません。
                         </div>
