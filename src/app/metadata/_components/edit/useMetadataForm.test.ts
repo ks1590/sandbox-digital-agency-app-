@@ -165,4 +165,24 @@ describe("useMetadataForm", () => {
       "/metadata/detail?tab=overview",
     );
   });
+
+  it("トップページの場合、overviewTextにTOP_OVERVIEW_TEMPLATEの内容（キー情報など）が初期設定される", () => {
+    vi.mocked(usePathname).mockReturnValue("/metadata");
+    const apiData = createApiData();
+    const { result } = renderHook(() => useMetadataForm(apiData));
+
+    const overviewText = result.current.methods.getValues("overviewText");
+    expect(overviewText).toContain("キー情報");
+    expect(overviewText).not.toContain("収集期間");
+  });
+
+  it("子ページの場合、overviewTextにCHILD_OVERVIEW_TEMPLATEの内容（収集期間など）が初期設定される", () => {
+    vi.mocked(usePathname).mockReturnValue("/metadata/detail");
+    const apiData = createApiData();
+    const { result } = renderHook(() => useMetadataForm(apiData));
+
+    const overviewText = result.current.methods.getValues("overviewText");
+    expect(overviewText).toContain("収集期間");
+    expect(overviewText).not.toContain("キー情報");
+  });
 });
