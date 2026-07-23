@@ -1,13 +1,10 @@
 import { Suspense } from "react";
-import { fetchMetadata } from "../api";
-import MetadataTableDefPageClient from "./MetadataTableDefPageClient";
+import MetadataTableDefLoader from "./MetadataTableDefLoader";
 
-export default async function TableDefPage() {
-  const data = await fetchMetadata();
-
+export default function TableDefPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <MetadataTableDefPageClient data={data} />
+    <Suspense fallback={<div>読み込み中...</div>}>
+      <MetadataTableDefLoader />
     </Suspense>
   );
 }

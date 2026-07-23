@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import { TableDefGrid } from "../_components/table-def/TableDefContent";
 import { SortableTableWithColumns } from "../_components/table-def/TableDefViewClient";
+import { useDataTypes } from "../_components/useDataTypes";
 import MetadataViewTabs from "../_components/view/MetadataViewTabs";
 import PublishButtonClient from "../_components/view/PublishButtonClient";
-import { useDataTypes } from "../_components/useDataTypes";
 import type { MetadataResponse } from "../types";
 
 export default function MetadataTableDefPageClient({
@@ -32,14 +32,17 @@ export default function MetadataTableDefPageClient({
       const timer = setTimeout(() => {
         const newParams = new URLSearchParams(searchParams.toString());
         newParams.delete("publish_success");
-        router.replace(`${pathname}?${newParams.toString()}`, { scroll: false });
+        router.replace(`${pathname}?${newParams.toString()}`, {
+          scroll: false,
+        });
       }, 3000);
       return () => clearTimeout(timer);
     }
   }, [publishSuccess, searchParams, pathname, router]);
 
   const validTables = data.overview.tables.filter((t) => t.physicalName);
-  const fallbackTab = validTables.length > 0 ? validTables[0].physicalName : "disease";
+  const fallbackTab =
+    validTables.length > 0 ? validTables[0].physicalName : "disease";
   const tabParam = searchParams.get("tab") || fallbackTab;
 
   const activeIndex = validTables.findIndex((t) => t.physicalName === tabParam);
