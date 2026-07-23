@@ -50,7 +50,7 @@ const tableColumns: ColumnDef<TableDefRow>[] = [
   },
 ];
 
-export function SortableTableWithColumns({
+export function TableDefTable({
   subtab,
   data: apiData,
 }: {

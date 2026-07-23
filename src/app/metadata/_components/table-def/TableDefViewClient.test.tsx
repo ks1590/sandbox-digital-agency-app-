@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { MetadataResponse, TableDefRow } from "../../types";
-import { SortableTableWithColumns } from "./TableDefViewClient";
+import { TableDefTable } from "./TableDefViewClient";
 
 function createRow(overrides: Partial<TableDefRow> = {}): TableDefRow {
   return {
@@ -41,7 +41,7 @@ beforeEach(() => {
   sessionStorage.clear();
 });
 
-describe("SortableTableWithColumns", () => {
+describe("TableDefTable", () => {
   it("指定した subtab の行データを表示する", () => {
     const data = createResponse({
       condtion_table: [
@@ -50,7 +50,7 @@ describe("SortableTableWithColumns", () => {
       ],
     });
 
-    render(<SortableTableWithColumns subtab="condtion_table" data={data} />);
+    render(<TableDefTable subtab="condtion_table" data={data} />);
 
     expect(screen.getByText("disease_code")).toBeInTheDocument();
     expect(screen.getByText("onset_date")).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe("SortableTableWithColumns", () => {
       condtion_table: [createRow({ physicalName: "disease_code" })],
     });
 
-    render(<SortableTableWithColumns subtab="unknown_table" data={data} />);
+    render(<TableDefTable subtab="unknown_table" data={data} />);
 
     expect(screen.queryByText("disease_code")).not.toBeInTheDocument();
   });
@@ -79,7 +79,7 @@ describe("SortableTableWithColumns", () => {
       }),
     );
 
-    render(<SortableTableWithColumns subtab="condtion_table" data={data} />);
+    render(<TableDefTable subtab="condtion_table" data={data} />);
 
     expect(screen.getByText("session_value")).toBeInTheDocument();
     expect(screen.queryByText("api_value")).not.toBeInTheDocument();
@@ -96,7 +96,7 @@ describe("SortableTableWithColumns", () => {
       ],
     });
 
-    render(<SortableTableWithColumns subtab="condtion_table" data={data} />);
+    render(<TableDefTable subtab="condtion_table" data={data} />);
 
     const table = screen.getByRole("table");
     expect(within(table).getByText("傷病名コード")).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe("SortableTableWithColumns", () => {
     });
     sessionStorage.setItem("metadata_clinical", "{invalid");
 
-    render(<SortableTableWithColumns subtab="condtion_table" data={data} />);
+    render(<TableDefTable subtab="condtion_table" data={data} />);
 
     expect(screen.getByText("api_value")).toBeInTheDocument();
     expect(errorSpy).toHaveBeenCalled();

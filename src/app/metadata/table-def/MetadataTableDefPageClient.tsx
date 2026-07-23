@@ -7,7 +7,7 @@ import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import { TableDefGrid } from "../_components/table-def/TableDefContent";
-import { SortableTableWithColumns } from "../_components/table-def/TableDefViewClient";
+import { TableDefTable } from "../_components/table-def/TableDefViewClient";
 import { useDataTypes } from "../_components/useDataTypes";
 import MetadataViewTabs from "../_components/view/MetadataViewTabs";
 import PublishButtonClient from "../_components/view/PublishButtonClient";
@@ -122,7 +122,7 @@ export default function MetadataTableDefPageClient({
                     {isEditMode ? (
                       <TableDefGrid subtab={table.physicalName} />
                     ) : (
-                      <SortableTableWithColumns
+                      <TableDefTable
                         subtab={table.physicalName}
                         data={data}
                       />
