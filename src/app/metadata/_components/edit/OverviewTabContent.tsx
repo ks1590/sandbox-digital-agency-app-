@@ -37,7 +37,19 @@ export default function OverviewTabContent({
             概要の説明
           </label>
           <div className="group relative flex items-center text-sm text-[#0017C1] font-bold cursor-pointer hover:underline">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="mr-1"
+            >
+              <title>記入項目の情報</title>
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="16" x2="12" y2="12" />
               <line x1="12" y1="8" x2="12.01" y2="8" />
@@ -45,7 +57,9 @@ export default function OverviewTabContent({
             <span>記入項目</span>
             <div className="absolute right-0 top-full pt-2 hidden group-hover:block z-50">
               <div className="w-[400px] p-2 bg-white border border-gray-900 text-sm font-normal text-gray-900 shadow-md cursor-auto">
-                <div className="font-bold mb-2 border-b border-gray-900 pb-1">記入項目</div>
+                <div className="font-bold mb-2 border-b border-gray-900 pb-1">
+                  記入項目
+                </div>
                 {isTopPage ? (
                   <ul className="list-disc pl-5 space-y-1">
                     <li>データ説明情報</li>

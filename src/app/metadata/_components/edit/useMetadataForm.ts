@@ -8,16 +8,12 @@ import { saveMetadataAction } from "../../actions";
 import type { MetadataResponse } from "../../types";
 import { type MetadataFormData, metadataSchema } from "../schema";
 
-/** 通知バナーの状態型 */
 export type NotificationState = {
   type: "success" | "error";
   title: string;
   message: string;
 } | null;
 
-/**
- * MetadataEdit のフォーム初期化・送信・タブ遷移ロジックをまとめたカスタムフック
- */
 export function useMetadataForm(apiData: MetadataResponse) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -44,14 +40,15 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const typeParam = searchParams.get("type") || 
-    (pathname !== "/metadata" && pathname !== "/metadata/detail" ? pathname.split("/").pop() : "clinical");
+  const typeParam =
+    searchParams.get("type") ||
+    (pathname !== "/metadata" && pathname !== "/metadata/detail"
+      ? pathname.split("/").pop()
+      : "clinical");
 
-  // APIデータが取得できたらフォームの初期値としてリセット
   useEffect(() => {
     if (!apiData || isInitialized) return;
 
-    // sessionStorageに保存済みデータがあればそちらを優先
     const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
     const saved = sessionStorage.getItem(storageKey);
     if (saved) {
@@ -99,7 +96,6 @@ export function useMetadataForm(apiData: MetadataResponse) {
       ? TOP_OVERVIEW_TEMPLATE
       : CHILD_OVERVIEW_TEMPLATE;
 
-    // sessionStorageにデータがなければAPIデータを使用しつつ、overviewTextはテンプレートを使用
     methods.reset({
       dataType: typeParam || "clinical",
       overviewText: OVERVIEW_TEMPLATE,
@@ -115,17 +111,22 @@ export function useMetadataForm(apiData: MetadataResponse) {
     setIsInitialized(true);
   }, [apiData, methods, isTopPage, isInitialized, typeParam]);
 
+  useEffect(() => {
+    if (!isInitialized) return;
+    const subscription = methods.watch(() => {
+      const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
+      sessionStorage.setItem(storageKey, JSON.stringify(methods.getValues()));
+    });
+    return () => subscription.unsubscribe();
+  }, [methods, isInitialized, isTopPage, typeParam]);
 
-  // タブのデフォルトインデックス算出
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
   else if (tabParam === "table-def") defaultIndex = 2;
 
-  const [notification, setNotification] = useState<NotificationState>(null);
+  const [notification] = useState<NotificationState>(null);
 
-  /** フォーム送信ハンドラ */
   const handleSubmit = async (data: MetadataFormData) => {
-    // サーバーアクションを呼び出してAPI経由での保存をシミュレート
     await saveMetadataAction(data);
 
     // 今回はバックエンド（DB）が存在しないモック環境のため、
@@ -149,7 +150,6 @@ export function useMetadataForm(apiData: MetadataResponse) {
     }
   };
 
-  /** タブ切替ハンドラ */
   const handleTabChange = (index: number) => {
     const tabMap = ["overview", "er", "table-def"];
     const newTab = tabMap[index] || "overview";
@@ -158,16 +158,20 @@ export function useMetadataForm(apiData: MetadataResponse) {
     params.set("tab", newTab);
     params.delete("subtab");
 
-    // Replace URL to preserve tab state without pushing to history stack
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  /** キャンセルリンクの遷移先を算出 */
   const cancelHref = isTopPage
     ? "/metadata"
     : subtabParam
       ? `/metadata/table-def?tab=${subtabParam}&from=${searchParams.get("from") || "clinical"}`
       : `${pathname}?tab=${tabParam}`;
+
+  const handleCancel = () => {
+    const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
+    sessionStorage.removeItem(storageKey);
+    router.push(cancelHref);
+  };
 
   const fromType = searchParams.get("from") || "clinical";
   const returnHref = isTopPage
@@ -192,7 +196,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
     defaultIndex,
     handleSubmit,
     handleTabChange,
-    cancelHref,
+    handleCancel,
     returnHref,
     returnText,
   };
