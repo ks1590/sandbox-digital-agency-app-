@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { Controller, useFormContext } from "react-hook-form";
 import type { MetadataFormData } from "../schema";
 import DataTypeListEditor from "./DataTypeListEditor";
-import TableDefinitionLinks from "./TableDefinitionLinks";
 
 const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
   ssr: false,
@@ -27,9 +26,6 @@ export default function OverviewTabContent({
 
   return (
     <div className="space-y-10 py-6">
-      {/* テーブル定義と紐づける（子ページのみ） */}
-      {!isTopPage && <TableDefinitionLinks />}
-
       {/* 概要 */}
       <section>
         <div className="flex items-center justify-end mb-2">
