@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { saveMetadataAction } from "../../actions";
 import type { MetadataResponse } from "../../types";
@@ -111,14 +111,49 @@ export function useMetadataForm(apiData: MetadataResponse) {
     setIsInitialized(true);
   }, [apiData, methods, isTopPage, isInitialized, typeParam]);
 
+  // フォームの変更状態をrefで追跡し、beforeunload/popstateハンドラで参照する
+  const isDirtyRef = useRef(false);
+
   useEffect(() => {
     if (!isInitialized) return;
     const subscription = methods.watch(() => {
+      isDirtyRef.current = true;
       const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
       sessionStorage.setItem(storageKey, JSON.stringify(methods.getValues()));
     });
     return () => subscription.unsubscribe();
   }, [methods, isInitialized, isTopPage, typeParam]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirtyRef.current) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    const handlePopState = () => {
+      if (isDirtyRef.current) {
+        const confirmed = window.confirm(
+          "編集中の内容が破棄されますがよろしいですか？",
+        );
+        if (!confirmed) {
+          // ブラウザバックをキャンセルし、現在のURLに戻す
+          window.history.pushState(null, "", window.location.href);
+        }
+      }
+    };
+
+    // popstateキャンセル用に現在の履歴エントリを追加
+    window.history.pushState(null, "", window.location.href);
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
@@ -174,17 +209,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
   };
 
   const fromType = searchParams.get("from") || "clinical";
-  const returnHref = isTopPage
-    ? null
-    : subtabParam
-      ? `/metadata/detail?type=${fromType}&mode=edit&tab=table-def`
-      : `/metadata?mode=edit`;
-
-  const returnText = isTopPage
-    ? null
-    : subtabParam
-      ? "データ種別に関する情報に戻る"
-      : "データベース全体に関する情報に戻る";
+  const returnHref = null;
+  const returnText = null;
 
   return {
     methods,
