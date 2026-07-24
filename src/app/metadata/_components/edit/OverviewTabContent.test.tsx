@@ -17,9 +17,6 @@ vi.mock("./DataTypeListEditor", () => ({
   ),
 }));
 
-vi.mock("./TableDefinitionLinks", () => ({
-  default: () => <div data-testid="table-definition-links">Table Links</div>,
-}));
 
 function Wrapper({
   children,
@@ -43,27 +40,21 @@ describe("OverviewTabContent", () => {
     vi.clearAllMocks();
   });
 
-  it("トップページの場合はTableDefinitionLinksを表示せず、DataTypeListEditorを表示する", () => {
+  it("トップページの場合はDataTypeListEditorを表示する", () => {
     render(
       <Wrapper>
         <OverviewTabContent isTopPage={true} />
       </Wrapper>,
     );
-
-    expect(
-      screen.queryByTestId("table-definition-links"),
-    ).not.toBeInTheDocument();
     expect(screen.getByTestId("datatype-list-editor")).toBeInTheDocument();
   });
 
-  it("子ページの場合はTableDefinitionLinksを表示し、DataTypeListEditorを表示しない", () => {
+  it("子ページの場合はDataTypeListEditorを表示しない", () => {
     render(
       <Wrapper>
         <OverviewTabContent isTopPage={false} />
       </Wrapper>,
     );
-
-    expect(screen.getByTestId("table-definition-links")).toBeInTheDocument();
     expect(
       screen.queryByTestId("datatype-list-editor"),
     ).not.toBeInTheDocument();

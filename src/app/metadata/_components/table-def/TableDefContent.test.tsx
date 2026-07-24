@@ -28,57 +28,15 @@ describe("TableDefContent.tsx", () => {
   });
 
   describe("TableDefContent component", () => {
-    it("テーブルがない場合、メッセージが表示されること", () => {
+    it("TableDefinitionLinksがレンダリングされること", () => {
       render(
         <Wrapper defaultValues={{ tables: [] }}>
           <TableDefContent />
         </Wrapper>,
       );
       expect(
-        screen.getByText(
-          "テーブル定義が紐付けられていません。「概要」タブでテーブルを追加してください。",
-        ),
+        screen.getByRole("button", { name: /テーブル定義と紐づける/ }),
       ).toBeInTheDocument();
-    });
-
-    it("テーブルがある場合、LinkCardが表示されること", () => {
-      render(
-        <Wrapper
-          defaultValues={{
-            tables: [
-              {
-                id: "1",
-                physicalName: "test_table",
-                logicalName: "テストテーブル",
-              },
-              { id: "2", physicalName: "no_logical_table", logicalName: "" },
-              { id: "3", physicalName: "" }, // 物理名がない場合は表示されない
-            ],
-          }}
-        >
-          <TableDefContent />
-        </Wrapper>,
-      );
-
-      // logicalName がある場合
-      expect(
-        screen.getByRole("link", { name: "テストテーブル" }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("link", { name: "テストテーブル" }),
-      ).toHaveAttribute(
-        "href",
-        "/mock-path?mode=edit&tab=table-def&subtab=test_table",
-      );
-
-      // logicalName がない場合 (physicalName が表示される)
-      expect(
-        screen.getByRole("link", { name: "no_logical_table" }),
-      ).toBeInTheDocument();
-
-      // 物理名がないものは表示されない
-      const links = screen.queryAllByRole("link");
-      expect(links).toHaveLength(2);
     });
   });
 
