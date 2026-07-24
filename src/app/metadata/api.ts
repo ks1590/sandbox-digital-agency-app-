@@ -209,6 +209,34 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
         data.tableDefs = {};
       }
     }
+
+    if (typeof window !== "undefined") {
+      const storageKey = type ? `metadata_${type}` : "metadata_top";
+      const saved = sessionStorage.getItem(storageKey);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          data.overview = {
+            ...data.overview,
+            overviewText: parsed.overviewText ?? data.overview.overviewText,
+            dataTypes: parsed.dataTypes ?? data.overview.dataTypes,
+            startYear: parsed.startYear ?? data.overview.startYear,
+            latestYear: parsed.latestYear ?? data.overview.latestYear,
+            updateFrequencies:
+              parsed.updateFrequencies ?? data.overview.updateFrequencies,
+            tables: parsed.tables ?? data.overview.tables,
+            notesText: parsed.notesText ?? data.overview.notesText,
+            keyInfoText: parsed.keyInfoText ?? data.overview.keyInfoText,
+          };
+          if (parsed.tableDefs) {
+            data.tableDefs = parsed.tableDefs;
+          }
+        } catch (e) {
+          console.error("Failed to parse sessionStorage data", e);
+        }
+      }
+    }
+
     return data;
   };
   // API URLが設定されている場合はAPIから取得を試みる
