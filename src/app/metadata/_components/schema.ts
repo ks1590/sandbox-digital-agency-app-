@@ -61,11 +61,36 @@ export const metadataSchema = z.object({
       z.object({
         id: z.string(),
         physicalName: z.string(),
-        logicalName: z.string(),
+        logicalName: z.string().trim().min(1, {
+          message: "テーブル論理名を入力してください",
+        }),
         overview: z.string(),
         unit: z.string(),
       }),
     )
+    .superRefine((items, ctx) => {
+      const nameIndicesMap = new Map<string, number[]>();
+      items.forEach((item, index) => {
+        const trimmed = item.logicalName.trim();
+        if (!trimmed) return;
+        if (!nameIndicesMap.has(trimmed)) {
+          nameIndicesMap.set(trimmed, []);
+        }
+        nameIndicesMap.get(trimmed)!.push(index);
+      });
+
+      nameIndicesMap.forEach((indices) => {
+        if (indices.length > 1) {
+          indices.forEach((index) => {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "テーブル論理名が重複しています",
+              path: [index, "logicalName"],
+            });
+          });
+        }
+      });
+    })
     .optional(),
   notesText: z.string().optional(),
 

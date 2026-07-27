@@ -1,6 +1,8 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { metadataSchema } from "../schema";
 import TableDefinitionLinks from "./TableDefinitionLinks";
 
 function Wrapper({
@@ -10,13 +12,18 @@ function Wrapper({
   children: React.ReactNode;
   defaultValues?: any;
 }) {
-  const methods = useForm({ defaultValues });
+  const methods = useForm({
+    resolver: zodResolver(metadataSchema),
+    defaultValues,
+    mode: "onChange",
+  });
   return <FormProvider {...methods}>{children}</FormProvider>;
 }
 
 describe("TableDefinitionLinks", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    sessionStorage.clear();
   });
 
   it("初期状態で「テーブル定義と紐づける」ボタンが表示される", () => {
@@ -96,5 +103,109 @@ describe("TableDefinitionLinks", () => {
     const options2 = Array.from(selects[1].options).map((opt) => opt.value);
     expect(options2).not.toContain("condtion_table");
     expect(options2).toContain("allergyIntolerance_table");
+  });
+
+  it("別データ種別で選択済みの物理名も全体の選択肢から非表示になる", async () => {
+    // sessionStorage に別データ種別の保存データを作成
+    sessionStorage.setItem(
+      "metadata_文書情報",
+      JSON.stringify({
+        tables: [{ physicalName: "allergyIntolerance_table", logicalName: "アレルギー" }],
+      }),
+    );
+
+    render(
+      <Wrapper
+        defaultValues={{
+          tables: [{ physicalName: "", logicalName: "" }],
+        }}
+      >
+        <TableDefinitionLinks />
+      </Wrapper>,
+    );
+
+    const select = screen.getByRole("combobox") as HTMLSelectElement;
+    const options = Array.from(select.options).map((opt) => opt.value);
+    // 別データ種別（文書情報）で選択済みの allergyIntolerance_table は除外される
+    expect(options).not.toContain("allergyIntolerance_table");
+  });
+
+  it("同じデータ種別内でテーブル論理名が重複している場合にエラーメッセージを表示する", async () => {
+    let triggerFn: () => Promise<boolean>;
+    const TestComponent = () => {
+      const methods = useForm({
+        resolver: zodResolver(metadataSchema),
+        defaultValues: {
+          tables: [
+            {
+              id: "1",
+              physicalName: "condtion_table",
+              logicalName: "傷病",
+              overview: "",
+              unit: "",
+            },
+            {
+              id: "2",
+              physicalName: "observation_table",
+              logicalName: "傷病",
+              overview: "",
+              unit: "",
+            },
+          ],
+        },
+      });
+      triggerFn = () => methods.trigger();
+      return (
+        <FormProvider {...methods}>
+          <TableDefinitionLinks />
+        </FormProvider>
+      );
+    };
+
+    render(<TestComponent />);
+
+    await act(async () => {
+      await triggerFn();
+    });
+
+    expect(
+      await screen.findAllByText("テーブル論理名が重複しています"),
+    ).toHaveLength(2);
+  });
+
+  it("テーブル論理名が空欄の場合にエラーメッセージを表示する", async () => {
+    let triggerFn: () => Promise<boolean>;
+    const TestComponent = () => {
+      const methods = useForm({
+        resolver: zodResolver(metadataSchema),
+        defaultValues: {
+          tables: [
+            {
+              id: "1",
+              physicalName: "condtion_table",
+              logicalName: "",
+              overview: "",
+              unit: "",
+            },
+          ],
+        },
+      });
+      triggerFn = () => methods.trigger();
+      return (
+        <FormProvider {...methods}>
+          <TableDefinitionLinks />
+        </FormProvider>
+      );
+    };
+
+    render(<TestComponent />);
+
+    await act(async () => {
+      await triggerFn();
+    });
+
+    expect(
+      await screen.findByText("テーブル論理名を入力してください"),
+    ).toBeInTheDocument();
   });
 });
