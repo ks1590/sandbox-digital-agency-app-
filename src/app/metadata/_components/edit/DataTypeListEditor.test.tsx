@@ -1,5 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useRouter } from "next/navigation";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DataTypeListEditor from "./DataTypeListEditor";
 
@@ -36,10 +35,10 @@ describe("DataTypeListEditor", () => {
       "/metadata/detail?type=type-clinical&mode=edit",
     );
 
-    // "new-type-"の場合は「ページを作成」ボタンが表示される
+    // "new-type-"の場合は「ページを作成」ボタンが存在しない（仮登録時に作成される）
     expect(
-      screen.getByRole("button", { name: "ページを作成" }),
-    ).toBeInTheDocument();
+      screen.queryByRole("button", { name: "ページを作成" }),
+    ).not.toBeInTheDocument();
   });
 
   it("データ種別を追加できる", () => {
@@ -84,28 +83,5 @@ describe("DataTypeListEditor", () => {
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     const newTypes = mockOnChange.mock.calls[0][0];
     expect(newTypes[0].name).toBe("Updated Clinical");
-  });
-
-  it("ページを作成ボタンをクリックすると、IDが更新される", async () => {
-    render(
-      <DataTypeListEditor dataTypes={baseDataTypes} onChange={mockOnChange} />,
-    );
-
-    const createButton = screen.getByRole("button", { name: "ページを作成" });
-    fireEvent.click(createButton);
-
-    // ローディング中になるためボタンが無効化される
-    expect(createButton).toBeDisabled();
-
-    // 1.5秒の待機後にonChangeが呼ばれるのを待つ
-    await waitFor(
-      () => {
-        expect(mockOnChange).toHaveBeenCalled();
-      },
-      { timeout: 2000 },
-    );
-
-    const newTypes = mockOnChange.mock.calls[0][0];
-    expect(newTypes[1].id).toBe("type-123");
   });
 });

@@ -162,12 +162,71 @@ export function useMetadataForm(apiData: MetadataResponse) {
   const [notification] = useState<NotificationState>(null);
 
   const handleSubmit = async (data: MetadataFormData) => {
-    await saveMetadataAction(data);
+    let finalData = data;
+
+    if (isTopPage && data.dataTypes && data.dataTypes.length > 0) {
+      const CHILD_OVERVIEW_TEMPLATE = `
+## データ説明情報
+- 
+## 収集期間
+| 項目 | 内容 |
+| --- | --- |
+| 収集開始年度 | |
+| 最新の提供可能年度 | |
+| 収集頻度 | |
+
+## 更新頻度
+- 
+## テーブル一覧
+テーブル物理名 | テーブル論理名 | 概要 | 格納単位 |
+| ---| --- | --- | --- |
+| | | | |
+| | | | |
+| | | | |
+
+## 留意事項
+-
+`;
+
+      const updatedDataTypes = data.dataTypes.map((dt) => {
+        if (dt.id.startsWith("new-type-")) {
+          const newId = dt.id.replace("new-type-", "type-");
+
+          // 新規作成されたデータ種別の初期データを作成・保存
+          const childStorageKey = `metadata_${newId}`;
+          if (!sessionStorage.getItem(childStorageKey)) {
+            const initialChildData = {
+              dataType: newId,
+              overviewText: CHILD_OVERVIEW_TEMPLATE,
+              dataTypes: [],
+              startYear: "",
+              latestYear: "",
+              updateFrequencies: [],
+              tables: [],
+              notesText: "",
+              keyInfoText: "",
+              tableDefs: {},
+            };
+            sessionStorage.setItem(
+              childStorageKey,
+              JSON.stringify(initialChildData),
+            );
+          }
+
+          return { ...dt, id: newId };
+        }
+        return dt;
+      });
+
+      finalData = { ...data, dataTypes: updatedDataTypes };
+    }
+
+    await saveMetadataAction(finalData);
 
     // 今回はバックエンド（DB）が存在しないモック環境のため、
     // 画面リロード時に編集内容が消えないようにセッションストレージにも保存しておく
     const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
-    sessionStorage.setItem(storageKey, JSON.stringify(data));
+    sessionStorage.setItem(storageKey, JSON.stringify(finalData));
 
     if (isTopPage) {
       router.push("/metadata");

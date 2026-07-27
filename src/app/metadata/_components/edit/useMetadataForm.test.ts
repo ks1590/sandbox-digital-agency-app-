@@ -119,7 +119,7 @@ describe("useMetadataForm", () => {
     );
   });
 
-  it("handleSubmit でトップページの場合は /metadata に遷移する", async () => {
+  it("handleSubmit でトップページの場合は /metadata に遷移し、新規データ種別のID変換と初期データ作成を行う", async () => {
     vi.mocked(usePathname).mockReturnValue("/metadata");
     vi.mocked(useSearchParams).mockReturnValue(
       new ReadonlyURLSearchParams(new URLSearchParams("")),
@@ -128,11 +128,31 @@ describe("useMetadataForm", () => {
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));
 
+    act(() => {
+      result.current.methods.setValue("dataTypes", [
+        { id: "type-existing", name: "Existing" },
+        { id: "new-type-12345", name: "New One" },
+      ]);
+    });
+
     await act(async () => {
       await result.current.handleSubmit(result.current.methods.getValues());
     });
 
     expect(saveMetadataAction).toHaveBeenCalled();
+
+    // new-type-12345 が type-12345 に変換されていること
+    const callArg = vi.mocked(saveMetadataAction).mock.calls[0][0];
+    expect(callArg.dataTypes).toEqual([
+      { id: "type-existing", name: "Existing" },
+      { id: "type-12345", name: "New One" },
+    ]);
+
+    // 子要素のセッションストレージが初期化されていること
+    const childSaved = sessionStorage.getItem("metadata_type-12345");
+    expect(childSaved).not.toBeNull();
+    expect(JSON.parse(childSaved as string).dataType).toBe("type-12345");
+
     expect(mockRouter.push).toHaveBeenCalledWith("/metadata");
   });
 
