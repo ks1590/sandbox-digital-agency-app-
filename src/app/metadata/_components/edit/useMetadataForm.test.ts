@@ -59,7 +59,7 @@ describe("useMetadataForm", () => {
     vi.mocked(usePathname).mockReturnValue("/metadata/detail");
     vi.mocked(useSearchParams).mockReturnValue(
       new ReadonlyURLSearchParams(
-        new URLSearchParams("type=clinical&tab=overview"),
+        new URLSearchParams("type=臨床情報&tab=overview"),
       ),
     );
     vi.mocked(saveMetadataAction).mockResolvedValue({ success: true });
@@ -75,12 +75,12 @@ describe("useMetadataForm", () => {
 
     expect(result.current.isInitialized).toBe(true);
     expect(result.current.isTopPage).toBe(false);
-    expect(result.current.methods.getValues("dataType")).toBe("clinical");
+    expect(result.current.methods.getValues("dataType")).toBe("臨床情報");
   });
 
   it("セッションストレージにデータがある場合はそれを復元する", () => {
     const savedData = { dataType: "saved_type", overviewText: "saved text" };
-    sessionStorage.setItem("metadata_clinical", JSON.stringify(savedData));
+    sessionStorage.setItem("metadata_臨床情報", JSON.stringify(savedData));
 
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));
@@ -99,7 +99,7 @@ describe("useMetadataForm", () => {
     });
 
     await waitFor(() => {
-      const saved = sessionStorage.getItem("metadata_clinical");
+      const saved = sessionStorage.getItem("metadata_臨床情報");
       expect(saved).toBeTruthy();
       expect(JSON.parse(saved as string).overviewText).toBe("new text");
     });
@@ -115,7 +115,7 @@ describe("useMetadataForm", () => {
 
     expect(saveMetadataAction).toHaveBeenCalled();
     expect(mockRouter.push).toHaveBeenCalledWith(
-      "/metadata/detail?tab=overview&type=clinical",
+      `/metadata/detail?tab=overview&type=${encodeURIComponent("臨床情報")}`,
     );
   });
 
@@ -141,17 +141,17 @@ describe("useMetadataForm", () => {
 
     expect(saveMetadataAction).toHaveBeenCalled();
 
-    // new-type-12345 が type-12345 に変換されていること
+    // 既存・新規とも ID が名称に統一されていること
     const callArg = vi.mocked(saveMetadataAction).mock.calls[0][0];
     expect(callArg.dataTypes).toEqual([
-      { id: "type-existing", name: "Existing" },
-      { id: "type-12345", name: "New One" },
+      { id: "Existing", name: "Existing" },
+      { id: "New One", name: "New One" },
     ]);
 
     // 子要素のセッションストレージが初期化されていること
-    const childSaved = sessionStorage.getItem("metadata_type-12345");
+    const childSaved = sessionStorage.getItem("metadata_New One");
     expect(childSaved).not.toBeNull();
-    expect(JSON.parse(childSaved as string).dataType).toBe("type-12345");
+    expect(JSON.parse(childSaved as string).dataType).toBe("New One");
 
     expect(mockRouter.push).toHaveBeenCalledWith("/metadata");
   });
@@ -165,13 +165,13 @@ describe("useMetadataForm", () => {
     });
 
     expect(mockRouter.replace).toHaveBeenCalledWith(
-      "/metadata/detail?type=clinical&tab=er",
+      `/metadata/detail?type=${encodeURIComponent("臨床情報")}&tab=er`,
       { scroll: false },
     );
   });
 
   it("handleCancel でセッションをクリアし、適切な画面に戻る", () => {
-    sessionStorage.setItem("metadata_clinical", JSON.stringify({}));
+    sessionStorage.setItem("metadata_臨床情報", JSON.stringify({}));
 
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));
@@ -180,9 +180,9 @@ describe("useMetadataForm", () => {
       result.current.handleCancel();
     });
 
-    expect(sessionStorage.getItem("metadata_clinical")).toBeNull();
+    expect(sessionStorage.getItem("metadata_臨床情報")).toBeNull();
     expect(mockRouter.push).toHaveBeenCalledWith(
-      "/metadata/detail?tab=overview",
+      "/metadata/detail?tab=overview&type=%E8%87%A8%E5%BA%8A%E6%83%85%E5%A0%B1",
     );
   });
 

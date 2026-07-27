@@ -8,7 +8,7 @@ import MetadataDetailPageClient from "./MetadataDetailPageClient";
 
 export default function MetadataDetailLoader() {
   const searchParams = useSearchParams();
-  const type = searchParams.get("type") || "";
+  const type = searchParams.get("type") || "臨床情報";
 
   const [data, setData] = useState<MetadataResponse | null>(null);
 

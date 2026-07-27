@@ -9,8 +9,17 @@ import type { DataTypeItem } from "../types";
  */
 export function useDataTypes(initialDataTypes?: DataTypeItem[]) {
   const [dataTypes, setDataTypes] = useState<DataTypeItem[]>(
-    initialDataTypes || [{ id: "clinical", name: "臨床情報" }],
+    initialDataTypes || [{ id: "臨床情報", name: "臨床情報" }],
   );
+
+  const serializedInitialDataTypes = JSON.stringify(initialDataTypes || []);
+
+  useEffect(() => {
+    const parsed = JSON.parse(serializedInitialDataTypes) as DataTypeItem[];
+    if (parsed.length > 0) {
+      setDataTypes(parsed);
+    }
+  }, [serializedInitialDataTypes]);
 
   useEffect(() => {
     try {
@@ -26,9 +35,12 @@ export function useDataTypes(initialDataTypes?: DataTypeItem[]) {
     }
   }, []);
 
-  const getDataTypeName = (id: string) => {
-    const found = dataTypes.find((dt) => dt.id === id);
-    return found ? found.name : id;
+  const getDataTypeName = (idOrName: string) => {
+    if (idOrName === "clinical") return "臨床情報";
+    const found = dataTypes.find(
+      (dt) => dt.id === idOrName || dt.name === idOrName,
+    );
+    return found ? found.name : idOrName;
   };
 
   return { dataTypes, getDataTypeName };

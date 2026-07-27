@@ -60,7 +60,7 @@ export default function MetadataContent({ data }: { data: MetadataResponse }) {
           {dataTypes.map((dt) => (
             <LinkCard
               key={dt.id}
-              href={`/metadata/detail?type=${dt.id}`}
+              href={`/metadata/detail?type=${encodeURIComponent(dt.name)}`}
               title={dt.name}
             />
           ))}

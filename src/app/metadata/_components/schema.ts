@@ -23,9 +23,27 @@ export const metadataSchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        name: z.string(),
+        name: z.string().trim().min(1, {
+          message: "データ種別名を入力してください",
+        }),
       }),
     )
+    .superRefine((items, ctx) => {
+      const names = new Set<string>();
+      items.forEach((item, index) => {
+        const trimmed = item.name.trim();
+        if (!trimmed) return;
+        if (names.has(trimmed)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "同じデータ種別名は登録できません",
+            path: [index, "name"],
+          });
+        } else {
+          names.add(trimmed);
+        }
+      });
+    })
     .optional(),
   startYear: z.string().optional(),
   latestYear: z.string().optional(),

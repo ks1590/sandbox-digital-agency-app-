@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { FormProvider, useForm } from "react-hook-form";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DataTypeListEditor from "./DataTypeListEditor";
 
@@ -29,11 +31,8 @@ describe("DataTypeListEditor", () => {
     expect(inputs[0]).toHaveValue("Clinical");
     expect(inputs[1]).toHaveValue("New Type");
 
-    // "type-"の場合は「詳細」リンクが表示される
-    expect(screen.getByText("詳細")).toHaveAttribute(
-      "href",
-      "/metadata/detail?type=type-clinical&mode=edit",
-    );
+    // 「詳細」リンクが表示されないこと
+    expect(screen.queryByText("詳細")).not.toBeInTheDocument();
 
     // "new-type-"の場合は「ページを作成」ボタンが存在しない（仮登録時に作成される）
     expect(
@@ -83,5 +82,34 @@ describe("DataTypeListEditor", () => {
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     const newTypes = mockOnChange.mock.calls[0][0];
     expect(newTypes[0].name).toBe("Updated Clinical");
+  });
+
+  it("バリデーションエラーがある場合にエラーメッセージとARIA属性が設定される", () => {
+    const Wrapper = ({ children }: { children: React.ReactNode }) => {
+      const methods = useForm({
+        defaultValues: {
+          dataTypes: baseDataTypes,
+        },
+      });
+      useEffect(() => {
+        methods.setError("dataTypes.0.name", {
+          type: "manual",
+          message: "同じデータ種別名は登録できません",
+        });
+      }, [methods]);
+      return <FormProvider {...methods}>{children}</FormProvider>;
+    };
+
+    render(
+      <Wrapper>
+        <DataTypeListEditor dataTypes={baseDataTypes} onChange={mockOnChange} />
+      </Wrapper>,
+    );
+
+    expect(
+      screen.getByText("同じデータ種別名は登録できません"),
+    ).toBeInTheDocument();
+    const inputs = screen.getAllByRole("textbox");
+    expect(inputs[0]).toHaveAttribute("aria-invalid", "true");
   });
 });

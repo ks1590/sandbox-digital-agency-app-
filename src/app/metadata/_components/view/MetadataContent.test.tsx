@@ -24,8 +24,8 @@ function createResponse(
     overview: {
       overviewText: "## 概要テキスト",
       dataTypes: [
-        { id: "clinical", name: "臨床情報" },
-        { id: "document", name: "文書情報" },
+        { id: "臨床情報", name: "臨床情報" },
+        { id: "文書情報", name: "文書情報" },
       ],
       startYear: "2020",
       latestYear: "2026",
@@ -69,12 +69,12 @@ describe("MetadataContent", () => {
     const clinicalLink = screen.getByRole("link", { name: "臨床情報" });
     expect(clinicalLink).toHaveAttribute(
       "href",
-      "/metadata/detail?type=clinical",
+      `/metadata/detail?type=${encodeURIComponent("臨床情報")}`,
     );
     const documentLink = screen.getByRole("link", { name: "文書情報" });
     expect(documentLink).toHaveAttribute(
       "href",
-      "/metadata/detail?type=document",
+      `/metadata/detail?type=${encodeURIComponent("文書情報")}`,
     );
   });
 

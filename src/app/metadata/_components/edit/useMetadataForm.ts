@@ -25,7 +25,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
   const methods = useForm<MetadataFormData>({
     resolver: zodResolver(metadataSchema),
     defaultValues: {
-      dataType: "clinical",
+      dataType: "臨床情報",
       overviewText: "",
       dataTypes: [],
       startYear: "",
@@ -44,7 +44,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
     searchParams.get("type") ||
     (pathname !== "/metadata" && pathname !== "/metadata/detail"
       ? pathname.split("/").pop()
-      : "clinical");
+      : "臨床情報");
 
   useEffect(() => {
     if (!apiData || isInitialized) return;
@@ -97,7 +97,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       : CHILD_OVERVIEW_TEMPLATE;
 
     methods.reset({
-      dataType: typeParam || "clinical",
+      dataType: typeParam || "臨床情報",
       overviewText: OVERVIEW_TEMPLATE,
       dataTypes: apiData.overview.dataTypes,
       startYear: apiData.overview.startYear,
@@ -189,33 +189,30 @@ export function useMetadataForm(apiData: MetadataResponse) {
 `;
 
       const updatedDataTypes = data.dataTypes.map((dt) => {
-        if (dt.id.startsWith("new-type-")) {
-          const newId = dt.id.replace("new-type-", "type-");
+        const targetId = dt.name;
 
-          // 新規作成されたデータ種別の初期データを作成・保存
-          const childStorageKey = `metadata_${newId}`;
-          if (!sessionStorage.getItem(childStorageKey)) {
-            const initialChildData = {
-              dataType: newId,
-              overviewText: CHILD_OVERVIEW_TEMPLATE,
-              dataTypes: [],
-              startYear: "",
-              latestYear: "",
-              updateFrequencies: [],
-              tables: [],
-              notesText: "",
-              keyInfoText: "",
-              tableDefs: {},
-            };
-            sessionStorage.setItem(
-              childStorageKey,
-              JSON.stringify(initialChildData),
-            );
-          }
-
-          return { ...dt, id: newId };
+        // データ種別の初期データを作成・保存
+        const childStorageKey = `metadata_${targetId}`;
+        if (!sessionStorage.getItem(childStorageKey)) {
+          const initialChildData = {
+            dataType: targetId,
+            overviewText: CHILD_OVERVIEW_TEMPLATE,
+            dataTypes: [],
+            startYear: "",
+            latestYear: "",
+            updateFrequencies: [],
+            tables: [],
+            notesText: "",
+            keyInfoText: "",
+            tableDefs: {},
+          };
+          sessionStorage.setItem(
+            childStorageKey,
+            JSON.stringify(initialChildData),
+          );
         }
-        return dt;
+
+        return { ...dt, id: targetId };
       });
 
       finalData = { ...data, dataTypes: updatedDataTypes };
@@ -232,7 +229,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       router.push("/metadata");
     } else if (subtabParam) {
       router.push(
-        `/metadata/table-def?tab=${subtabParam}&from=${typeParam || "clinical"}`,
+        `/metadata/table-def?tab=${subtabParam}&from=${typeParam || "臨床情報"}`,
       );
     } else {
       const viewParams = new URLSearchParams();
@@ -255,11 +252,16 @@ export function useMetadataForm(apiData: MetadataResponse) {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
+  const cancelParams = new URLSearchParams();
+  cancelParams.set("tab", tabParam);
+  if (typeParam) {
+    cancelParams.set("type", typeParam);
+  }
   const cancelHref = isTopPage
     ? "/metadata"
     : subtabParam
-      ? `/metadata/table-def?tab=${subtabParam}&from=${searchParams.get("from") || "clinical"}`
-      : `${pathname}?tab=${tabParam}`;
+      ? `/metadata/table-def?tab=${subtabParam}&from=${searchParams.get("from") || "臨床情報"}`
+      : `${pathname}?${cancelParams.toString()}`;
 
   const handleCancel = () => {
     const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
@@ -267,7 +269,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
     router.push(cancelHref);
   };
 
-  const fromType = searchParams.get("from") || "clinical";
+  const fromType = searchParams.get("from") || "臨床情報";
   const returnHref = null;
   const returnText = null;
 

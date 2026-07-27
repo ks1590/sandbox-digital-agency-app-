@@ -11,10 +11,13 @@ import { useDataTypes } from "../useDataTypes";
 export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
   const { register, watch } = useFormContext<MetadataFormData>();
   const currentDataType = watch("dataType");
-  const { dataTypes } = useDataTypes();
+  const formDataTypes = watch("dataTypes");
+  const { dataTypes } = useDataTypes(formDataTypes);
 
   if (readonly) {
-    const selectedOption = dataTypes.find((opt) => opt.id === currentDataType);
+    const selectedOption = dataTypes.find(
+      (opt) => opt.id === currentDataType || opt.name === currentDataType,
+    );
     return (
       <div className="mb-8">
         <p className="block text-xl font-bold text-gray-900 mb-2">データ種別</p>
@@ -40,7 +43,7 @@ export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
           {...register("dataType")}
         >
           {dataTypes.map((dt) => (
-            <option key={dt.id} value={dt.id}>
+            <option key={dt.id} value={dt.name}>
               {dt.name}
             </option>
           ))}

@@ -27,7 +27,7 @@ const mockData: MetadataResponse = {
   overview: {
     overviewText: "",
     status: "draft",
-    dataTypes: [{ id: "clinical", name: "臨床データ" }],
+    dataTypes: [{ id: "臨床データ", name: "臨床データ" }],
     startYear: "2020",
     latestYear: "2024",
     updateFrequencies: [],
@@ -61,13 +61,13 @@ describe("MetadataDetailPageClient", () => {
       get: vi.fn((key) => (key === "mode" ? "edit" : null)),
     });
 
-    render(<MetadataDetailPageClient data={mockData} type="clinical" />);
+    render(<MetadataDetailPageClient data={mockData} type="臨床データ" />);
     expect(screen.getByTestId("metadata-edit")).toBeInTheDocument();
     expect(screen.queryByText("データ種別")).not.toBeInTheDocument();
   });
 
   it("通常モードでタブと基本情報が正しく表示されること", () => {
-    render(<MetadataDetailPageClient data={mockData} type="clinical" />);
+    render(<MetadataDetailPageClient data={mockData} type="臨床データ" />);
 
     expect(screen.getByText("メタデータ")).toBeInTheDocument();
     expect(screen.getByText("臨床データ")).toBeInTheDocument(); // getDataTypeNameの解決結果
@@ -76,7 +76,7 @@ describe("MetadataDetailPageClient", () => {
   });
 
   it("ステータスがdraftの場合は公開ボタンが表示されること", () => {
-    render(<MetadataDetailPageClient data={mockData} type="clinical" />);
+    render(<MetadataDetailPageClient data={mockData} type="臨床データ" />);
     expect(
       screen.getByRole("button", { name: "公開する" }),
     ).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe("MetadataDetailPageClient", () => {
       ...mockData,
       overview: { ...mockData.overview, status: "published" as const },
     };
-    render(<MetadataDetailPageClient data={publishedData} type="clinical" />);
+    render(<MetadataDetailPageClient data={publishedData} type="臨床データ" />);
     expect(
       screen.queryByRole("button", { name: "公開する" }),
     ).not.toBeInTheDocument();
@@ -100,7 +100,7 @@ describe("MetadataDetailPageClient", () => {
       toString: vi.fn(() => "publish_success=true"),
     });
 
-    render(<MetadataDetailPageClient data={mockData} type="clinical" />);
+    render(<MetadataDetailPageClient data={mockData} type="臨床データ" />);
 
     expect(screen.getByText("完了通知")).toBeInTheDocument();
     expect(
@@ -124,7 +124,7 @@ describe("MetadataDetailPageClient", () => {
       get: vi.fn((key) => (key === "publish_error" ? "true" : null)),
     });
 
-    render(<MetadataDetailPageClient data={mockData} type="clinical" />);
+    render(<MetadataDetailPageClient data={mockData} type="臨床データ" />);
     expect(screen.getByText("公開に失敗しました")).toBeInTheDocument();
   });
 
@@ -133,7 +133,7 @@ describe("MetadataDetailPageClient", () => {
       get: vi.fn((key) => (key === "tab" ? "table-def" : null)),
     });
 
-    render(<MetadataDetailPageClient data={mockData} type="clinical" />);
+    render(<MetadataDetailPageClient data={mockData} type="臨床データ" />);
     expect(
       screen.getByRole("link", { name: "患者テーブル" }),
     ).toBeInTheDocument();
@@ -148,7 +148,7 @@ describe("MetadataDetailPageClient", () => {
       get: vi.fn((key) => (key === "tab" ? "table-def" : null)),
     });
 
-    render(<MetadataDetailPageClient data={emptyTablesData} type="clinical" />);
+    render(<MetadataDetailPageClient data={emptyTablesData} type="臨床データ" />);
     expect(
       screen.getByText("テーブル定義が紐付けられていません。"),
     ).toBeInTheDocument();

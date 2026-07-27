@@ -23,7 +23,7 @@ export default function MetadataTableDefPageClient({
   const pathname = usePathname();
 
   const isEditMode = searchParams.get("mode") === "edit";
-  const fromType = searchParams.get("from") || "clinical";
+  const fromType = searchParams.get("from") || "臨床情報";
   const publishSuccess = searchParams.get("publish_success") === "true";
   const publishError = searchParams.get("publish_error") === "true";
 

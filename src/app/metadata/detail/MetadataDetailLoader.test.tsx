@@ -26,7 +26,7 @@ describe("MetadataDetailLoader", () => {
 
   it("初期状態でローディング画面が表示され、データ取得後にClientコンポーネントが表示されること", async () => {
     (useSearchParams as Mock).mockReturnValue({
-      get: vi.fn((key) => (key === "type" ? "clinical" : null)),
+      get: vi.fn((key) => (key === "type" ? "臨床情報" : null)),
     });
 
     const mockData = { overview: { status: "draft" } };
@@ -42,11 +42,11 @@ describe("MetadataDetailLoader", () => {
       expect(screen.getByTestId("detail-client")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("Client: clinical")).toBeInTheDocument();
-    expect(fetchMetadata).toHaveBeenCalledWith("clinical");
+    expect(screen.getByText("Client: 臨床情報")).toBeInTheDocument();
+    expect(fetchMetadata).toHaveBeenCalledWith("臨床情報");
   });
 
-  it("typeパラメータが存在しない場合、空文字でfetchが呼ばれること", async () => {
+  it("typeパラメータが存在しない場合、デフォルトの臨床情報でfetchが呼ばれること", async () => {
     (useSearchParams as Mock).mockReturnValue({
       get: vi.fn(() => null),
     });
@@ -59,7 +59,7 @@ describe("MetadataDetailLoader", () => {
       expect(screen.getByTestId("detail-client")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("Client:")).toBeInTheDocument();
-    expect(fetchMetadata).toHaveBeenCalledWith("");
+    expect(screen.getByText("Client: 臨床情報")).toBeInTheDocument();
+    expect(fetchMetadata).toHaveBeenCalledWith("臨床情報");
   });
 });
