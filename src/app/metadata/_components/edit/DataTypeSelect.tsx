@@ -21,7 +21,7 @@ export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
     (dt) =>
       dt.name === currentDataType ||
       dt.id === currentDataType ||
-      dt.name === getDataTypeName(currentDataType),
+      dt.name === getDataTypeName(currentDataType || ""),
   )
     ? dataTypes
     : [

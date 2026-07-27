@@ -156,6 +156,35 @@ describe("useMetadataForm", () => {
     expect(mockRouter.push).toHaveBeenCalledWith("/metadata");
   });
 
+  it("新規データ種別追加時に「臨床情報」のセッションデータが存在しない場合、空配列ではなく臨床情報のデフォルトテーブル情報で初期化されること", async () => {
+    vi.mocked(usePathname).mockReturnValue("/metadata");
+    vi.mocked(useSearchParams).mockReturnValue(
+      new ReadonlyURLSearchParams(new URLSearchParams("")),
+    );
+
+    const apiData = createApiData({
+      tables: [{ id: "disease", physicalName: "condtion_table", logicalName: "傷病" }],
+    });
+    const { result } = renderHook(() => useMetadataForm(apiData));
+
+    act(() => {
+      result.current.methods.setValue("dataTypes", [
+        { id: "臨床情報", name: "臨床情報" },
+        { id: "新データ種別", name: "新データ種別" },
+      ]);
+    });
+
+    await act(async () => {
+      await result.current.handleSubmit(result.current.methods.getValues());
+    });
+
+    const clinicalSaved = sessionStorage.getItem("metadata_臨床情報");
+    expect(clinicalSaved).not.toBeNull();
+    const parsedClinical = JSON.parse(clinicalSaved as string);
+    expect(parsedClinical.tables).toHaveLength(1);
+    expect(parsedClinical.tables[0].physicalName).toBe("condtion_table");
+  });
+
   it("handleTabChange でタブのクエリパラメータを更新する", () => {
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));

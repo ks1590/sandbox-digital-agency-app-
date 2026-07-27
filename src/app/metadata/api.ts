@@ -196,7 +196,9 @@ const MOCK_DATA: MetadataResponse = {
  */
 export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
   const getMockData = (type?: string): MetadataResponse => {
-    const data = { ...MOCK_DATA };
+    const data: MetadataResponse = JSON.parse(JSON.stringify(MOCK_DATA));
+    const isClinical = !type || type === "clinical" || type === "臨床情報";
+
     if (type) {
       data.overview = {
         ...data.overview,
@@ -204,7 +206,7 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
           "\n## データ説明情報\n- \n## 収集期間\n| 項目 | 内容 |\n| --- | --- |\n| 収集開始年度 | |\n| 最新の提供可能年度 | |\n| 収集頻度 | |\n\n## 更新頻度\n対象項目\n\n## テーブル一覧\nテーブル論理名 | 概要 | 格納単位 |\n| --- | --- | --- |\n| | | |\n\n## 留意事項\n-\n## キー情報\n-\n",
       };
 
-      if (type !== "clinical" && type !== "臨床情報") {
+      if (!isClinical) {
         data.overview.tables = [];
         data.tableDefs = {};
       }
@@ -228,6 +230,15 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
+          const tablesToUse =
+            isClinical && (!parsed.tables || parsed.tables.length === 0)
+              ? data.overview.tables
+              : parsed.tables ?? data.overview.tables;
+          const tableDefsToUse =
+            isClinical && (!parsed.tableDefs || Object.keys(parsed.tableDefs).length === 0)
+              ? data.tableDefs
+              : parsed.tableDefs ?? data.tableDefs;
+
           data.overview = {
             ...data.overview,
             overviewText: parsed.overviewText ?? data.overview.overviewText,
@@ -236,13 +247,11 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
             latestYear: parsed.latestYear ?? data.overview.latestYear,
             updateFrequencies:
               parsed.updateFrequencies ?? data.overview.updateFrequencies,
-            tables: parsed.tables ?? data.overview.tables,
+            tables: tablesToUse,
             notesText: parsed.notesText ?? data.overview.notesText,
             keyInfoText: parsed.keyInfoText ?? data.overview.keyInfoText,
           };
-          if (parsed.tableDefs) {
-            data.tableDefs = parsed.tableDefs;
-          }
+          data.tableDefs = tableDefsToUse;
         } catch (e) {
           console.error("Failed to parse sessionStorage data", e);
         }

@@ -63,7 +63,7 @@ describe("MetadataDetailLoader", () => {
     expect(fetchMetadata).toHaveBeenCalledWith("臨床情報");
   });
 
-  it("modeパラメータが変更された場合、fetchMetadataが再実行されること", async () => {
+  it("modeパラメータが変更されても、fetchMetadataが再実行されないこと", async () => {
     const getMock = vi.fn((key: string) => {
       if (key === "type") return "1234";
       if (key === "mode") return "edit";
@@ -81,12 +81,35 @@ describe("MetadataDetailLoader", () => {
     expect(fetchMetadata).toHaveBeenCalledTimes(1);
     expect(fetchMetadata).toHaveBeenCalledWith("1234");
 
-    // モードがeditから参照画面（mode=null）に変更
+    // モードがeditから参照画面（mode=null）に変更されても再実行されない
     getMock.mockImplementation((key: string) => (key === "type" ? "1234" : null));
+    rerender(<MetadataDetailLoader />);
+
+    // 呼び出し回数は1回のまま
+    expect(fetchMetadata).toHaveBeenCalledTimes(1);
+  });
+
+  it("typeパラメータが変更された場合、新しいtypeでfetchMetadataが再実行されること", async () => {
+    const getMock = vi.fn((key: string): string | null => (key === "type" ? "臨床情報" : null));
+    (useSearchParams as Mock).mockReturnValue({ get: getMock });
+    (fetchMetadata as Mock).mockResolvedValue({ overview: { status: "draft" } });
+
+    const { rerender } = render(<MetadataDetailLoader />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("detail-client")).toBeInTheDocument();
+    });
+
+    expect(fetchMetadata).toHaveBeenCalledTimes(1);
+    expect(fetchMetadata).toHaveBeenCalledWith("臨床情報");
+
+    // typeが「ゲノム情報」に変更
+    getMock.mockImplementation((key: string) => (key === "type" ? "ゲノム情報" : null));
     rerender(<MetadataDetailLoader />);
 
     await waitFor(() => {
       expect(fetchMetadata).toHaveBeenCalledTimes(2);
     });
+    expect(fetchMetadata).toHaveBeenLastCalledWith("ゲノム情報");
   });
 });

@@ -201,21 +201,26 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
       const updatedDataTypes = data.dataTypes.map((dt) => {
         const targetId = dt.name;
+        const isClinical = targetId === "臨床情報" || targetId === "clinical";
 
         // データ種別の初期データを作成・保存
         const childStorageKey = `metadata_${targetId}`;
         if (!sessionStorage.getItem(childStorageKey)) {
           const initialChildData = {
             dataType: targetId,
-            overviewText: CHILD_OVERVIEW_TEMPLATE,
+            overviewText: isClinical
+              ? apiData.overview.overviewText
+              : CHILD_OVERVIEW_TEMPLATE,
             dataTypes: [],
-            startYear: "",
-            latestYear: "",
-            updateFrequencies: [],
-            tables: [],
-            notesText: "",
-            keyInfoText: "",
-            tableDefs: {},
+            startYear: isClinical ? apiData.overview.startYear : "",
+            latestYear: isClinical ? apiData.overview.latestYear : "",
+            updateFrequencies: isClinical
+              ? apiData.overview.updateFrequencies
+              : [],
+            tables: isClinical ? apiData.overview.tables : [],
+            notesText: isClinical ? apiData.overview.notesText : "",
+            keyInfoText: isClinical ? apiData.overview.keyInfoText : "",
+            tableDefs: isClinical ? apiData.tableDefs : {},
           };
           sessionStorage.setItem(
             childStorageKey,
