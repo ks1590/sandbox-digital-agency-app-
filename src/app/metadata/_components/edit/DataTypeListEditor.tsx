@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { inputClass } from "../styles";
 
@@ -82,6 +83,24 @@ export default function DataTypeListEditor({
                 className={inputClass}
               />
             </div>
+            {dt.id.startsWith("type-") && (
+              <Link
+                href={`/metadata/detail?type=${dt.id}&mode=edit`}
+                className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+              >
+                詳細
+              </Link>
+            )}
+            {dt.id.startsWith("new-type-") && (
+              <button
+                type="button"
+                disabled={creatingId === dt.id}
+                onClick={() => handleCreatePage(idx, dt.id)}
+                className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:no-underline"
+              >
+                {creatingId === dt.id ? "作成中..." : "ページを作成"}
+              </button>
+            )}
             <button
               type="button"
               onClick={() => handleRemove(idx)}
