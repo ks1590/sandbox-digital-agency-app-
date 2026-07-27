@@ -29,7 +29,22 @@ export default function MetadataDetailPageClient({
   const isEditMode = searchParams.get("mode") === "edit";
   const publishSuccess = searchParams.get("publish_success") === "true";
   const publishError = searchParams.get("publish_error") === "true";
-  const { getDataTypeName } = useDataTypes(data.overview.dataTypes);
+  const { dataTypes, getDataTypeName } = useDataTypes(data.overview.dataTypes);
+  const options = dataTypes.some(
+    (dt) =>
+      dt.name === type || dt.id === type || dt.name === getDataTypeName(type),
+  )
+    ? dataTypes
+    : [
+        ...dataTypes,
+        {
+          id: type,
+          name: getDataTypeName(type) !== type ? getDataTypeName(type) : type,
+        },
+      ];
+  const currentSelectedValue =
+    options.find((dt) => dt.id === type || dt.name === type)?.name ||
+    getDataTypeName(type);
 
   useEffect(() => {
     if (publishSuccess) {
@@ -100,8 +115,44 @@ export default function MetadataDetailPageClient({
           </div>
 
           <div className="mb-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">データ種別</h3>
-            <p className="text-base text-gray-900">{getDataTypeName(type)}</p>
+            <label
+              htmlFor="viewDataType"
+              className="block text-xl font-bold text-gray-900 mb-4"
+            >
+              データ種別
+            </label>
+            <div className="relative w-1/2 md:w-1/4 lg:w-1/6">
+              <select
+                id="viewDataType"
+                value={currentSelectedValue}
+                onChange={(e) => {
+                  const newType = e.target.value;
+                  if (newType && newType !== currentSelectedValue) {
+                    const newParams = new URLSearchParams(
+                      searchParams.toString(),
+                    );
+                    newParams.set("type", newType);
+                    router.push(`${pathname}?${newParams.toString()}`);
+                  }
+                }}
+                className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
+              >
+                {options.map((dt) => (
+                  <option key={dt.id} value={dt.name}>
+                    {dt.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <svg
+                  className="h-4 w-4 fill-current"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div className="mb-12">

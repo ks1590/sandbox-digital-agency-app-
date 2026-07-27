@@ -17,7 +17,15 @@ export function useDataTypes(initialDataTypes?: DataTypeItem[]) {
   useEffect(() => {
     const parsed = JSON.parse(serializedInitialDataTypes) as DataTypeItem[];
     if (parsed.length > 0) {
-      setDataTypes(parsed);
+      setDataTypes((prev) => {
+        const merged = [...prev];
+        for (const item of parsed) {
+          if (!merged.some((dt) => dt.id === item.id || dt.name === item.name)) {
+            merged.push(item);
+          }
+        }
+        return merged;
+      });
     }
   }, [serializedInitialDataTypes]);
 
@@ -27,7 +35,15 @@ export function useDataTypes(initialDataTypes?: DataTypeItem[]) {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.dataTypes && parsed.dataTypes.length > 0) {
-          setDataTypes(parsed.dataTypes);
+          setDataTypes((prev) => {
+            const merged = [...prev];
+            for (const item of parsed.dataTypes as DataTypeItem[]) {
+              if (!merged.some((dt) => dt.id === item.id || dt.name === item.name)) {
+                merged.push(item);
+              }
+            }
+            return merged;
+          });
         }
       }
     } catch (e) {

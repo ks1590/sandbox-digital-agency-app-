@@ -22,12 +22,18 @@ export function useMetadataForm(apiData: MetadataResponse) {
   const tabParam = searchParams.get("tab") || "overview";
   const subtabParam = searchParams.get("subtab");
 
+  const typeParam =
+    searchParams.get("type") ||
+    (pathname !== "/metadata" && pathname !== "/metadata/detail"
+      ? pathname.split("/").pop()
+      : "臨床情報");
+
   const methods = useForm<MetadataFormData>({
     resolver: zodResolver(metadataSchema),
     defaultValues: {
-      dataType: "臨床情報",
+      dataType: typeParam || "臨床情報",
       overviewText: "",
-      dataTypes: [],
+      dataTypes: apiData?.overview?.dataTypes || [],
       startYear: "",
       latestYear: "",
       updateFrequencies: [],
@@ -40,12 +46,6 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const typeParam =
-    searchParams.get("type") ||
-    (pathname !== "/metadata" && pathname !== "/metadata/detail"
-      ? pathname.split("/").pop()
-      : "臨床情報");
-
   useEffect(() => {
     if (!apiData || isInitialized) return;
 
@@ -54,6 +54,17 @@ export function useMetadataForm(apiData: MetadataResponse) {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        try {
+          const topSaved = sessionStorage.getItem("metadata_top");
+          if (topSaved) {
+            const parsedTop = JSON.parse(topSaved);
+            if (parsedTop.dataTypes && parsedTop.dataTypes.length > 0) {
+              parsed.dataTypes = parsedTop.dataTypes;
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
         methods.reset(parsed);
         setIsInitialized(true);
         return;

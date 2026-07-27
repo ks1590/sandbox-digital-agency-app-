@@ -1,8 +1,14 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 import { useDataTypes } from "../useDataTypes";
 import DataTypeSelect from "./DataTypeSelect";
+
+vi.mock("next/navigation", () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn(), replace: vi.fn() })),
+  useSearchParams: vi.fn(() => ({ get: vi.fn(), toString: vi.fn(() => "") })),
+}));
 
 vi.mock("../useDataTypes", () => ({
   useDataTypes: vi.fn(),
@@ -74,5 +80,24 @@ describe("DataTypeSelect", () => {
     );
 
     expect(screen.getByText("unknown_type")).toBeInTheDocument();
+  });
+
+  it("プルダウンを変更するとURLが更新される", () => {
+    const mockPush = vi.fn();
+    vi.mocked(useRouter as Mock).mockReturnValue({
+      push: mockPush,
+      replace: vi.fn(),
+    });
+    render(
+      <Wrapper>
+        <DataTypeSelect readonly={false} />
+      </Wrapper>,
+    );
+
+    const select = screen.getByRole("combobox", { name: "データ種別" });
+    fireEvent.change(select, { target: { value: "ゲノム情報" } });
+    expect(mockPush).toHaveBeenCalledWith(
+      "/metadata/detail?type=%E3%82%B2%E3%83%8E%E3%83%A0%E6%83%85%E5%A0%B1",
+    );
   });
 });

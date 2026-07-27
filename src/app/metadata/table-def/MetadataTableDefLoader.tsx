@@ -1,10 +1,13 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchMetadata } from "../api";
 import type { MetadataResponse } from "../types";
 import MetadataTableDefPageClient from "./MetadataTableDefPageClient";
 export default function MetadataTableDefLoader() {
+  const searchParams = useSearchParams();
+  const isEditMode = searchParams?.get("mode") === "edit";
   const [data, setData] = useState<MetadataResponse | null>(null);
 
   useEffect(() => {

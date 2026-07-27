@@ -211,6 +211,18 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
     }
 
     if (typeof window !== "undefined") {
+      try {
+        const topSaved = sessionStorage.getItem("metadata_top");
+        if (topSaved) {
+          const parsedTop = JSON.parse(topSaved);
+          if (parsedTop.dataTypes && parsedTop.dataTypes.length > 0) {
+            data.overview.dataTypes = parsedTop.dataTypes;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse metadata_top from sessionStorage", e);
+      }
+
       const storageKey = type ? `metadata_${type}` : "metadata_top";
       const saved = sessionStorage.getItem(storageKey);
       if (saved) {
@@ -235,6 +247,16 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
           console.error("Failed to parse sessionStorage data", e);
         }
       }
+    }
+
+    if (
+      type &&
+      !data.overview.dataTypes.some((dt) => dt.id === type || dt.name === type)
+    ) {
+      data.overview.dataTypes = [
+        ...data.overview.dataTypes,
+        { id: type, name: type },
+      ];
     }
 
     return data;

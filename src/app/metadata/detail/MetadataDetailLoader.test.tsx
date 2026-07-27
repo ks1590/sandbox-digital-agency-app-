@@ -62,4 +62,31 @@ describe("MetadataDetailLoader", () => {
     expect(screen.getByText("Client: 臨床情報")).toBeInTheDocument();
     expect(fetchMetadata).toHaveBeenCalledWith("臨床情報");
   });
+
+  it("modeパラメータが変更された場合、fetchMetadataが再実行されること", async () => {
+    const getMock = vi.fn((key: string) => {
+      if (key === "type") return "1234";
+      if (key === "mode") return "edit";
+      return null;
+    });
+    (useSearchParams as Mock).mockReturnValue({ get: getMock });
+    (fetchMetadata as Mock).mockResolvedValue({ overview: { status: "draft" } });
+
+    const { rerender } = render(<MetadataDetailLoader />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("detail-client")).toBeInTheDocument();
+    });
+
+    expect(fetchMetadata).toHaveBeenCalledTimes(1);
+    expect(fetchMetadata).toHaveBeenCalledWith("1234");
+
+    // モードがeditから参照画面（mode=null）に変更
+    getMock.mockImplementation((key: string) => (key === "type" ? "1234" : null));
+    rerender(<MetadataDetailLoader />);
+
+    await waitFor(() => {
+      expect(fetchMetadata).toHaveBeenCalledTimes(2);
+    });
+  });
 });

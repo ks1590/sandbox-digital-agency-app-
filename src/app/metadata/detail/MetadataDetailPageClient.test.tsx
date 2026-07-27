@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 import type { MetadataResponse } from "../types";
@@ -32,7 +32,13 @@ const mockData: MetadataResponse = {
     latestYear: "2024",
     updateFrequencies: [],
     tables: [
-      { id: "1", physicalName: "patient_table", logicalName: "患者テーブル", overview: "患者の基本情報", unit: "人" },
+      {
+        id: "1",
+        physicalName: "patient_table",
+        logicalName: "患者テーブル",
+        overview: "患者の基本情報",
+        unit: "人",
+      },
     ],
     notesText: "",
     keyInfoText: "",
@@ -41,7 +47,7 @@ const mockData: MetadataResponse = {
 };
 
 describe("MetadataDetailPageClient", () => {
-  const mockRouter = { replace: vi.fn() };
+  const mockRouter = { replace: vi.fn(), push: vi.fn() };
   const mockPathname = "/metadata/detail";
 
   beforeEach(() => {
@@ -148,9 +154,34 @@ describe("MetadataDetailPageClient", () => {
       get: vi.fn((key) => (key === "tab" ? "table-def" : null)),
     });
 
-    render(<MetadataDetailPageClient data={emptyTablesData} type="臨床データ" />);
+    render(
+      <MetadataDetailPageClient data={emptyTablesData} type="臨床データ" />,
+    );
     expect(
       screen.getByText("テーブル定義が紐付けられていません。"),
     ).toBeInTheDocument();
+  });
+
+  it("通常モードでデータ種別のプルダウンを変更すると、選択したデータ種別のURLへ遷移すること", () => {
+    const multiData = {
+      ...mockData,
+      overview: {
+        ...mockData.overview,
+        dataTypes: [
+          { id: "臨床データ", name: "臨床データ" },
+          { id: "テストデータ", name: "テストデータ" },
+        ],
+      },
+    };
+    render(<MetadataDetailPageClient data={multiData} type="臨床データ" />);
+
+    const select = screen.getByRole("combobox", { name: "データ種別" });
+    expect(select).toBeInTheDocument();
+    expect(select).toHaveValue("臨床データ");
+
+    fireEvent.change(select, { target: { value: "テストデータ" } });
+    expect(mockRouter.push).toHaveBeenCalledWith(
+      "/metadata/detail?type=%E3%83%86%E3%82%B9%E3%83%88%E3%83%87%E3%83%BC%E3%82%BF",
+    );
   });
 });

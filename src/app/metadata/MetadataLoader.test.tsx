@@ -3,6 +3,12 @@ import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 import { fetchMetadata } from "./api";
 import MetadataLoader from "./MetadataLoader";
 
+vi.mock("next/navigation", () => ({
+  useSearchParams: vi.fn(() => ({
+    get: vi.fn(() => null),
+  })),
+}));
+
 vi.mock("./api", () => ({
   fetchMetadata: vi.fn(),
 }));
