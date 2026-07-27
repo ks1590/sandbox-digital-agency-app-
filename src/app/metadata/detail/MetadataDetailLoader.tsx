@@ -9,12 +9,15 @@ import MetadataDetailPageClient from "./MetadataDetailPageClient";
 export default function MetadataDetailLoader() {
   const searchParams = useSearchParams();
   const type = searchParams?.get("type") || "臨床情報";
+  const mode = searchParams?.get("mode");
 
   const [data, setData] = useState<MetadataResponse | null>(null);
 
   useEffect(() => {
+    // typeまたはmode（編集/参照切り替えなど）が変化した際に最新データを取得
+    void mode;
     fetchMetadata(type).then(setData).catch(console.error);
-  }, [type]);
+  }, [type, mode]);
 
   if (!data) {
     return (

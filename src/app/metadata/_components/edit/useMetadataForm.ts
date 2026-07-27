@@ -24,7 +24,10 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
   const typeParam =
     searchParams.get("type") ||
-    (pathname !== "/metadata" && pathname !== "/metadata/detail"
+    searchParams.get("from") ||
+    (pathname !== "/metadata" &&
+    pathname !== "/metadata/detail" &&
+    pathname !== "/metadata/table-def"
       ? pathname.split("/").pop()
       : "臨床情報");
 

@@ -63,13 +63,15 @@ describe("MetadataDetailLoader", () => {
     expect(fetchMetadata).toHaveBeenCalledWith("臨床情報");
   });
 
-  it("modeパラメータが変更されても、fetchMetadataが再実行されないこと", async () => {
-    const getMock = vi.fn((key: string) => {
-      if (key === "type") return "1234";
-      if (key === "mode") return "edit";
-      return null;
-    });
-    (useSearchParams as Mock).mockReturnValue({ get: getMock });
+  it("modeパラメータが変更された場合、fetchMetadataが再実行されて最新データが反映されること", async () => {
+    let mockSearchParams = {
+      get: (key: string) => {
+        if (key === "type") return "1234";
+        if (key === "mode") return "edit";
+        return null;
+      },
+    };
+    (useSearchParams as Mock).mockImplementation(() => mockSearchParams);
     (fetchMetadata as Mock).mockResolvedValue({ overview: { status: "draft" } });
 
     const { rerender } = render(<MetadataDetailLoader />);
@@ -81,12 +83,15 @@ describe("MetadataDetailLoader", () => {
     expect(fetchMetadata).toHaveBeenCalledTimes(1);
     expect(fetchMetadata).toHaveBeenCalledWith("1234");
 
-    // モードがeditから参照画面（mode=null）に変更されても再実行されない
-    getMock.mockImplementation((key: string) => (key === "type" ? "1234" : null));
+    // モードがeditから参照画面（mode=null）に変更された場合
+    mockSearchParams = {
+      get: (key: string) => (key === "type" ? "1234" : null),
+    };
     rerender(<MetadataDetailLoader />);
 
-    // 呼び出し回数は1回のまま
-    expect(fetchMetadata).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(fetchMetadata).toHaveBeenCalledTimes(2);
+    });
   });
 
   it("typeパラメータが変更された場合、新しいtypeでfetchMetadataが再実行されること", async () => {

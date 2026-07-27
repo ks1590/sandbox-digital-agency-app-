@@ -234,4 +234,26 @@ describe("useMetadataForm", () => {
     expect(overviewText).toContain("収集期間");
     expect(overviewText).not.toContain("キー情報");
   });
+
+  it("fromパラメータが存在する場合、その値に対応するセッションストレージからデータを復元する", () => {
+    vi.mocked(usePathname).mockReturnValue("/metadata/table-def");
+    vi.mocked(useSearchParams).mockReturnValue(
+      new URLSearchParams("tab=observation_table&from=検診情報") as unknown as ReadonlyURLSearchParams,
+    );
+    sessionStorage.setItem(
+      "metadata_検診情報",
+      JSON.stringify({
+        dataType: "検診情報",
+        tables: [{ id: "1", physicalName: "observation_table", logicalName: "健診結果" }],
+      }),
+    );
+
+    const apiData = createApiData();
+    const { result } = renderHook(() => useMetadataForm(apiData));
+
+    const tables = result.current.methods.getValues("tables");
+    expect(tables).toEqual([
+      { id: "1", physicalName: "observation_table", logicalName: "健診結果" },
+    ]);
+  });
 });

@@ -40,7 +40,25 @@ describe("MetadataTableDefLoader", () => {
       expect(screen.getByTestId("page-client-mock")).toBeInTheDocument();
     });
 
-    // データフェッチが呼ばれたことを確認
-    expect(fetchMetadata).toHaveBeenCalledTimes(1);
+    // データフェッチがデフォルトで"臨床情報"引数付きで呼ばれたことを確認
+    expect(fetchMetadata).toHaveBeenCalledWith("臨床情報");
+  });
+
+  it("fromパラメータが存在する場合、指定された種別でfetchMetadataが呼ばれること", async () => {
+    const { useSearchParams } = await import("next/navigation");
+    (useSearchParams as Mock).mockReturnValue({
+      get: (key: string) => (key === "from" ? "検診情報" : null),
+    });
+
+    const mockData = { overview: { status: "draft" } };
+    (fetchMetadata as Mock).mockResolvedValue(mockData);
+
+    render(<MetadataTableDefLoader />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("page-client-mock")).toBeInTheDocument();
+    });
+
+    expect(fetchMetadata).toHaveBeenCalledWith("検診情報");
   });
 });

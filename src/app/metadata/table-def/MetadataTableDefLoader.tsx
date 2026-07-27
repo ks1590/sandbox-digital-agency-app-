@@ -7,12 +7,12 @@ import type { MetadataResponse } from "../types";
 import MetadataTableDefPageClient from "./MetadataTableDefPageClient";
 export default function MetadataTableDefLoader() {
   const searchParams = useSearchParams();
-  const isEditMode = searchParams?.get("mode") === "edit";
+  const fromType = searchParams?.get("from") || "臨床情報";
   const [data, setData] = useState<MetadataResponse | null>(null);
 
   useEffect(() => {
-    fetchMetadata().then(setData).catch(console.error);
-  }, []);
+    fetchMetadata(fromType).then(setData).catch(console.error);
+  }, [fromType]);
 
   if (!data) {
     return (
@@ -22,5 +22,5 @@ export default function MetadataTableDefLoader() {
     );
   }
 
-  return <MetadataTableDefPageClient data={data} />;
+  return <MetadataTableDefPageClient key={fromType} data={data} />;
 }
