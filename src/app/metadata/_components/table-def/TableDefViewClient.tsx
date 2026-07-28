@@ -70,7 +70,11 @@ export function TableDefTable({
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.tableDefs?.[subtab]) {
+        if (
+          parsed.tableDefs?.[subtab] &&
+          Array.isArray(parsed.tableDefs[subtab]) &&
+          parsed.tableDefs[subtab].length > 0
+        ) {
           setSessionOverride(parsed.tableDefs[subtab]);
         }
       } catch (e) {

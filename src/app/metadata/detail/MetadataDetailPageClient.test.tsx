@@ -145,23 +145,6 @@ describe("MetadataDetailPageClient", () => {
     ).toBeInTheDocument();
   });
 
-  it("テーブルが紐付いていない場合、テーブル定義タブでメッセージが表示されること", () => {
-    const emptyTablesData = {
-      ...mockData,
-      overview: { ...mockData.overview, tables: [] },
-    };
-    (useSearchParams as Mock).mockReturnValue({
-      get: vi.fn((key) => (key === "tab" ? "table-def" : null)),
-    });
-
-    render(
-      <MetadataDetailPageClient data={emptyTablesData} type="臨床データ" />,
-    );
-    expect(
-      screen.getByText("テーブル定義が紐付けられていません。"),
-    ).toBeInTheDocument();
-  });
-
   it("通常モードでデータ種別のプルダウンを変更すると、選択したデータ種別のURLへ遷移すること", () => {
     const multiData = {
       ...mockData,

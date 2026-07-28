@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { saveMetadataAction } from "../../actions";
+import { EXAMINATION_MOCK_DATA } from "../../api";
 import {
   CHILD_OVERVIEW_TEMPLATE,
   TOP_OVERVIEW_TEMPLATE,
@@ -202,10 +203,10 @@ export function useMetadataForm(apiData: MetadataResponse) {
               updateFrequencies: isClinical
                 ? apiData.overview.updateFrequencies
                 : [],
-              tables: isClinical ? apiData.overview.tables : [],
+              tables: apiData.overview.tables,
               notesText: isClinical ? apiData.overview.notesText : "",
               keyInfoText: isClinical ? apiData.overview.keyInfoText : "",
-              tableDefs: isClinical ? apiData.tableDefs : {},
+              tableDefs: apiData.tableDefs,
             };
             sessionStorage.setItem(
               childStorageKey,
@@ -227,7 +228,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
             updatedTableDefs[t.physicalName].length === 0)
         ) {
           updatedTableDefs[t.physicalName] =
-            apiData.tableDefs?.[t.physicalName] || [];
+            apiData.tableDefs?.[t.physicalName] || EXAMINATION_MOCK_DATA;
         }
       }
       finalData = { ...finalData, tableDefs: updatedTableDefs };

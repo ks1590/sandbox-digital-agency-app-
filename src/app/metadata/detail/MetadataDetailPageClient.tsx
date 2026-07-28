@@ -189,11 +189,6 @@ export default function MetadataDetailPageClient({
                           />
                         );
                       })}
-                      {data.overview.tables.length === 0 && (
-                        <div className="col-span-3 text-center text-gray-500">
-                          テーブル定義が紐付けられていません。
-                        </div>
-                      )}
                     </div>
                   ),
                 },
