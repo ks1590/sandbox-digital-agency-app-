@@ -105,12 +105,23 @@ describe("TableDefinitionLinks", () => {
     expect(options2).toContain("allergyIntolerance_table");
   });
 
-  it("別データ種別で選択済みの物理名も全体の選択肢から非表示になる", async () => {
-    // sessionStorage に別データ種別の保存データを作成
+  it("他のデータ種別で紐付け済みのテーブル定義（物理名）はどのデータ種別でも選択肢として選択できない", async () => {
+    // 他のデータ種別（臨床情報、文書情報）で condtion_table と allergyIntolerance_table を紐付け済み
+    sessionStorage.setItem(
+      "metadata_臨床情報",
+      JSON.stringify({
+        tables: [{ physicalName: "condtion_table", logicalName: "傷病" }],
+      }),
+    );
     sessionStorage.setItem(
       "metadata_文書情報",
       JSON.stringify({
-        tables: [{ physicalName: "allergyIntolerance_table", logicalName: "アレルギー" }],
+        tables: [
+          {
+            physicalName: "allergyIntolerance_table",
+            logicalName: "アレルギー",
+          },
+        ],
       }),
     );
 
@@ -126,8 +137,13 @@ describe("TableDefinitionLinks", () => {
 
     const select = screen.getByRole("combobox") as HTMLSelectElement;
     const options = Array.from(select.options).map((opt) => opt.value);
-    // 別データ種別（文書情報）で選択済みの allergyIntolerance_table は除外される
+
+    // 既に他のデータ種別で紐付け済みの物理名は選択できない
+    expect(options).not.toContain("condtion_table");
     expect(options).not.toContain("allergyIntolerance_table");
+
+    // 未使用の observation_table のみが選択可能
+    expect(options).toContain("observation_table");
   });
 
   it("同じデータ種別内でテーブル論理名が重複している場合にエラーメッセージを表示する", async () => {
@@ -206,6 +222,42 @@ describe("TableDefinitionLinks", () => {
 
     expect(
       await screen.findByText("テーブル論理名を入力してください"),
+    ).toBeInTheDocument();
+  });
+
+  it("テーブル物理名が未選択の場合にエラーメッセージを表示する", async () => {
+    let triggerFn: () => Promise<boolean>;
+    const TestComponent = () => {
+      const methods = useForm({
+        resolver: zodResolver(metadataSchema),
+        defaultValues: {
+          tables: [
+            {
+              id: "1",
+              physicalName: "",
+              logicalName: "傷病",
+              overview: "",
+              unit: "",
+            },
+          ],
+        },
+      });
+      triggerFn = () => methods.trigger();
+      return (
+        <FormProvider {...methods}>
+          <TableDefinitionLinks />
+        </FormProvider>
+      );
+    };
+
+    render(<TestComponent />);
+
+    await act(async () => {
+      await triggerFn();
+    });
+
+    expect(
+      await screen.findByText("テーブル物理名を選択してください"),
     ).toBeInTheDocument();
   });
 });

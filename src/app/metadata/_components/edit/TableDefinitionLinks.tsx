@@ -105,33 +105,49 @@ export default function TableDefinitionLinks() {
                       テーブル物理名
                     </label>
                   )}
-                  <div className="relative">
-                    <select
-                      id={`physical-name-${field.id}`}
-                      className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
-                      {...register(`tables.${index}.physicalName` as const)}
-                    >
-                      <option value="">選択してください</option>
-                      {PHYSICAL_NAME_OPTIONS.filter(
-                        (opt) =>
-                          !selectedPhysicalNames.includes(opt) ||
-                          watchTables[index]?.physicalName === opt,
-                      ).map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                      <svg
-                        className="h-4 w-4 fill-current"
-                        viewBox="0 0 20 20"
-                        aria-hidden="true"
-                      >
-                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                      </svg>
-                    </div>
-                  </div>
+                  {(() => {
+                    const errorMessage =
+                      errors?.tables?.[index]?.physicalName?.message;
+                    return (
+                      <div className="flex flex-col gap-1 w-full">
+                        <div className="relative">
+                          <select
+                            id={`physical-name-${field.id}`}
+                            className={`w-full appearance-none rounded-[8px] border bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300 ${
+                              errorMessage
+                                ? "border-red-600 focus:ring-red-300"
+                                : "border-solid-gray-600"
+                            }`}
+                            aria-invalid={!!errorMessage}
+                            {...register(
+                              `tables.${index}.physicalName` as const,
+                            )}
+                          >
+                            <option value="">選択してください</option>
+                            {PHYSICAL_NAME_OPTIONS.filter(
+                              (opt) =>
+                                !selectedPhysicalNames.includes(opt) ||
+                                watchTables[index]?.physicalName === opt,
+                            ).map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                            <svg
+                              className="h-4 w-4 fill-current"
+                              viewBox="0 0 20 20"
+                              aria-hidden="true"
+                            >
+                              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                          </div>
+                        </div>
+                        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* テーブル論理名 */}
@@ -159,7 +175,9 @@ export default function TableDefinitionLinks() {
                                 : "border-solid-gray-600"
                             }`}
                             aria-invalid={!!errorMessage}
-                            {...register(`tables.${index}.logicalName` as const)}
+                            {...register(
+                              `tables.${index}.logicalName` as const,
+                            )}
                           />
                           <button
                             type="button"

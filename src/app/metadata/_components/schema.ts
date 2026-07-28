@@ -60,7 +60,9 @@ export const metadataSchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        physicalName: z.string(),
+        physicalName: z.string().trim().min(1, {
+          message: "テーブル物理名を選択してください",
+        }),
         logicalName: z.string().trim().min(1, {
           message: "テーブル論理名を入力してください",
         }),
