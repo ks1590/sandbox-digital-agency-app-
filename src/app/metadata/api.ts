@@ -1,3 +1,4 @@
+import { CHILD_OVERVIEW_TEMPLATE, TOP_OVERVIEW_TEMPLATE } from "./constants";
 import type { MetadataResponse, TableDefRow } from "./types";
 
 /**
@@ -139,7 +140,7 @@ export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
  */
 const MOCK_DATA: MetadataResponse = {
   overview: {
-    overviewText: "\n## データ説明情報\n- \n## キー情報\n- \n",
+    overviewText: TOP_OVERVIEW_TEMPLATE,
     dataTypes: [{ id: "臨床情報", name: "臨床情報" }],
     startYear: "2020",
     latestYear: "2026",
@@ -200,6 +201,7 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
     const isClinical = !type || type === "clinical" || type === "臨床情報";
 
     if (type) {
+      data.overview.overviewText = CHILD_OVERVIEW_TEMPLATE;
       if (!isClinical) {
         data.overview.tables = [];
         data.tableDefs = {};

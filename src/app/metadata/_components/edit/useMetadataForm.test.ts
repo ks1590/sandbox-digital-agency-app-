@@ -199,8 +199,8 @@ describe("useMetadataForm", () => {
     );
   });
 
-  it("handleCancel でセッションをクリアし、適切な画面に戻る", () => {
-    sessionStorage.setItem("metadata_臨床情報", JSON.stringify({}));
+  it("handleCancel で編集前に保存データがない場合セッションをクリアし、適切な画面に戻る", () => {
+    sessionStorage.clear();
 
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));
@@ -213,6 +213,29 @@ describe("useMetadataForm", () => {
     expect(mockRouter.push).toHaveBeenCalledWith(
       "/metadata/detail?tab=overview&type=%E8%87%A8%E5%BA%8A%E6%83%85%E5%A0%B1",
     );
+  });
+
+  it("handleCancel で編集前に保存データがあった場合、編集前のデータを復元して適切な画面に戻る", () => {
+    const savedData = { dataType: "臨床情報", overviewText: "編集前のデータ" };
+    sessionStorage.setItem("metadata_臨床情報", JSON.stringify(savedData));
+
+    const apiData = createApiData();
+    const { result } = renderHook(() => useMetadataForm(apiData));
+
+    // フォームで一時的に内容を変更
+    act(() => {
+      result.current.methods.setValue("overviewText", "編集中の下書き");
+    });
+
+    // キャンセル実行
+    act(() => {
+      result.current.handleCancel();
+    });
+
+    // 編集前のデータが復元されていること
+    const restored = sessionStorage.getItem("metadata_臨床情報");
+    expect(restored).not.toBeNull();
+    expect(JSON.parse(restored as string).overviewText).toBe("編集前のデータ");
   });
 
   it("トップページの場合、overviewTextにTOP_OVERVIEW_TEMPLATEの内容（キー情報など）が初期設定される", () => {

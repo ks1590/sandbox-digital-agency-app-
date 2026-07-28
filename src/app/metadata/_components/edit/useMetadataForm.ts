@@ -5,6 +5,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { saveMetadataAction } from "../../actions";
+import {
+  CHILD_OVERVIEW_TEMPLATE,
+  TOP_OVERVIEW_TEMPLATE,
+} from "../../constants";
 import type { MetadataResponse } from "../../types";
 import { type MetadataFormData, metadataSchema } from "../schema";
 
@@ -48,12 +52,14 @@ export function useMetadataForm(apiData: MetadataResponse) {
   });
 
   const [isInitialized, setIsInitialized] = useState(false);
+  const initialStorageDataRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!apiData || isInitialized) return;
 
     const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
     const saved = sessionStorage.getItem(storageKey);
+    initialStorageDataRef.current = saved;
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -76,43 +82,13 @@ export function useMetadataForm(apiData: MetadataResponse) {
       }
     }
 
-    const CHILD_OVERVIEW_TEMPLATE = `
-## データ説明情報
-- 
-## 収集期間
-| 項目 | 内容 |
-| --- | --- |
-| 収集開始年度 | |
-| 最新の提供可能年度 | |
-| 収集頻度 | |
-
-## 更新頻度
-- 
-## テーブル一覧
-テーブル物理名 | テーブル論理名 | 概要 | 格納単位 |
-| ---| --- | --- | --- |
-| | | | |
-| | | | |
-| | | | |
-
-## 留意事項
--
-`;
-
-    const TOP_OVERVIEW_TEMPLATE = `
-## データ説明情報
-- 
-## キー情報
-- 
-`;
-
     const OVERVIEW_TEMPLATE = isTopPage
       ? TOP_OVERVIEW_TEMPLATE
       : CHILD_OVERVIEW_TEMPLATE;
 
     methods.reset({
       dataType: typeParam || "臨床情報",
-      overviewText: OVERVIEW_TEMPLATE,
+      overviewText: apiData.overview.overviewText || OVERVIEW_TEMPLATE,
       dataTypes: apiData.overview.dataTypes,
       startYear: apiData.overview.startYear,
       latestYear: apiData.overview.latestYear,
@@ -203,29 +179,6 @@ export function useMetadataForm(apiData: MetadataResponse) {
       }
 
       if (data.dataTypes.length > 0) {
-        const CHILD_OVERVIEW_TEMPLATE = `
-## データ説明情報
-- 
-## 収集期間
-| 項目 | 内容 |
-| --- | --- |
-| 収集開始年度 | |
-| 最新の提供可能年度 | |
-| 収集頻度 | |
-
-## 更新頻度
-- 
-## テーブル一覧
-テーブル物理名 | テーブル論理名 | 概要 | 格納単位 |
-| ---| --- | --- | --- |
-| | | | |
-| | | | |
-| | | | |
-
-## 留意事項
--
-`;
-
         const updatedDataTypes = data.dataTypes.map((dt) => ({
           ...dt,
           id: dt.name,
@@ -285,7 +238,9 @@ export function useMetadataForm(apiData: MetadataResponse) {
     // 今回はバックエンド（DB）が存在しないモック環境のため、
     // 画面リロード時に編集内容が消えないようにセッションストレージにも保存しておく
     const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
-    sessionStorage.setItem(storageKey, JSON.stringify(finalData));
+    const serialized = JSON.stringify(finalData);
+    sessionStorage.setItem(storageKey, serialized);
+    initialStorageDataRef.current = serialized;
 
     if (isTopPage) {
       router.push("/metadata");
@@ -327,11 +282,14 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
   const handleCancel = () => {
     const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
-    sessionStorage.removeItem(storageKey);
+    if (initialStorageDataRef.current !== null) {
+      sessionStorage.setItem(storageKey, initialStorageDataRef.current);
+    } else {
+      sessionStorage.removeItem(storageKey);
+    }
     router.push(cancelHref);
   };
 
-  const fromType = searchParams.get("from") || "臨床情報";
   const returnHref = null;
   const returnText = null;
 

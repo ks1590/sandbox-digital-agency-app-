@@ -1,4 +1,8 @@
-import type { MetadataResponse, TableDefRow } from "../types";
+import {
+  CHILD_OVERVIEW_TEMPLATE,
+  TOP_OVERVIEW_TEMPLATE,
+} from "../../constants";
+import type { MetadataResponse, TableDefRow } from "../../types";
 
 /**
  * APIのベースURL
@@ -139,7 +143,7 @@ export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
  */
 const MOCK_DATA: MetadataResponse = {
   overview: {
-    overviewText: "\n## データ説明情報\n- \n## キー情報\n- \n",
+    overviewText: TOP_OVERVIEW_TEMPLATE,
     dataTypes: [{ id: "臨床情報", name: "臨床情報" }],
     startYear: "2020",
     latestYear: "2026",
@@ -200,8 +204,7 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
     if (type) {
       data.overview = {
         ...data.overview,
-        overviewText:
-          "\n## データ説明情報\n- \n## 収集期間\n| 項目 | 内容 |\n| --- | --- |\n| 収集開始年度 | |\n| 最新の提供可能年度 | |\n| 収集頻度 | |\n\n## 更新頻度\n対象項目\n\n## テーブル一覧\nテーブル論理名 | 概要 | 格納単位 |\n| --- | --- | --- |\n| | | |\n\n## 留意事項\n-\n## キー情報\n-\n",
+        overviewText: CHILD_OVERVIEW_TEMPLATE,
       };
 
       if (type !== "clinical" && type !== "臨床情報") {
