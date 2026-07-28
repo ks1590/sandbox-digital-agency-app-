@@ -163,7 +163,9 @@ describe("useMetadataForm", () => {
     );
 
     const apiData = createApiData({
-      tables: [{ id: "disease", physicalName: "condtion_table", logicalName: "傷病" }],
+      tables: [
+        { id: "disease", physicalName: "condtion_table", logicalName: "傷病" },
+      ],
     });
     const { result } = renderHook(() => useMetadataForm(apiData));
 
@@ -261,13 +263,21 @@ describe("useMetadataForm", () => {
   it("fromパラメータが存在する場合、その値に対応するセッションストレージからデータを復元する", () => {
     vi.mocked(usePathname).mockReturnValue("/metadata/table-def");
     vi.mocked(useSearchParams).mockReturnValue(
-      new URLSearchParams("tab=observation_table&from=検診情報") as unknown as ReadonlyURLSearchParams,
+      new URLSearchParams(
+        "tab=observation_table&from=検診情報",
+      ) as unknown as ReadonlyURLSearchParams,
     );
     sessionStorage.setItem(
       "metadata_検診情報",
       JSON.stringify({
         dataType: "検診情報",
-        tables: [{ id: "1", physicalName: "observation_table", logicalName: "健診結果" }],
+        tables: [
+          {
+            id: "1",
+            physicalName: "observation_table",
+            logicalName: "健診結果",
+          },
+        ],
       }),
     );
 
@@ -282,8 +292,14 @@ describe("useMetadataForm", () => {
 
   it("トップページ保存時に削除されたデータ種別のセッションストレージがクリーンアップされること", async () => {
     vi.mocked(usePathname).mockReturnValue("/metadata");
-    sessionStorage.setItem("metadata_削除されたデータ種別", JSON.stringify({ dummy: true }));
-    sessionStorage.setItem("metadata_残るデータ種別", JSON.stringify({ dummy: true }));
+    sessionStorage.setItem(
+      "metadata_削除されたデータ種別",
+      JSON.stringify({ dummy: true }),
+    );
+    sessionStorage.setItem(
+      "metadata_残るデータ種別",
+      JSON.stringify({ dummy: true }),
+    );
 
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));
@@ -297,5 +313,32 @@ describe("useMetadataForm", () => {
 
     expect(sessionStorage.getItem("metadata_削除されたデータ種別")).toBeNull();
     expect(sessionStorage.getItem("metadata_残るデータ種別")).not.toBeNull();
+  });
+
+  it("新規データ種別を追加して保存した際、臨床情報以外のデータ種別の初期tablesとtableDefsが空で初期化されること", async () => {
+    vi.mocked(usePathname).mockReturnValue("/metadata");
+
+    const apiData = createApiData();
+    const { result } = renderHook(() => useMetadataForm(apiData));
+
+    await act(async () => {
+      await result.current.handleSubmit({
+        dataType: "臨床情報",
+        dataTypes: [
+          { id: "臨床情報", name: "臨床情報" },
+          { id: "新規データ種別", name: "新規データ種別" },
+        ],
+      });
+    });
+
+    const newDataTypeStorage = sessionStorage.getItem(
+      "metadata_新規データ種別",
+    );
+    expect(newDataTypeStorage).not.toBeNull();
+    if (newDataTypeStorage) {
+      const parsed = JSON.parse(newDataTypeStorage);
+      expect(parsed.tables).toEqual([]);
+      expect(parsed.tableDefs).toEqual({});
+    }
   });
 });

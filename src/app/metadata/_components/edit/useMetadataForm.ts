@@ -203,10 +203,10 @@ export function useMetadataForm(apiData: MetadataResponse) {
               updateFrequencies: isClinical
                 ? apiData.overview.updateFrequencies
                 : [],
-              tables: apiData.overview.tables,
+              tables: isClinical ? apiData.overview.tables : [],
               notesText: isClinical ? apiData.overview.notesText : "",
               keyInfoText: isClinical ? apiData.overview.keyInfoText : "",
-              tableDefs: apiData.tableDefs,
+              tableDefs: isClinical ? apiData.tableDefs : {},
             };
             sessionStorage.setItem(
               childStorageKey,
