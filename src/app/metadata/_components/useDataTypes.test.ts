@@ -47,4 +47,25 @@ describe("useDataTypes", () => {
       expect(result.current.getDataTypeName("custom")).toBe("カスタム種別");
     });
   });
+
+  it("initialDataTypesの要素数が少なくても sessionStorage(metadata_top) にある複数リストを保護・維持する", async () => {
+    sessionStorage.setItem(
+      "metadata_top",
+      JSON.stringify({
+        dataTypes: [
+          { id: "111", name: "111" },
+          { id: "222", name: "222" },
+        ],
+      }),
+    );
+
+    const { result } = renderHook(() =>
+      useDataTypes([{ id: "111", name: "111" }]),
+    );
+
+    await waitFor(() => {
+      expect(result.current.dataTypes.length).toBe(2);
+      expect(result.current.getDataTypeName("222")).toBe("222");
+    });
+  });
 });

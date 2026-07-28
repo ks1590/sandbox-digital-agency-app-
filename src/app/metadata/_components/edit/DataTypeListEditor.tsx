@@ -35,6 +35,19 @@ export default function DataTypeListEditor({
   };
 
   const handleRemove = (idx: number) => {
+    const target = dataTypes[idx];
+    if (target && typeof window !== "undefined" && window.sessionStorage) {
+      try {
+        if (target.name) {
+          sessionStorage.removeItem(`metadata_${target.name}`);
+        }
+        if (target.id) {
+          sessionStorage.removeItem(`metadata_${target.id}`);
+        }
+      } catch (e) {
+        console.error("Failed to remove metadata from sessionStorage", e);
+      }
+    }
     const newTypes = [...dataTypes];
     newTypes.splice(idx, 1);
     onChange(newTypes);

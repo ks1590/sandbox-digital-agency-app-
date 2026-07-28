@@ -53,9 +53,11 @@ const tableColumns: ColumnDef<TableDefRow>[] = [
 export function TableDefTable({
   subtab,
   data: apiData,
+  fromType,
 }: {
   subtab: string;
   data: MetadataResponse;
+  fromType?: string;
 }) {
   const [sessionOverride, setSessionOverride] = useState<TableDefRow[] | null>(
     null,
@@ -63,7 +65,8 @@ export function TableDefTable({
 
   // sessionStorageに編集済みデータがあれば優先する
   useEffect(() => {
-    const saved = sessionStorage.getItem("metadata_clinical");
+    const storageKey = fromType ? `metadata_${fromType}` : "metadata_clinical";
+    const saved = sessionStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -74,7 +77,7 @@ export function TableDefTable({
         console.error(e);
       }
     }
-  }, [subtab]);
+  }, [subtab, fromType]);
 
   // sessionStorageに編集済みデータがあればそちらを優先
   const data = sessionOverride || apiData.tableDefs?.[subtab] || [];

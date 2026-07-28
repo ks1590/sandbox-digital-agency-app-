@@ -15,41 +15,34 @@ export function useDataTypes(initialDataTypes?: DataTypeItem[]) {
   const serializedInitialDataTypes = JSON.stringify(initialDataTypes || []);
 
   useEffect(() => {
-    const parsed = JSON.parse(serializedInitialDataTypes) as DataTypeItem[];
-    if (parsed.length > 0) {
-      setDataTypes((prev) => {
-        const merged = [...prev];
-        for (const item of parsed) {
-          if (!merged.some((dt) => dt.id === item.id || dt.name === item.name)) {
-            merged.push(item);
-          }
-        }
-        return merged;
-      });
-    }
-  }, [serializedInitialDataTypes]);
+    let baseList =
+      (JSON.parse(serializedInitialDataTypes) as DataTypeItem[]) || [];
 
-  useEffect(() => {
     try {
-      const saved = sessionStorage.getItem("metadata_top");
+      const saved =
+        typeof window !== "undefined"
+          ? sessionStorage.getItem("metadata_top")
+          : null;
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.dataTypes && parsed.dataTypes.length > 0) {
-          setDataTypes((prev) => {
-            const merged = [...prev];
-            for (const item of parsed.dataTypes as DataTypeItem[]) {
-              if (!merged.some((dt) => dt.id === item.id || dt.name === item.name)) {
-                merged.push(item);
-              }
-            }
-            return merged;
-          });
+        if (
+          parsed.dataTypes &&
+          Array.isArray(parsed.dataTypes) &&
+          parsed.dataTypes.length > 0
+        ) {
+          if (parsed.dataTypes.length >= baseList.length) {
+            baseList = parsed.dataTypes;
+          }
         }
       }
     } catch (e) {
       console.error("Failed to parse metadata_top from sessionStorage", e);
     }
-  }, []);
+
+    if (baseList.length > 0) {
+      setDataTypes(baseList);
+    }
+  }, [serializedInitialDataTypes]);
 
   const getDataTypeName = (idOrName: string) => {
     if (idOrName === "clinical") return "臨床情報";

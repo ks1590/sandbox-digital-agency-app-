@@ -125,6 +125,7 @@ export default function MetadataTableDefPageClient({
                       <TableDefTable
                         subtab={table.physicalName}
                         data={data}
+                        fromType={fromType}
                       />
                     )}
                   </div>

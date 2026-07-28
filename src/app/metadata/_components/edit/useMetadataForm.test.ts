@@ -256,4 +256,23 @@ describe("useMetadataForm", () => {
       { id: "1", physicalName: "observation_table", logicalName: "健診結果" },
     ]);
   });
+
+  it("トップページ保存時に削除されたデータ種別のセッションストレージがクリーンアップされること", async () => {
+    vi.mocked(usePathname).mockReturnValue("/metadata");
+    sessionStorage.setItem("metadata_削除されたデータ種別", JSON.stringify({ dummy: true }));
+    sessionStorage.setItem("metadata_残るデータ種別", JSON.stringify({ dummy: true }));
+
+    const apiData = createApiData();
+    const { result } = renderHook(() => useMetadataForm(apiData));
+
+    await act(async () => {
+      await result.current.handleSubmit({
+        dataType: "臨床情報",
+        dataTypes: [{ id: "残るデータ種別", name: "残るデータ種別" }],
+      });
+    });
+
+    expect(sessionStorage.getItem("metadata_削除されたデータ種別")).toBeNull();
+    expect(sessionStorage.getItem("metadata_残るデータ種別")).not.toBeNull();
+  });
 });

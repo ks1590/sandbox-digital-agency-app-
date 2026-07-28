@@ -178,8 +178,32 @@ export function useMetadataForm(apiData: MetadataResponse) {
   const handleSubmit = async (data: MetadataFormData) => {
     let finalData = data;
 
-    if (isTopPage && data.dataTypes && data.dataTypes.length > 0) {
-      const CHILD_OVERVIEW_TEMPLATE = `
+    if (isTopPage && data.dataTypes) {
+      if (typeof window !== "undefined" && window.sessionStorage) {
+        const validNames = new Set(
+          data.dataTypes.map((dt) => dt.name).filter(Boolean),
+        );
+        const validIds = new Set(
+          data.dataTypes.map((dt) => dt.id).filter(Boolean),
+        );
+
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key?.startsWith("metadata_") && key !== "metadata_top") {
+            const keyName = key.replace("metadata_", "");
+            if (!validNames.has(keyName) && !validIds.has(keyName)) {
+              keysToRemove.push(key);
+            }
+          }
+        }
+        keysToRemove.forEach((k) => {
+          sessionStorage.removeItem(k);
+        });
+      }
+
+      if (data.dataTypes.length > 0) {
+        const CHILD_OVERVIEW_TEMPLATE = `
 ## データ説明情報
 - 
 ## 収集期間
@@ -202,39 +226,58 @@ export function useMetadataForm(apiData: MetadataResponse) {
 -
 `;
 
-      const updatedDataTypes = data.dataTypes.map((dt) => {
-        const targetId = dt.name;
-        const isClinical = targetId === "臨床情報" || targetId === "clinical";
+        const updatedDataTypes = data.dataTypes.map((dt) => ({
+          ...dt,
+          id: dt.name,
+        }));
 
-        // データ種別の初期データを作成・保存
-        const childStorageKey = `metadata_${targetId}`;
-        if (!sessionStorage.getItem(childStorageKey)) {
-          const initialChildData = {
-            dataType: targetId,
-            overviewText: isClinical
-              ? apiData.overview.overviewText
-              : CHILD_OVERVIEW_TEMPLATE,
-            dataTypes: [],
-            startYear: isClinical ? apiData.overview.startYear : "",
-            latestYear: isClinical ? apiData.overview.latestYear : "",
-            updateFrequencies: isClinical
-              ? apiData.overview.updateFrequencies
-              : [],
-            tables: isClinical ? apiData.overview.tables : [],
-            notesText: isClinical ? apiData.overview.notesText : "",
-            keyInfoText: isClinical ? apiData.overview.keyInfoText : "",
-            tableDefs: isClinical ? apiData.tableDefs : {},
-          };
-          sessionStorage.setItem(
-            childStorageKey,
-            JSON.stringify(initialChildData),
-          );
+        for (const dt of updatedDataTypes) {
+          const targetId = dt.name;
+          const isClinical = targetId === "臨床情報" || targetId === "clinical";
+
+          // データ種別の初期データを作成・保存
+          const childStorageKey = `metadata_${targetId}`;
+          if (!sessionStorage.getItem(childStorageKey)) {
+            const initialChildData = {
+              dataType: targetId,
+              overviewText: isClinical
+                ? apiData.overview.overviewText
+                : CHILD_OVERVIEW_TEMPLATE,
+              dataTypes: updatedDataTypes,
+              startYear: isClinical ? apiData.overview.startYear : "",
+              latestYear: isClinical ? apiData.overview.latestYear : "",
+              updateFrequencies: isClinical
+                ? apiData.overview.updateFrequencies
+                : [],
+              tables: isClinical ? apiData.overview.tables : [],
+              notesText: isClinical ? apiData.overview.notesText : "",
+              keyInfoText: isClinical ? apiData.overview.keyInfoText : "",
+              tableDefs: isClinical ? apiData.tableDefs : {},
+            };
+            sessionStorage.setItem(
+              childStorageKey,
+              JSON.stringify(initialChildData),
+            );
+          }
         }
 
-        return { ...dt, id: targetId };
-      });
+        finalData = { ...data, dataTypes: updatedDataTypes };
+      }
+    }
 
-      finalData = { ...data, dataTypes: updatedDataTypes };
+    if (finalData.tables && finalData.tables.length > 0) {
+      const updatedTableDefs = { ...(finalData.tableDefs || {}) };
+      for (const t of finalData.tables) {
+        if (
+          t.physicalName &&
+          (!updatedTableDefs[t.physicalName] ||
+            updatedTableDefs[t.physicalName].length === 0)
+        ) {
+          updatedTableDefs[t.physicalName] =
+            apiData.tableDefs?.[t.physicalName] || [];
+        }
+      }
+      finalData = { ...finalData, tableDefs: updatedTableDefs };
     }
 
     await saveMetadataAction(finalData);

@@ -57,7 +57,9 @@ describe("DataTypeListEditor", () => {
     expect(newTypes[2].name).toBe("");
   });
 
-  it("データ種別を削除できる", () => {
+  it("データ種別を削除できる（紐づくデータ定義のsessionStorageもクリアされる）", () => {
+    const removeItemSpy = vi.spyOn(Storage.prototype, "removeItem");
+
     render(
       <DataTypeListEditor dataTypes={baseDataTypes} onChange={mockOnChange} />,
     );
@@ -65,10 +67,15 @@ describe("DataTypeListEditor", () => {
     const deleteButtons = screen.getAllByRole("button", { name: "削除" });
     fireEvent.click(deleteButtons[0]);
 
+    expect(removeItemSpy).toHaveBeenCalledWith("metadata_Clinical");
+    expect(removeItemSpy).toHaveBeenCalledWith("metadata_type-clinical");
+
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     const newTypes = mockOnChange.mock.calls[0][0];
     expect(newTypes).toHaveLength(1);
     expect(newTypes[0].id).toBe("new-type-123");
+
+    removeItemSpy.mockRestore();
   });
 
   it("データ種別の名前を変更できる", () => {
