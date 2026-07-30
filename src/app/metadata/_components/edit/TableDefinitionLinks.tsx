@@ -1,6 +1,7 @@
 "use client";
 
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/Button";
 import { ErrorText } from "@/components/ui/ErrorText/ErrorText";
 import type { MetadataFormData } from "../schema";
 
@@ -40,7 +41,7 @@ export default function TableDefinitionLinks() {
       try {
         for (let i = 0; i < sessionStorage.length; i++) {
           const key = sessionStorage.key(i);
-          if (key && key.startsWith("metadata_") && key !== "metadata_top") {
+          if (key?.startsWith("metadata_") && key !== "metadata_top") {
             const raw = sessionStorage.getItem(key);
             if (raw) {
               const data = JSON.parse(raw);
@@ -79,23 +80,21 @@ export default function TableDefinitionLinks() {
 
   return (
     <div className="w-full max-w-3xl">
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="md"
         onClick={handleAddTable}
-        className="group mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-[#0017C1] bg-white px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 active:bg-gray-100 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
+        className="mb-4"
       >
-        <span className="mr-1 text-lg font-normal">＋</span>{" "}
-        <span className="underline-offset-[3px] group-hover:underline group-active:underline">
-          テーブル定義と紐づける
-        </span>
-      </button>
+        ＋ テーブル定義と紐づける
+      </Button>
 
       {fields.length > 0 && (
         <div className="space-y-4">
           {fields.map((field, index) => (
             <div key={field.id}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* テーブル物理名 */}
                 <div>
                   {index === 0 && (
                     <label
@@ -150,7 +149,6 @@ export default function TableDefinitionLinks() {
                   })()}
                 </div>
 
-                {/* テーブル論理名 */}
                 <div>
                   {index === 0 && (
                     <label
@@ -179,13 +177,15 @@ export default function TableDefinitionLinks() {
                               `tables.${index}.logicalName` as const,
                             )}
                           />
-                          <button
+                          <Button
                             type="button"
+                            variant="outline"
+                            size="md"
                             onClick={() => remove(index)}
-                            className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-red-600 bg-white px-4 py-2 text-base font-bold text-red-600 underline-offset-[3px] transition-colors hover:bg-red-50 hover:underline active:bg-red-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300 shrink-0"
+                            className="!border-[#D91A2A] !text-[#D91A2A] hover:!text-[#D91A2A] hover:bg-red-50 active:bg-red-100 shrink-0 whitespace-nowrap"
                           >
                             削除
-                          </button>
+                          </Button>
                         </div>
                         {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
                       </div>

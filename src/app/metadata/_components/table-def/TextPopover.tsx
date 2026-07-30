@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/Button";
 
 interface TextPopoverProps {
   text: string;
@@ -102,17 +103,19 @@ export default function TextPopover({
 
   return (
     <>
-      <button
+      <Button
         type="button"
+        variant="text"
+        size="xs"
         ref={elementRef as React.RefObject<HTMLButtonElement>}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onFocus={handleMouseEnter}
         onBlur={handleMouseLeave}
-        className={className}
+        className="!p-0 !min-w-0 !min-h-0 !font-normal !no-underline cursor-default outline-none text-left block truncate max-w-full text-inherit hover:!bg-transparent"
       >
         {text}
-      </button>
+      </Button>
 
       {isOpen && (
         <div

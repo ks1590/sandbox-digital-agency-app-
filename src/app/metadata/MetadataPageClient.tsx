@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
+import { Button } from "@/components/ui/Button";
 import MetadataEdit from "./_components/edit/MetadataEdit";
 import MetadataContent from "./_components/view/MetadataContent";
 import PublishButtonClient from "./_components/view/PublishButtonClient";
@@ -79,12 +80,9 @@ export default function MetadataPageClient({
             <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
             <div className="flex items-center gap-4">
               {data.overview.status === "draft" && <PublishButtonClient />}
-              <Link
-                href="/metadata?mode=edit"
-                className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-[#0017C1] px-4 py-2 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
-              >
-                編集
-              </Link>
+              <Button asChild variant="solid-fill" size="md">
+                <Link href="/metadata?mode=edit">編集</Link>
+              </Button>
             </div>
           </div>
 

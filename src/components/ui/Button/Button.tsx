@@ -5,6 +5,7 @@ export type ButtonVariant = "solid-fill" | "outline" | "text";
 export type ButtonSize = "lg" | "md" | "sm" | "xs";
 
 export const buttonBaseStyle = `
+  inline-flex items-center justify-center
   underline-offset-[calc(3/16*1rem)]
   focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[calc(2/16*1rem)] focus-visible:ring-[calc(2/16*1rem)] focus-visible:ring-yellow-300
   aria-disabled:pointer-events-none forced-colors:aria-disabled:border-[GrayText] forced-colors:aria-disabled:text-[GrayText]

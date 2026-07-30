@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/Button";
 import { ErrorText } from "@/components/ui/ErrorText/ErrorText";
 import type { MetadataFormData } from "../schema";
 import { inputClass } from "../styles";
@@ -61,13 +62,15 @@ export default function DataTypeListEditor({
   return (
     <section>
       <h3 className="text-xl font-bold mb-4">データ種別</h3>
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="md"
         onClick={handleAdd}
-        className="mb-4 inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+        className="mb-4"
       >
         ＋ データ種別を追加
-      </button>
+      </Button>
       {dataTypes.length > 0 && (
         <p className="text-sm font-bold mb-2">データ種別名</p>
       )}
@@ -86,13 +89,15 @@ export default function DataTypeListEditor({
                     aria-invalid={!!errorMessage}
                   />
                 </div>
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="md"
                   onClick={() => handleRemove(idx)}
-                  className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-[#D91A2A] px-4 py-2 text-base font-bold text-[#D91A2A] underline-offset-[3px] transition-colors hover:bg-red-50 hover:underline active:bg-red-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:no-underline"
+                  className="!border-[#D91A2A] !text-[#D91A2A] hover:!text-[#D91A2A] hover:bg-red-50 active:bg-red-100 whitespace-nowrap"
                 >
                   削除
-                </button>
+                </Button>
               </div>
               {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
             </div>

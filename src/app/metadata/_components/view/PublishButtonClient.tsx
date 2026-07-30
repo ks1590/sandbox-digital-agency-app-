@@ -2,11 +2,12 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
-import {
-  ModalDialog,
-  ModalDialogBody,
-  ModalDialogContent,
-} from "@/components/ui/ModalDialog";
+import { Button } from "@/components/ui/Button";
+// import {
+//   ModalDialog,
+//   ModalDialogBody,
+//   ModalDialogContent,
+// } from "@/components/ui/ModalDialog";
 
 export default function PublishButtonClient() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -42,13 +43,15 @@ export default function PublishButtonClient() {
 
   return (
     <>
-      <button
+      <Button
         type="button"
+        variant="solid-fill"
+        size="md"
         // onClick={handleOpen} sagemakerの挙動を検証の上、実装検討
-        className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-green-600 px-4 py-2 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-green-700 hover:underline active:bg-green-800 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+        className="!bg-green-600 hover:!bg-green-700 active:!bg-green-800"
       >
         公開
-      </button>
+      </Button>
 
       {/* <ModalDialog ref={dialogRef} className="m-auto">
         <ModalDialogContent>
@@ -56,20 +59,22 @@ export default function PublishButtonClient() {
             このメタデータを公開します。よろしいですか？
           </ModalDialogBody>
           <div className="flex justify-center gap-4 w-full p-6">
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="md"
               onClick={handleClose}
-              className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-solid border-gray-600 bg-white px-4 py-2 text-base font-bold text-gray-900 transition-colors hover:bg-gray-100 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
               キャンセル
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="solid-fill"
+              size="md"
               onClick={handlePublish}
-              className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-[#0017C1] px-4 py-2 text-base font-bold text-white transition-colors hover:bg-[#1A30C9] focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
             >
               公開する
-            </button>
+            </Button>
           </div>
         </ModalDialogContent>
       </ModalDialog> */}

@@ -250,13 +250,15 @@ export default function ErDiagramTabContent({
           </div>
           {showDeleteButton && (
             <div className="flex justify-end">
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="md"
                 onClick={() => setIsExistingRemoved(true)}
-                className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-error-1 px-4 py-2 text-base font-bold text-error-1 transition-colors hover:bg-red-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+                className="!border-error-1 !text-error-1 hover:!text-error-1 hover:bg-red-50 active:bg-red-100"
               >
                 削除
-              </button>
+              </Button>
             </div>
           )}
         </div>
