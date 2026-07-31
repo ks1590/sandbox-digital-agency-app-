@@ -1,18 +1,27 @@
-import { type ComponentProps, forwardRef, useId } from 'react';
+import { type ComponentProps, forwardRef, useId } from "react";
 
-export type RadioSize = 'sm' | 'md' | 'lg';
+export type RadioSize = "sm" | "md" | "lg";
 
-export type RadioProps = Omit<ComponentProps<'input'>, 'size'> & {
+export type RadioProps = Omit<ComponentProps<"input">, "size"> & {
   size?: RadioSize;
   isError?: boolean;
 };
 
 export const Radio = forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
-  const { children, isError, onClick, size = 'sm', id: propsId, ...rest } = props;
+  const {
+    children,
+    isError,
+    onClick,
+    size = "sm",
+    id: propsId,
+    ...rest
+  } = props;
   const generatedId = useId();
   const id = propsId ?? generatedId;
 
-  const handleDisabled = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+  const handleDisabled = (
+    e: React.MouseEvent<HTMLInputElement, MouseEvent>,
+  ) => {
     e.preventDefault();
   };
 
@@ -42,8 +51,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
           forced-colors:!border-[ButtonText] forced-colors:checked:!border-[Highlight] forced-colors:checked:before:!bg-[Highlight] forced-colors:aria-disabled:!border-[GrayText] forced-colors:aria-disabled:checked:before:!bg-[GrayText]
         `}
         ref={ref}
-        type='radio'
-        onClick={props['aria-disabled'] ? handleDisabled : onClick}
+        type="radio"
+        onClick={props["aria-disabled"] ? handleDisabled : onClick}
         data-size={size}
         data-error={isError || null}
         {...rest}
@@ -54,12 +63,12 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
   return children ? (
     <label
       htmlFor={id}
-      className='flex w-fit items-center py-2 data-[size=sm]:gap-1 data-[size=md]:gap-2 data-[size=lg]:gap-3'
+      className="flex w-fit items-center py-2 data-[size=sm]:gap-1 data-[size=md]:gap-2 data-[size=lg]:gap-3"
       data-size={size}
     >
       {radio}
       <span
-        className='text-solid-gray-800 data-[size=sm]:pt-px data-[size=sm]:text-dns-16N-130 data-[size=md]:pt-1 data-[size=md]:text-dns-16N-130 data-[size=lg]:pt-2.5 data-[size=lg]:text-dns-17N-130'
+        className="text-solid-gray-800 data-[size=sm]:pt-px data-[size=sm]:text-dns-16N-130 data-[size=md]:pt-1 data-[size=md]:text-dns-16N-130 data-[size=lg]:pt-2.5 data-[size=lg]:text-dns-17N-130"
         data-size={size}
       >
         {children}

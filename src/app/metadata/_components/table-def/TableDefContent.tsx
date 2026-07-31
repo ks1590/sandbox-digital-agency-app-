@@ -1,13 +1,12 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Input } from "@/components/form/Input";
 import { Radio } from "@/components/form/Radio";
 import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
-import LinkCard from "@/components/ui/LinkCard";
 import type { TableDefRow } from "../../types";
+import TableDefinitionLinks from "../edit/TableDefinitionLinks";
 import type { MetadataFormData } from "../schema";
 import TextPopover from "./TextPopover";
 
@@ -163,29 +162,9 @@ export function TableDefGrid({ subtab }: { subtab: string }) {
 }
 
 export default function TableDefContent() {
-  const pathname = usePathname();
-  const { watch } = useFormContext<MetadataFormData>();
-
-  const tables = watch("tables") || [];
-
   return (
-    <div className="flex flex-wrap gap-6 py-8">
-      {tables.map((table) => {
-        // 物理名が未入力の場合はカードを生成しない、もしくはデフォルト値を設定するなど
-        if (!table.physicalName) return null;
-        return (
-          <LinkCard
-            key={table.id || table.physicalName}
-            href={`${pathname}?mode=edit&tab=table-def&subtab=${table.physicalName}`}
-            title={table.logicalName || table.physicalName}
-          />
-        );
-      })}
-      {tables.length === 0 && (
-        <div className="col-span-3 text-center text-gray-500">
-          テーブル定義が紐付けられていません。「概要」タブでテーブルを追加してください。
-        </div>
-      )}
+    <div className="py-8">
+      <TableDefinitionLinks />
     </div>
   );
 }

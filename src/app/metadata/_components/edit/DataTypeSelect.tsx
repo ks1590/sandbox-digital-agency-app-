@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import type { MetadataFormData } from "../schema";
 import { useDataTypes } from "../useDataTypes";
@@ -9,12 +10,36 @@ import { useDataTypes } from "../useDataTypes";
  * 配下ページ（!isTopPage）の編集画面で表示されるデータ種別の選択UI
  */
 export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { register, watch } = useFormContext<MetadataFormData>();
   const currentDataType = watch("dataType");
-  const { dataTypes } = useDataTypes();
+  const formDataTypes = watch("dataTypes");
+  const { dataTypes, getDataTypeName } = useDataTypes(formDataTypes);
+
+  const options = dataTypes.some(
+    (dt) =>
+      dt.name === currentDataType ||
+      dt.id === currentDataType ||
+      dt.name === getDataTypeName(currentDataType || ""),
+  )
+    ? dataTypes
+    : [
+        ...dataTypes,
+        {
+          id: currentDataType || "default",
+          name: currentDataType
+            ? getDataTypeName(currentDataType) !== currentDataType
+              ? getDataTypeName(currentDataType)
+              : currentDataType
+            : "臨床情報",
+        },
+      ];
 
   if (readonly) {
-    const selectedOption = dataTypes.find((opt) => opt.id === currentDataType);
+    const selectedOption = options.find(
+      (opt) => opt.id === currentDataType || opt.name === currentDataType,
+    );
     return (
       <div className="mb-8">
         <p className="block text-xl font-bold text-gray-900 mb-2">データ種別</p>
@@ -37,10 +62,19 @@ export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
         <select
           id="globalDataType"
           className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
-          {...register("dataType")}
+          value={currentDataType}
+          onChange={(e) => {
+            register("dataType").onChange(e);
+            const newType = e.target.value;
+            if (newType && newType !== currentDataType) {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set("type", newType);
+              router.push(`/metadata/detail?${params.toString()}`);
+            }
+          }}
         >
-          {dataTypes.map((dt) => (
-            <option key={dt.id} value={dt.id}>
+          {options.map((dt) => (
+            <option key={dt.id} value={dt.name}>
               {dt.name}
             </option>
           ))}

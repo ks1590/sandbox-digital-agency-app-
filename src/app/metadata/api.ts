@@ -1,4 +1,6 @@
+import { CHILD_OVERVIEW_TEMPLATE, TOP_OVERVIEW_TEMPLATE } from "./constants";
 import type { MetadataResponse, TableDefRow } from "./types";
+import type { MetadataFormData } from "./_components/schema";
 
 /**
  * APIのベースURL
@@ -139,8 +141,8 @@ export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
  */
 const MOCK_DATA: MetadataResponse = {
   overview: {
-    overviewText: "\n## データ説明情報\n- \n## キー情報\n- \n",
-    dataTypes: [{ id: "clinical", name: "臨床情報" }],
+    overviewText: TOP_OVERVIEW_TEMPLATE,
+    dataTypes: [{ id: "臨床情報", name: "臨床情報" }],
     startYear: "2020",
     latestYear: "2026",
     collectionFrequency: "年次",
@@ -196,18 +198,88 @@ const MOCK_DATA: MetadataResponse = {
  */
 export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
   const getMockData = (type?: string): MetadataResponse => {
-    const data = { ...MOCK_DATA };
-    if (type) {
-      data.overview = {
-        ...data.overview,
-        overviewText: "\n## データ説明情報\n- \n## 収集期間\n| 項目 | 内容 |\n| --- | --- |\n| 収集開始年度 | |\n| 最新の提供可能年度 | |\n| 収集頻度 | |\n\n## 更新頻度\n対象項目\n\n## テーブル一覧\nテーブル論理名 | 概要 | 格納単位 |\n| --- | --- | --- |\n| | | |\n\n## 留意事項\n-\n## キー情報\n-\n"
-      };
+    const data: MetadataResponse = JSON.parse(JSON.stringify(MOCK_DATA));
+    const isClinical = !type || type === "clinical" || type === "臨床情報";
 
-      if (type.startsWith("type-")) {
+    if (type) {
+      data.overview.overviewText = CHILD_OVERVIEW_TEMPLATE;
+      if (!isClinical) {
         data.overview.tables = [];
         data.tableDefs = {};
       }
     }
+
+    if (typeof window !== "undefined") {
+      try {
+        const topSaved = sessionStorage.getItem("metadata_top");
+        if (topSaved) {
+          const parsedTop = JSON.parse(topSaved);
+          if (parsedTop.dataTypes && parsedTop.dataTypes.length > 0) {
+            data.overview.dataTypes = parsedTop.dataTypes;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse metadata_top from sessionStorage", e);
+      }
+
+      const storageKey = type ? `metadata_${type}` : "metadata_top";
+      const saved = sessionStorage.getItem(storageKey);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          const defaultTables = isClinical ? data.overview.tables : [];
+          const defaultTableDefs = isClinical ? data.tableDefs : {};
+          const tablesToUse = parsed.tables ?? defaultTables;
+
+          const rawTableDefs = parsed.tableDefs ?? defaultTableDefs;
+          const tableDefsToUse: Record<string, TableDefRow[]> = {
+            ...rawTableDefs,
+          };
+
+          for (const table of tablesToUse) {
+            if (
+              table.physicalName &&
+              (!tableDefsToUse[table.physicalName] ||
+                tableDefsToUse[table.physicalName].length === 0)
+            ) {
+              tableDefsToUse[table.physicalName] =
+                MOCK_DATA.tableDefs[table.physicalName] ||
+                EXAMINATION_MOCK_DATA;
+            }
+          }
+
+          data.overview = {
+            ...data.overview,
+            overviewText: parsed.overviewText ?? data.overview.overviewText,
+            dataTypes:
+              parsed.dataTypes && parsed.dataTypes.length > 0
+                ? parsed.dataTypes
+                : data.overview.dataTypes,
+            startYear: parsed.startYear ?? data.overview.startYear,
+            latestYear: parsed.latestYear ?? data.overview.latestYear,
+            updateFrequencies:
+              parsed.updateFrequencies ?? data.overview.updateFrequencies,
+            tables: tablesToUse,
+            notesText: parsed.notesText ?? data.overview.notesText,
+            keyInfoText: parsed.keyInfoText ?? data.overview.keyInfoText,
+          };
+          data.tableDefs = tableDefsToUse;
+        } catch (e) {
+          console.error("Failed to parse sessionStorage data", e);
+        }
+      }
+    }
+
+    if (
+      type &&
+      !data.overview.dataTypes.some((dt) => dt.id === type || dt.name === type)
+    ) {
+      data.overview.dataTypes = [
+        ...data.overview.dataTypes,
+        { id: type, name: type },
+      ];
+    }
+
     return data;
   };
   // API URLが設定されている場合はAPIから取得を試みる
@@ -245,4 +317,32 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
     "NEXT_PUBLIC_API_BASE_URL が未設定のため、モックデータを使用します。",
   );
   return getMockData(type);
+}
+
+/**
+ * メタデータを保存する
+ * 外部API通信などを行います。
+ */
+export async function saveMetadata(data: MetadataFormData) {
+  // 実際のプロダクトでは、ここでGoなどの外部APIにPOST/PUTリクエストを送信します。
+  // 例:
+  // const response = await fetch(`${API_BASE_URL || ""}/metadata`, {
+  //   method: "PUT",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(data),
+  // });
+  // if (!response.ok) throw new Error("保存に失敗しました");
+
+  console.info("外部APIへメタデータ保存リクエストを送信しました", {
+    dataType: data.dataType,
+    tablesCount: data.tables?.length,
+  });
+
+  // モックとして少しだけ待機（API通信のシミュレーション）
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // 成功したことを呼び出し元に返す
+  return { success: true };
 }

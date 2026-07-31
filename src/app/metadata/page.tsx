@@ -1,13 +1,10 @@
 import { Suspense } from "react";
-import { fetchMetadata } from "./api";
-import MetadataPageClient from "./MetadataPageClient";
+import MetadataLoader from "./MetadataLoader";
 
-export default async function MetadataPage() {
-  const data = await fetchMetadata();
-
+export default function MetadataPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <MetadataPageClient data={data} />
+    <Suspense fallback={<div>読み込み中...</div>}>
+      <MetadataLoader />
     </Suspense>
   );
 }

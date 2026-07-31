@@ -50,12 +50,14 @@ const tableColumns: ColumnDef<TableDefRow>[] = [
   },
 ];
 
-export function SortableTableWithColumns({
+export function TableDefTable({
   subtab,
   data: apiData,
+  fromType,
 }: {
   subtab: string;
   data: MetadataResponse;
+  fromType?: string;
 }) {
   const [sessionOverride, setSessionOverride] = useState<TableDefRow[] | null>(
     null,
@@ -63,18 +65,23 @@ export function SortableTableWithColumns({
 
   // sessionStorageに編集済みデータがあれば優先する
   useEffect(() => {
-    const saved = sessionStorage.getItem("metadata_clinical");
+    const storageKey = fromType ? `metadata_${fromType}` : "metadata_clinical";
+    const saved = sessionStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.tableDefs?.[subtab]) {
+        if (
+          parsed.tableDefs?.[subtab] &&
+          Array.isArray(parsed.tableDefs[subtab]) &&
+          parsed.tableDefs[subtab].length > 0
+        ) {
           setSessionOverride(parsed.tableDefs[subtab]);
         }
       } catch (e) {
         console.error(e);
       }
     }
-  }, [subtab]);
+  }, [subtab, fromType]);
 
   // sessionStorageに編集済みデータがあればそちらを優先
   const data = sessionOverride || apiData.tableDefs?.[subtab] || [];

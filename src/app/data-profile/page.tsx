@@ -1,13 +1,6 @@
 import Header from "@/components/layout/Header";
-import { fetchDataProfile } from "./api";
-import DataProfileContent from "./DataProfileContent";
-
-export default async function DataProfilePage() {
-
-  // サーバー側（Lambda）でGoのAPIを叩いてデータを取得します。
-  // ここで取得するため、ブラウザ側でのCORSは発生しません。
-  const data = await fetchDataProfile();
-
+import DataProfileLoader from "./DataProfileLoader";
+export default function DataProfilePage() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header />
@@ -20,7 +13,7 @@ export default async function DataProfilePage() {
             </h2>
           </div>
 
-          <DataProfileContent data={data} />
+          <DataProfileLoader />
         </div>
       </main>
     </div>

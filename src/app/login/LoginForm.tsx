@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TextInput } from "@/components/form/TextInput";
+import { Button } from "@/components/ui/Button";
 import { ErrorText } from "@/components/ui/ErrorText";
 
 export default function LoginForm() {
@@ -41,32 +42,38 @@ export default function LoginForm() {
               {error}
             </ErrorText>
           )}
-          <button
+          <Button
             type="submit"
+            variant="solid-fill"
+            size="lg"
             disabled={isPending}
-            className="inline-flex w-full items-center justify-center min-h-[56px] rounded-[8px] border-4 border-double border-transparent bg-[#0017C1] text-white px-4 py-3 text-base font-bold underline-offset-[3px] transition-colors hover:bg-blue-900 hover:underline active:bg-blue-950 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300 disabled:opacity-50"
+            className="w-full"
           >
             ログイン
-          </button>
+          </Button>
         </div>
       </form>
 
       <div className="pt-6 border-t border-gray-200 space-y-4">
         <p className="font-bold text-center">テストユーザーログイン</p>
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="lg"
           onClick={() => handleTestUserLogin("test-userA")}
-          className="inline-flex w-full items-center justify-center min-h-[56px] rounded-[8px] border border-gray-400 bg-white text-gray-900 px-4 py-3 text-base font-bold transition-colors hover:bg-gray-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2"
+          className="w-full"
         >
           業務運営事業者
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="outline"
+          size="lg"
           onClick={() => handleTestUserLogin("test-userB")}
-          className="inline-flex w-full items-center justify-center min-h-[56px] rounded-[8px] border border-gray-400 bg-white text-gray-900 px-4 py-3 text-base font-bold transition-colors hover:bg-gray-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2"
+          className="w-full"
         >
           診療情報DB管理担当課
-        </button>
+        </Button>
       </div>
     </div>
   );

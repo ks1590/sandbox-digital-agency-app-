@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
+import { Button } from "@/components/ui/Button";
 import LinkCard from "@/components/ui/LinkCard";
 import MetadataEdit from "../_components/edit/MetadataEdit";
 import { useDataTypes } from "../_components/useDataTypes";
@@ -29,7 +30,22 @@ export default function MetadataDetailPageClient({
   const isEditMode = searchParams.get("mode") === "edit";
   const publishSuccess = searchParams.get("publish_success") === "true";
   const publishError = searchParams.get("publish_error") === "true";
-  const { getDataTypeName } = useDataTypes(data.overview.dataTypes);
+  const { dataTypes, getDataTypeName } = useDataTypes(data.overview.dataTypes);
+  const options = dataTypes.some(
+    (dt) =>
+      dt.name === type || dt.id === type || dt.name === getDataTypeName(type),
+  )
+    ? dataTypes
+    : [
+        ...dataTypes,
+        {
+          id: type,
+          name: getDataTypeName(type) !== type ? getDataTypeName(type) : type,
+        },
+      ];
+  const currentSelectedValue =
+    options.find((dt) => dt.id === type || dt.name === type)?.name ||
+    getDataTypeName(type);
 
   useEffect(() => {
     if (publishSuccess) {
@@ -43,21 +59,6 @@ export default function MetadataDetailPageClient({
       return () => clearTimeout(timer);
     }
   }, [publishSuccess, searchParams, pathname, router]);
-
-  const [sessionData, setSessionData] = useState<any>(null);
-
-  useEffect(() => {
-    const saved = sessionStorage.getItem(`metadata_${type}`);
-    if (saved) {
-      try {
-        setSessionData(JSON.parse(saved));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, [type]);
-
-  const displayTables = sessionData?.tables || data.overview.tables;
 
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
@@ -105,18 +106,55 @@ export default function MetadataDetailPageClient({
             <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
             <div className="flex items-center gap-4">
               {data.overview.status === "draft" && <PublishButtonClient />}
-              <Link
-                href={`/metadata/detail?type=${type}&mode=edit&tab=${tabParam}`}
-                className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-[#0017C1] px-4 py-2 text-base font-bold text-white underline-offset-[3px] transition-colors hover:bg-[#1A30C9] hover:underline active:bg-[#001299] active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
-              >
-                編集
-              </Link>
+              <Button asChild variant="solid-fill" size="md">
+                <Link
+                  href={`/metadata/detail?type=${type}&mode=edit&tab=${tabParam}`}
+                >
+                  編集
+                </Link>
+              </Button>
             </div>
           </div>
 
           <div className="mb-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">データ種別</h3>
-            <p className="text-base text-gray-900">{getDataTypeName(type)}</p>
+            <label
+              htmlFor="viewDataType"
+              className="block text-xl font-bold text-gray-900 mb-4"
+            >
+              データ種別
+            </label>
+            <div className="relative w-1/2 md:w-1/4 lg:w-1/6">
+              <select
+                id="viewDataType"
+                value={currentSelectedValue}
+                onChange={(e) => {
+                  const newType = e.target.value;
+                  if (newType && newType !== currentSelectedValue) {
+                    const newParams = new URLSearchParams(
+                      searchParams.toString(),
+                    );
+                    newParams.set("type", newType);
+                    router.push(`${pathname}?${newParams.toString()}`);
+                  }
+                }}
+                className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
+              >
+                {options.map((dt) => (
+                  <option key={dt.id} value={dt.name}>
+                    {dt.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <svg
+                  className="h-4 w-4 fill-current"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div className="mb-12">
@@ -127,7 +165,7 @@ export default function MetadataDetailPageClient({
                 {
                   label: "概要",
                   id: "tab-overview",
-                  content: <OverviewViewClient data={data} type={type} />,
+                  content: <OverviewViewClient data={data} />,
                 },
                 {
                   label: "ER図",
@@ -143,7 +181,7 @@ export default function MetadataDetailPageClient({
                   id: "tab-table-def",
                   content: (
                     <div className="flex flex-wrap gap-6 p-8">
-                      {displayTables.map((table: any) => {
+                      {data.overview.tables.map((table) => {
                         if (!table.physicalName) return null;
                         return (
                           <LinkCard
@@ -153,11 +191,6 @@ export default function MetadataDetailPageClient({
                           />
                         );
                       })}
-                      {displayTables.length === 0 && (
-                        <div className="col-span-3 text-center text-gray-500">
-                          テーブル定義が紐付けられていません。
-                        </div>
-                      )}
                     </div>
                   ),
                 },
@@ -166,12 +199,9 @@ export default function MetadataDetailPageClient({
           </div>
 
           <div className="mt-8">
-            <Link
-              href="/metadata"
-              className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] border border-[#0017C1] bg-white px-4 py-2 text-base font-bold text-[#0017C1] underline-offset-[3px] transition-colors hover:bg-gray-50 hover:underline active:bg-gray-100 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300"
-            >
-              データベース全体に関する情報に戻る
-            </Link>
+            <Button asChild variant="outline" size="lg">
+              <Link href="/metadata">データベース全体に関する情報に戻る</Link>
+            </Button>
           </div>
         </div>
       </main>

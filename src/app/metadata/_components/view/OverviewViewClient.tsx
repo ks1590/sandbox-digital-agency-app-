@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/ui/DataTable/DataTable";
 import type { MetadataResponse } from "../../types";
@@ -12,17 +13,19 @@ const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
 
 export default function OverviewViewClient({
   data: apiData,
-  type,
 }: {
   data: MetadataResponse;
-  type?: string;
 }) {
+  const searchParams = useSearchParams();
+  const typeParam = searchParams?.get("type") || "臨床情報";
   const [sessionData, setSessionData] = useState<MetadataFormData | null>(null);
 
   // sessionStorageに編集済みデータがあれば優先する
   useEffect(() => {
-    const key = type ? `metadata_${type}` : "metadata_top";
-    const saved = sessionStorage.getItem(key);
+    const saved =
+      sessionStorage.getItem(`metadata_${typeParam}`) ||
+      sessionStorage.getItem("metadata_clinical") ||
+      sessionStorage.getItem("metadata_臨床情報");
     if (saved) {
       try {
         setSessionData(JSON.parse(saved));
@@ -30,7 +33,7 @@ export default function OverviewViewClient({
         console.error(e);
       }
     }
-  }, [type]);
+  }, [typeParam]);
 
   // sessionStorageに編集済みデータがあればそちらを優先、なければAPIデータを使用
   const overviewText =

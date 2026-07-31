@@ -29,7 +29,7 @@ export default function MetadataEdit({
     defaultIndex,
     handleSubmit,
     handleTabChange,
-    cancelHref,
+    handleCancel,
     returnHref,
     returnText,
   } = useMetadataForm(apiData);
@@ -61,59 +61,58 @@ export default function MetadataEdit({
             <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
           </div>
 
-          {/*
-            フォーム全体でTabを囲むことで、
-            どのタブにいても更新ボタンを押した際に全てのデータが送信可能になる。
-          */}
           {isInitialized ? (
             <FormProvider {...methods}>
               <form
-              onSubmit={methods.handleSubmit(handleSubmit)}
-              className="text-gray-900"
-            >
-              {!isTopPage && <DataTypeSelect readonly={!!subtabParam} />}
+                onSubmit={methods.handleSubmit(handleSubmit)}
+                className="text-gray-900"
+              >
+                {!isTopPage && <DataTypeSelect readonly={!!subtabParam} />}
 
-              {isTopPage ? (
-                <div className="mb-12">
-                  <OverviewTabContent isTopPage />
-                </div>
-              ) : (
-                <div className="mb-12" hidden={!!subtabParam}>
-                  <Tab
-                    headingId="register-tabs-heading"
-                    defaultIndex={defaultIndex}
-                    onChange={handleTabChange}
-                    items={[
-                      {
-                        label: "概要",
-                        id: "tab-overview",
-                        content: <OverviewTabContent isTopPage={false} />,
-                      },
-                      {
-                        label: "ER図",
-                        id: "tab-er",
-                        content: <ErDiagramTabContent />,
-                      },
-                      {
-                        label: "テーブル定義",
-                        id: "tab-table-def",
-                        content: <TableDefContent />,
-                      },
-                    ]}
+                {isTopPage ? (
+                  <div className="mb-12">
+                    <OverviewTabContent isTopPage />
+                  </div>
+                ) : (
+                  <div className="mb-12" hidden={!!subtabParam}>
+                    <Tab
+                      headingId="register-tabs-heading"
+                      defaultIndex={defaultIndex}
+                      onChange={handleTabChange}
+                      items={[
+                        {
+                          label: "概要",
+                          id: "tab-overview",
+                          content: <OverviewTabContent isTopPage={false} />,
+                        },
+                        {
+                          label: "ER図",
+                          id: "tab-er",
+                          content: <ErDiagramTabContent />,
+                        },
+                        {
+                          label: "テーブル定義",
+                          id: "tab-table-def",
+                          content: <TableDefContent />,
+                        },
+                      ]}
+                    />
+                  </div>
+                )}
+
+                {!!subtabParam && (
+                  <SubtabSection
+                    subtabParam={subtabParam}
+                    pathname={pathname}
                   />
-                </div>
-              )}
+                )}
 
-              {!!subtabParam && (
-                <SubtabSection subtabParam={subtabParam} pathname={pathname} />
-              )}
-
-              <EditFormFooter
-                cancelHref={cancelHref}
-                returnHref={returnHref}
-                returnText={returnText}
-              />
-            </form>
+                <EditFormFooter
+                  onCancel={handleCancel}
+                  returnHref={returnHref}
+                  returnText={returnText}
+                />
+              </form>
             </FormProvider>
           ) : (
             <div className="flex items-center justify-center p-12">

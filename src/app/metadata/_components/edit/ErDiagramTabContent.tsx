@@ -18,9 +18,6 @@ import { useFileUpload } from "@/components/form/FileUpload/hooks/useFileUpload"
 import { formatSize } from "@/components/form/FileUpload/utils";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { Label } from "@/components/ui/Label";
-import { RequirementBadge } from "@/components/ui/RequirementBadge";
-import { SupportText } from "@/components/ui/SupportText";
 
 /**
  * ER図タブのコンテンツ
@@ -70,7 +67,7 @@ export default function ErDiagramTabContent({
   const buttonId = useId();
   const inputId = useId();
   const labelId = useId();
-  const supportTextId = useId();
+  const _supportTextId = useId();
 
   const [isExistingRemoved, setIsExistingRemoved] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -89,7 +86,8 @@ export default function ErDiagramTabContent({
     }
   }, [files, initialImageUrl, isExistingRemoved]);
 
-  const showDeleteButton = previewUrl && files.length === 0 && initialImageUrl && !isExistingRemoved;
+  const showDeleteButton =
+    previewUrl && files.length === 0 && initialImageUrl && !isExistingRemoved;
 
   return (
     <div className="py-6 flex flex-col gap-6">
@@ -252,13 +250,15 @@ export default function ErDiagramTabContent({
           </div>
           {showDeleteButton && (
             <div className="flex justify-end">
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="md"
                 onClick={() => setIsExistingRemoved(true)}
-                className="inline-flex items-center justify-center min-w-[96px] min-h-[48px] rounded-[8px] bg-white border border-error-1 px-4 py-2 text-base font-bold text-error-1 transition-colors hover:bg-red-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300"
+                className="!border-error-1 !text-error-1 hover:!text-error-1 hover:bg-red-50 active:bg-red-100"
               >
                 削除
-              </button>
+              </Button>
             </div>
           )}
         </div>
