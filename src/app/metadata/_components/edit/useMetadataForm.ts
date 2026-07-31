@@ -4,8 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { saveMetadataAction } from "../../actions";
-import { EXAMINATION_MOCK_DATA } from "../../api";
+import { EXAMINATION_MOCK_DATA, saveMetadata } from "../../api";
 import {
   CHILD_OVERVIEW_TEMPLATE,
   TOP_OVERVIEW_TEMPLATE,
@@ -234,7 +233,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
       finalData = { ...finalData, tableDefs: updatedTableDefs };
     }
 
-    await saveMetadataAction(finalData);
+    await saveMetadata(finalData);
 
     // 今回はバックエンド（DB）が存在しないモック環境のため、
     // 画面リロード時に編集内容が消えないようにセッションストレージにも保存しておく

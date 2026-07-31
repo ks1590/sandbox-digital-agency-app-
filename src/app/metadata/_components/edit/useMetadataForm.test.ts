@@ -6,7 +6,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { saveMetadataAction } from "../../actions";
+import { saveMetadata } from "../../api";
 import type { MetadataResponse } from "../../types";
 import { useMetadataForm } from "./useMetadataForm";
 
@@ -21,9 +21,13 @@ vi.mock("next/navigation", async () => {
   };
 });
 
-vi.mock("../../actions", () => ({
-  saveMetadataAction: vi.fn(),
-}));
+vi.mock("../../api", async () => {
+  const actual = await vi.importActual<typeof import("../../api")>("../../api");
+  return {
+    ...actual,
+    saveMetadata: vi.fn(),
+  };
+});
 
 function createApiData(overrides = {}): MetadataResponse {
   return {
@@ -62,7 +66,7 @@ describe("useMetadataForm", () => {
         new URLSearchParams("type=臨床情報&tab=overview"),
       ),
     );
-    vi.mocked(saveMetadataAction).mockResolvedValue({ success: true });
+    vi.mocked(saveMetadata).mockResolvedValue({ success: true });
   });
 
   afterEach(() => {
@@ -113,7 +117,7 @@ describe("useMetadataForm", () => {
       await result.current.handleSubmit(result.current.methods.getValues());
     });
 
-    expect(saveMetadataAction).toHaveBeenCalled();
+    expect(saveMetadata).toHaveBeenCalled();
     expect(mockRouter.push).toHaveBeenCalledWith(
       `/metadata/detail?tab=overview&type=${encodeURIComponent("臨床情報")}`,
     );
@@ -139,10 +143,10 @@ describe("useMetadataForm", () => {
       await result.current.handleSubmit(result.current.methods.getValues());
     });
 
-    expect(saveMetadataAction).toHaveBeenCalled();
+    expect(saveMetadata).toHaveBeenCalled();
 
     // 既存・新規とも ID が名称に統一されていること
-    const callArg = vi.mocked(saveMetadataAction).mock.calls[0][0];
+    const callArg = vi.mocked(saveMetadata).mock.calls[0][0];
     expect(callArg.dataTypes).toEqual([
       { id: "Existing", name: "Existing" },
       { id: "New One", name: "New One" },

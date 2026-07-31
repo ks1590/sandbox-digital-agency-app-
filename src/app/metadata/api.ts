@@ -1,5 +1,6 @@
 import { CHILD_OVERVIEW_TEMPLATE, TOP_OVERVIEW_TEMPLATE } from "./constants";
 import type { MetadataResponse, TableDefRow } from "./types";
+import type { MetadataFormData } from "./_components/schema";
 
 /**
  * APIのベースURL
@@ -316,4 +317,32 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
     "NEXT_PUBLIC_API_BASE_URL が未設定のため、モックデータを使用します。",
   );
   return getMockData(type);
+}
+
+/**
+ * メタデータを保存する
+ * 外部API通信などを行います。
+ */
+export async function saveMetadata(data: MetadataFormData) {
+  // 実際のプロダクトでは、ここでGoなどの外部APIにPOST/PUTリクエストを送信します。
+  // 例:
+  // const response = await fetch(`${API_BASE_URL || ""}/metadata`, {
+  //   method: "PUT",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(data),
+  // });
+  // if (!response.ok) throw new Error("保存に失敗しました");
+
+  console.info("外部APIへメタデータ保存リクエストを送信しました", {
+    dataType: data.dataType,
+    tablesCount: data.tables?.length,
+  });
+
+  // モックとして少しだけ待機（API通信のシミュレーション）
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // 成功したことを呼び出し元に返す
+  return { success: true };
 }

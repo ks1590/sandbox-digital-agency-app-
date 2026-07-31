@@ -7,6 +7,7 @@ import {
   type Mock,
   vi,
 } from "vitest";
+import type { MetadataFormData } from "./_components/schema";
 
 const originalEnv = process.env;
 
@@ -77,6 +78,27 @@ describe("api.ts", () => {
       expect(consoleSpy).toHaveBeenCalled();
 
       consoleSpy.mockRestore();
+    });
+  });
+
+  describe("saveMetadata", () => {
+    it("保存処理をシミュレートし、success: true を返すこと", async () => {
+      const mockData: MetadataFormData = {
+        dataType: "clinical",
+        overviewText: "Test",
+        startYear: "2020",
+        latestYear: "2024",
+        collectionFrequency: "年次",
+        updateFrequencies: [],
+        tables: [],
+        notesText: "",
+        keyInfoText: "",
+        tableDefs: {},
+      };
+
+      const { saveMetadata } = await import("./api");
+      const result = await saveMetadata(mockData);
+      expect(result).toEqual({ success: true });
     });
   });
 });
