@@ -1,12 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { logout } from "../../actions/auth";
 
-export default function Header({ userId }: { userId?: string }) {
+export default function Header() {
+  const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // クライアントサイドでローカルストレージから取得
+    const storedUserId = localStorage.getItem("login-user-id");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+  }, []);
 
   // 外側クリックでメニューを閉じる処理
   useEffect(() => {
@@ -23,13 +33,20 @@ export default function Header({ userId }: { userId?: string }) {
     };
   }, [isMenuOpen]);
 
+  const handleLogout = () => {
+    setIsMenuOpen(false);
+    localStorage.removeItem("auth-token");
+    localStorage.removeItem("login-user-id");
+    router.replace("/login");
+  };
+
   return (
     <header className="portal-header" id="portal-header">
       <div className="portal-header__inner relative">
         <div className="portal-header__logo">
           <Link href="/" className="flex items-center gap-[14px]">
             <div>
-              <h1 className="portal-header__title">公的DB</h1>
+              <h1 className="portal-header__title">診療情報DB</h1>
             </div>
           </Link>
         </div>
@@ -114,41 +131,44 @@ export default function Header({ userId }: { userId?: string }) {
               {isMenuOpen && (
                 <div className="absolute right-6 top-full mt-2 w-64 bg-white border border-gray-400 shadow-lg rounded-md z-50 overflow-hidden">
                   <ul className="flex flex-col">
-                    <li>
-                      <Link
-                        href="/extraction-status"
-                        className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        抽出状況検索
-                      </Link>
-                    </li>
-                    <li className="border-t border-gray-200">
-                      <Link
-                        href="/metadata"
-                        className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        メタデータ参照・登録
-                      </Link>
-                    </li>
-                    <li className="border-t border-gray-200">
-                      <Link
-                        href="/data-profile"
-                        className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        データプロファイル参照
-                      </Link>
-                    </li>
+                    {userId === "test-userA" && (
+                      <li>
+                        <Link
+                          href="/extraction-status"
+                          className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          月次抽出依頼検索
+                        </Link>
+                      </li>
+                    )}
+                    {userId === "test-userB" && (
+                      <>
+                        <li className="border-t border-gray-200">
+                          <Link
+                            href="/metadata"
+                            className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            メタデータ参照・登録
+                          </Link>
+                        </li>
+                        <li className="border-t border-gray-200">
+                          <Link
+                            href="/data-profile"
+                            className="block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            データプロファイル参照
+                          </Link>
+                        </li>
+                      </>
+                    )}
                     <li className="border-t border-gray-200">
                       <button
                         type="button"
                         className="w-full text-left block px-4 py-3 hover:bg-gray-100 hover:underline hover:underline-offset-2 text-gray-900"
-                        onClick={async () => {
-                          setIsMenuOpen(false);
-                          await logout();
-                        }}
+                        onClick={handleLogout}
                       >
                         ログアウト
                       </button>

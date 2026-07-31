@@ -1,6 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import { useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/Button";
+import { ErrorText } from "@/components/ui/ErrorText/ErrorText";
+import type { MetadataFormData } from "../schema";
 import { inputClass } from "../styles";
 
 interface DataType {
@@ -16,13 +19,16 @@ interface DataTypeListEditorProps {
 /**
  * データ種別の編集リスト
  *
- * 各データ種別に対して、名前変更・詳細遷移・削除を行える。
+ * 各データ種別に対して、名前変更・削除を行える。
  * 新規データ種別の追加も可能。
  */
 export default function DataTypeListEditor({
   dataTypes,
   onChange,
 }: DataTypeListEditorProps) {
+  const formContext = useFormContext<MetadataFormData>();
+  const errors = formContext?.formState?.errors;
+
   const handleNameChange = (idx: number, name: string) => {
     const newTypes = [...dataTypes];
     newTypes[idx] = { ...newTypes[idx], name };
@@ -30,6 +36,19 @@ export default function DataTypeListEditor({
   };
 
   const handleRemove = (idx: number) => {
+    const target = dataTypes[idx];
+    if (target && typeof window !== "undefined" && window.sessionStorage) {
+      try {
+        if (target.name) {
+          sessionStorage.removeItem(`metadata_${target.name}`);
+        }
+        if (target.id) {
+          sessionStorage.removeItem(`metadata_${target.id}`);
+        }
+      } catch (e) {
+        console.error("Failed to remove metadata from sessionStorage", e);
+      }
+    }
     const newTypes = [...dataTypes];
     newTypes.splice(idx, 1);
     onChange(newTypes);
@@ -37,45 +56,53 @@ export default function DataTypeListEditor({
 
   const handleAdd = () => {
     const newId = `new-type-${Date.now()}`;
-    onChange([...dataTypes, { id: newId, name: "新しいデータ種別" }]);
+    onChange([...dataTypes, { id: newId, name: "" }]);
   };
 
   return (
     <section>
       <h3 className="text-xl font-bold mb-4">データ種別</h3>
+      <Button
+        type="button"
+        variant="outline"
+        size="md"
+        onClick={handleAdd}
+        className="mb-4"
+      >
+        ＋ データ種別を追加
+      </Button>
+      {dataTypes.length > 0 && (
+        <p className="text-sm font-bold mb-2">データ種別名</p>
+      )}
       <div className="space-y-4">
-        {dataTypes.map((dt, idx) => (
-          <div key={dt.id} className="flex items-center gap-4">
-            <div className="w-1/3">
-              <input
-                type="text"
-                value={dt.name}
-                onChange={(e) => handleNameChange(idx, e.target.value)}
-                className={inputClass}
-              />
+        {dataTypes.map((dt, idx) => {
+          const errorMessage = errors?.dataTypes?.[idx]?.name?.message;
+          return (
+            <div key={dt.id} className="flex flex-col gap-1">
+              <div className="flex items-center gap-4">
+                <div className="w-[300px]">
+                  <input
+                    type="text"
+                    value={dt.name}
+                    onChange={(e) => handleNameChange(idx, e.target.value)}
+                    className={`${inputClass} ${errorMessage ? "border-red-600 focus:ring-red-300" : ""}`}
+                    aria-invalid={!!errorMessage}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="md"
+                  onClick={() => handleRemove(idx)}
+                  className="!border-[#D91A2A] !text-[#D91A2A] hover:!text-[#D91A2A] hover:bg-red-50 active:bg-red-100 whitespace-nowrap"
+                >
+                  削除
+                </Button>
+              </div>
+              {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
             </div>
-            <Link
-              href={`/metadata/${dt.id}?mode=edit`}
-              className="inline-flex items-center justify-center min-w-[120px] min-h-[44px] rounded-[8px] bg-white border-2 border-[#0017C1] px-4 py-2 text-base font-bold text-[#0017C1] transition-colors hover:bg-gray-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap"
-            >
-              詳細
-            </Link>
-            {/* <button
-              type="button"
-              onClick={() => handleRemove(idx)}
-              className="inline-flex items-center justify-center min-w-[80px] min-h-[44px] rounded-[8px] bg-white border border-gray-400 px-4 py-2 text-base font-bold text-error-1 transition-colors hover:bg-gray-50 focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 whitespace-nowrap"
-            >
-              削除
-            </button> */}
-          </div>
-        ))}
-        {/* <button
-          type="button"
-          onClick={handleAdd}
-          className="inline-flex items-center justify-center mt-4 min-h-[44px] rounded-[8px] border-2 border-dashed border-gray-400 text-gray-700 hover:bg-gray-50 hover:border-gray-500 px-4 py-2 text-base font-bold transition-colors focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:ring-2 focus-visible:ring-yellow-300 w-full"
-        >
-          ＋ データ種別を追加
-        </button> */}
+          );
+        })}
       </div>
     </section>
   );

@@ -1,58 +1,80 @@
 "use client";
 
-import { useActionState } from "react";
-import { login } from "@/actions/auth";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { TextInput } from "@/components/form/TextInput";
+import { Button } from "@/components/ui/Button";
 import { ErrorText } from "@/components/ui/ErrorText";
 
 export default function LoginForm() {
-  const [state, formAction, isPending] = useActionState(login, null);
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPending(true);
+    setError(null);
+    setError("ログインIDまたはパスワードが間違っています。");
+    setIsPending(false);
+  };
+
+  const handleTestUserLogin = (userId: string) => {
+    localStorage.setItem("auth-token", "dummy-session-12345");
+    localStorage.setItem("login-user-id", userId);
+    router.replace("/");
+  };
 
   return (
-    <form action={formAction} className="space-y-6">
-      <div className="bg-blue-50 border border-blue-200 text-blue-900 px-4 py-3 rounded-md text-sm">
-        <p className="font-bold mb-1">【開発用ダミーアカウント】</p>
-        <p>
-          ログインID:{" "}
-          <code className="bg-white px-1 py-0.5 rounded text-black">admin</code>
-        </p>
-        <p>
-          パスワード:{" "}
-          <code className="bg-white px-1 py-0.5 rounded text-black">
-            password
-          </code>
-        </p>
-      </div>
+    <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <TextInput label="ログインID" id="loginId" name="loginId" type="text" />
+        <TextInput
+          label="パスワード"
+          id="password"
+          name="password"
+          type="password"
+        />
 
-      <TextInput
-        label="ログインID"
-        id="loginId"
-        name="loginId"
-        type="text"
-        required
-      />
-      <TextInput
-        label="パスワード"
-        id="password"
-        name="password"
-        type="password"
-        required
-      />
+        <div className="pt-4">
+          {error && (
+            <ErrorText className="mb-4 font-bold text-center">
+              {error}
+            </ErrorText>
+          )}
+          <Button
+            type="submit"
+            variant="solid-fill"
+            size="lg"
+            disabled={isPending}
+            className="w-full"
+          >
+            ログイン
+          </Button>
+        </div>
+      </form>
 
-      <div className="pt-4">
-        {state?.error && (
-          <ErrorText className="mb-4 font-bold text-center">
-            {state.error}
-          </ErrorText>
-        )}
-        <button
-          type="submit"
-          disabled={isPending}
-          className="inline-flex w-full items-center justify-center min-h-[56px] rounded-[8px] border-4 border-double border-transparent bg-[#0017C1] text-white px-4 py-3 text-base font-bold underline-offset-[3px] transition-colors hover:bg-blue-900 hover:underline active:bg-blue-950 active:underline focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-yellow-300 disabled:opacity-50"
+      <div className="pt-6 border-t border-gray-200 space-y-4">
+        <p className="font-bold text-center">テストユーザーログイン</p>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          onClick={() => handleTestUserLogin("test-userA")}
+          className="w-full"
         >
-          ログイン
-        </button>
+          業務運営事業者
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          onClick={() => handleTestUserLogin("test-userB")}
+          className="w-full"
+        >
+          診療情報DB管理担当課
+        </Button>
       </div>
-    </form>
+    </div>
   );
 }

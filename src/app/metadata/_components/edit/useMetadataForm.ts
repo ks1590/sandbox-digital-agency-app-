@@ -2,22 +2,22 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { saveMetadataAction } from "../../actions";
+import { EXAMINATION_MOCK_DATA, saveMetadata } from "../../api";
+import {
+  CHILD_OVERVIEW_TEMPLATE,
+  TOP_OVERVIEW_TEMPLATE,
+} from "../../constants";
 import type { MetadataResponse } from "../../types";
 import { type MetadataFormData, metadataSchema } from "../schema";
 
-/** 通知バナーの状態型 */
 export type NotificationState = {
   type: "success" | "error";
   title: string;
   message: string;
 } | null;
 
-/**
- * MetadataEdit のフォーム初期化・送信・タブ遷移ロジックをまとめたカスタムフック
- */
 export function useMetadataForm(apiData: MetadataResponse) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -26,46 +26,69 @@ export function useMetadataForm(apiData: MetadataResponse) {
   const tabParam = searchParams.get("tab") || "overview";
   const subtabParam = searchParams.get("subtab");
 
+  const typeParam =
+    searchParams.get("type") ||
+    searchParams.get("from") ||
+    (pathname !== "/metadata" &&
+    pathname !== "/metadata/detail" &&
+    pathname !== "/metadata/table-def"
+      ? pathname.split("/").pop()
+      : "臨床情報");
+
   const methods = useForm<MetadataFormData>({
     resolver: zodResolver(metadataSchema),
     defaultValues: {
-      dataType: "clinical",
+      dataType: typeParam || "臨床情報",
       overviewText: "",
-      dataTypes: [],
+      dataTypes: apiData?.overview?.dataTypes || [],
       startYear: "",
       latestYear: "",
       updateFrequencies: [],
       tables: [],
       notesText: "",
       keyInfoText: "",
-      tableDefs: {
-        disease: [],
-        allergy: [],
-        examination: [],
-      },
+      tableDefs: {},
     },
   });
 
-  // APIデータが取得できたらフォームの初期値としてリセット
-  useEffect(() => {
-    if (!apiData) return;
+  const [isInitialized, setIsInitialized] = useState(false);
+  const initialStorageDataRef = useRef<string | null>(null);
 
-    // sessionStorageに保存済みデータがあればそちらを優先
-    const saved = sessionStorage.getItem("metadata_clinical");
+  useEffect(() => {
+    if (!apiData || isInitialized) return;
+
+    const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
+    const saved = sessionStorage.getItem(storageKey);
+    initialStorageDataRef.current = saved;
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        try {
+          const topSaved = sessionStorage.getItem("metadata_top");
+          if (topSaved) {
+            const parsedTop = JSON.parse(topSaved);
+            if (parsedTop.dataTypes && parsedTop.dataTypes.length > 0) {
+              parsed.dataTypes = parsedTop.dataTypes;
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
         methods.reset(parsed);
+        setIsInitialized(true);
         return;
       } catch (e) {
         console.error("Failed to parse sessionStorage data", e);
       }
     }
 
-    // sessionStorageにデータがなければAPIデータを使用
+    const OVERVIEW_TEMPLATE = isTopPage
+      ? TOP_OVERVIEW_TEMPLATE
+      : CHILD_OVERVIEW_TEMPLATE;
+
     methods.reset({
-      dataType: "clinical",
-      overviewText: apiData.overview.overviewText,
+      dataType: typeParam || "臨床情報",
+      overviewText: apiData.overview.overviewText || OVERVIEW_TEMPLATE,
       dataTypes: apiData.overview.dataTypes,
       startYear: apiData.overview.startYear,
       latestYear: apiData.overview.latestYear,
@@ -75,49 +98,166 @@ export function useMetadataForm(apiData: MetadataResponse) {
       keyInfoText: apiData.overview.keyInfoText,
       tableDefs: apiData.tableDefs,
     });
-  }, [apiData, methods]);
+    setIsInitialized(true);
+  }, [apiData, methods, isTopPage, isInitialized, typeParam]);
 
-  // タブのデフォルトインデックス算出
+  // フォームの変更状態をrefで追跡し、beforeunload/popstateハンドラで参照する
+  const isDirtyRef = useRef(false);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+    const subscription = methods.watch(() => {
+      isDirtyRef.current = true;
+      const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
+      sessionStorage.setItem(storageKey, JSON.stringify(methods.getValues()));
+    });
+    return () => subscription.unsubscribe();
+  }, [methods, isInitialized, isTopPage, typeParam]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirtyRef.current) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    const handlePopState = () => {
+      if (isDirtyRef.current) {
+        const confirmed = window.confirm(
+          "編集中の内容が破棄されますがよろしいですか？",
+        );
+        if (!confirmed) {
+          // ブラウザバックをキャンセルし、現在のURLに戻す
+          window.history.pushState(null, "", window.location.href);
+        }
+      }
+    };
+
+    // popstateキャンセル用に現在の履歴エントリを追加
+    window.history.pushState(null, "", window.location.href);
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
   let defaultIndex = 0;
   if (tabParam === "er") defaultIndex = 1;
   else if (tabParam === "table-def") defaultIndex = 2;
 
-  const [notification, setNotification] = useState<NotificationState>(null);
+  const [notification] = useState<NotificationState>(null);
 
-  /** フォーム送信ハンドラ */
   const handleSubmit = async (data: MetadataFormData) => {
-    // サーバーアクションを呼び出してAPI経由での保存をシミュレート
-    await saveMetadataAction(data);
+    let finalData = data;
+
+    if (isTopPage && data.dataTypes) {
+      if (typeof window !== "undefined" && window.sessionStorage) {
+        const validNames = new Set(
+          data.dataTypes.map((dt) => dt.name).filter(Boolean),
+        );
+        const validIds = new Set(
+          data.dataTypes.map((dt) => dt.id).filter(Boolean),
+        );
+
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key?.startsWith("metadata_") && key !== "metadata_top") {
+            const keyName = key.replace("metadata_", "");
+            if (!validNames.has(keyName) && !validIds.has(keyName)) {
+              keysToRemove.push(key);
+            }
+          }
+        }
+        keysToRemove.forEach((k) => {
+          sessionStorage.removeItem(k);
+        });
+      }
+
+      if (data.dataTypes.length > 0) {
+        const updatedDataTypes = data.dataTypes.map((dt) => ({
+          ...dt,
+          id: dt.name,
+        }));
+
+        for (const dt of updatedDataTypes) {
+          const targetId = dt.name;
+          const isClinical = targetId === "臨床情報" || targetId === "clinical";
+
+          // データ種別の初期データを作成・保存
+          const childStorageKey = `metadata_${targetId}`;
+          if (!sessionStorage.getItem(childStorageKey)) {
+            const initialChildData = {
+              dataType: targetId,
+              overviewText: isClinical
+                ? apiData.overview.overviewText
+                : CHILD_OVERVIEW_TEMPLATE,
+              dataTypes: updatedDataTypes,
+              startYear: isClinical ? apiData.overview.startYear : "",
+              latestYear: isClinical ? apiData.overview.latestYear : "",
+              updateFrequencies: isClinical
+                ? apiData.overview.updateFrequencies
+                : [],
+              tables: isClinical ? apiData.overview.tables : [],
+              notesText: isClinical ? apiData.overview.notesText : "",
+              keyInfoText: isClinical ? apiData.overview.keyInfoText : "",
+              tableDefs: isClinical ? apiData.tableDefs : {},
+            };
+            sessionStorage.setItem(
+              childStorageKey,
+              JSON.stringify(initialChildData),
+            );
+          }
+        }
+
+        finalData = { ...data, dataTypes: updatedDataTypes };
+      }
+    }
+
+    if (finalData.tables && finalData.tables.length > 0) {
+      const updatedTableDefs = { ...(finalData.tableDefs || {}) };
+      for (const t of finalData.tables) {
+        if (
+          t.physicalName &&
+          (!updatedTableDefs[t.physicalName] ||
+            updatedTableDefs[t.physicalName].length === 0)
+        ) {
+          updatedTableDefs[t.physicalName] =
+            apiData.tableDefs?.[t.physicalName] || EXAMINATION_MOCK_DATA;
+        }
+      }
+      finalData = { ...finalData, tableDefs: updatedTableDefs };
+    }
+
+    await saveMetadata(finalData);
 
     // 今回はバックエンド（DB）が存在しないモック環境のため、
     // 画面リロード時に編集内容が消えないようにセッションストレージにも保存しておく
-    sessionStorage.setItem("metadata_clinical", JSON.stringify(data));
+    const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
+    const serialized = JSON.stringify(finalData);
+    sessionStorage.setItem(storageKey, serialized);
+    initialStorageDataRef.current = serialized;
 
     if (isTopPage) {
-      router.push("/metadata?success=true");
+      router.push("/metadata");
     } else if (subtabParam) {
       router.push(
-        `/metadata/table-def?tab=${subtabParam}&from=${pathname.split("/").pop()}&success=true`,
+        `/metadata/table-def?tab=${subtabParam}&from=${typeParam || "臨床情報"}`,
       );
     } else {
       const viewParams = new URLSearchParams();
       viewParams.set("tab", tabParam);
-      viewParams.set("success", "true");
+      if (typeParam) {
+        viewParams.set("type", typeParam);
+      }
       router.push(`${pathname}?${viewParams.toString()}`);
     }
   };
 
-  /** エラー表示ハンドラ */
-  const handleErrorSubmit = () => {
-    setNotification({
-      type: "error",
-      title: "操作を完了できませんでした",
-      message: "入力内容に誤りがあります。エラーメッセージを確認してください。",
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  /** タブ切替ハンドラ */
   const handleTabChange = (index: number) => {
     const tabMap = ["overview", "er", "table-def"];
     const newTab = tabMap[index] || "overview";
@@ -126,41 +266,44 @@ export function useMetadataForm(apiData: MetadataResponse) {
     params.set("tab", newTab);
     params.delete("subtab");
 
-    // Replace URL to preserve tab state without pushing to history stack
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  /** キャンセルリンクの遷移先を算出 */
+  const cancelParams = new URLSearchParams();
+  cancelParams.set("tab", tabParam);
+  if (typeParam) {
+    cancelParams.set("type", typeParam);
+  }
   const cancelHref = isTopPage
     ? "/metadata"
     : subtabParam
-      ? `/metadata/table-def?tab=${subtabParam}&from=${searchParams.get("from") || "clinical"}`
-      : `${pathname}?tab=${tabParam}`;
+      ? `/metadata/table-def?tab=${subtabParam}&from=${searchParams.get("from") || "臨床情報"}`
+      : `${pathname}?${cancelParams.toString()}`;
 
-  const fromType = searchParams.get("from") || "clinical";
-  const returnHref = isTopPage
-    ? null
-    : subtabParam
-      ? `/metadata/${fromType}?mode=edit&tab=table-def`
-      : `/metadata?mode=edit`;
+  const handleCancel = () => {
+    const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
+    if (initialStorageDataRef.current !== null) {
+      sessionStorage.setItem(storageKey, initialStorageDataRef.current);
+    } else {
+      sessionStorage.removeItem(storageKey);
+    }
+    router.push(cancelHref);
+  };
 
-  const returnText = isTopPage
-    ? null
-    : subtabParam
-      ? "データ種別に関する情報に戻る"
-      : "データベース全体の情報に戻る";
+  const returnHref = null;
+  const returnText = null;
 
   return {
     methods,
+    isInitialized,
     notification,
     isTopPage,
     subtabParam,
     pathname,
     defaultIndex,
     handleSubmit,
-    handleErrorSubmit,
     handleTabChange,
-    cancelHref,
+    handleCancel,
     returnHref,
     returnText,
   };

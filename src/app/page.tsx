@@ -1,14 +1,22 @@
-import { cookies } from "next/headers";
+"use client";
+
+import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import LinkCard from "@/components/ui/LinkCard";
 
-export default async function PortalPage() {
-  const cookieStore = await cookies();
-  const userId = cookieStore.get("login-user-id")?.value;
+export default function PortalPage() {
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("login-user-id");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Header userId={userId} />
+      <Header />
 
       <main className="portal-main" id="mainContainer">
         <section className="portal-cards-section" id="portal-cards">
@@ -18,9 +26,22 @@ export default async function PortalPage() {
             </div>
 
             <div className="portal-cards-stack">
-              <LinkCard title="抽出状況検索" href="/extraction-status" />
-              <LinkCard title="メタデータ参照・登録" href="/metadata" />
-              <LinkCard title="データプロファイル参照" href="/data-profile" />
+              {userId === "test-userA" && (
+                <LinkCard title="月次抽出依頼検索" href="/extraction-status" />
+              )}
+              {userId === "test-userB" && (
+                <>
+                  <LinkCard title="メタデータ参照・登録" href="/metadata" />
+                  <LinkCard
+                    title="データプロファイル参照"
+                    href="/data-profile"
+                  />
+                </>
+              )}
+              {/* For safety, if other users log in, you could show all or none */}
+              {!userId && (
+                <div className="text-gray-500">メニューを読み込み中...</div>
+              )}
             </div>
           </div>
         </section>

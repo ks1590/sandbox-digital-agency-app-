@@ -1,4 +1,6 @@
+import { CHILD_OVERVIEW_TEMPLATE, TOP_OVERVIEW_TEMPLATE } from "./constants";
 import type { MetadataResponse, TableDefRow } from "./types";
+import type { MetadataFormData } from "./_components/schema";
 
 /**
  * APIのベースURL
@@ -7,25 +9,7 @@ import type { MetadataResponse, TableDefRow } from "./types";
  */
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-/**
- * モック用のテーブル定義ダミー行データを生成する
- */
-function generateMockTableDefRows(count: number): TableDefRow[] {
-  return Array.from({ length: count }).map((_, i) => ({
-    id: i + 1,
-    physicalName: "sample",
-    dataType: "VARCHAR",
-    length: 100,
-    required: "必須",
-    logicalName: "サンプル",
-    description: "これはデザインの見本",
-    foreignKey: "キー",
-    masterType: "",
-    sampleData: "",
-  }));
-}
-
-const EXAMINATION_MOCK_DATA: TableDefRow[] = [
+export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
   {
     id: 1,
     physicalName: "meta.profile",
@@ -34,7 +18,7 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     required: "必須",
     logicalName: "プロファイル情報",
     description: "プロファイルのバージョン等",
-    foreignKey: "",
+    foreignKey: "いいえ",
     masterType: "",
     sampleData:
       "http://jpfhir.jp/fhir/clins/StructureDefinition/JP_Bundle_eCS_CLINS",
@@ -47,7 +31,7 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     required: "必須",
     logicalName: "bundle識別子",
     description: "bundleの一意の識別子",
-    foreignKey: "",
+    foreignKey: "いいえ",
     masterType: "",
     sampleData: "1311234567^2024^0123-IDa-20240123-111111",
   },
@@ -59,7 +43,7 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     required: "必須",
     logicalName: "被保険者個人識別子",
     description: "保険者情報と被保険者情報（個人に関する情報）",
-    foreignKey: "",
+    foreignKey: "いいえ",
     masterType: "",
     sampleData: "111222333",
   },
@@ -71,8 +55,8 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     required: "必須",
     logicalName: "記録の状態",
     description: "この患者の記録が積極的に使用されているかどうか",
-    foreignKey: "キーサンプル",
-    masterType: "マスタサンプル",
+    foreignKey: "はい",
+    masterType: "医療機関等マスタ",
     sampleData: "true",
   },
   {
@@ -83,8 +67,8 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     required: "必須",
     logicalName: "性別",
     description: "性別を表記 (male | female | other | unknown)",
-    foreignKey: "キーサンプル",
-    masterType: "マスタサンプル",
+    foreignKey: "はい",
+    masterType: "医療機関等マスタ",
     sampleData: "female",
   },
   {
@@ -95,7 +79,7 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     required: "必須",
     logicalName: "生年月日",
     description: "個人の生年月日",
-    foreignKey: "",
+    foreignKey: "いいえ",
     masterType: "",
     sampleData: "2000/1/1",
   },
@@ -107,7 +91,7 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     required: "条件により必須",
     logicalName: "医療機関コード",
     description: "【電子カルテ情報共有サービス】医療機関コード（10桁）",
-    foreignKey: "",
+    foreignKey: "いいえ",
     masterType: "",
     sampleData: "1211234567",
   },
@@ -120,7 +104,7 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     logicalName: "臨床的状態",
     description:
       "病名最終日での状態（転帰）(active | recurrence | relapse | inactive | remission | resolved)",
-    foreignKey: "",
+    foreignKey: "いいえ",
     masterType: "",
     sampleData: "active",
   },
@@ -133,7 +117,7 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     logicalName: "検証状況",
     description:
       "疑い病名フラグがない病名には、確認済み（確定病名：confirmed）を設定し、疑い病名には、未確認（疑い病名：unconfirmed）を設定する。",
-    foreignKey: "",
+    foreignKey: "いいえ",
     masterType: "",
     sampleData: "confirmed",
   },
@@ -145,7 +129,7 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
     required: "必須",
     logicalName: "病名終了日",
     description: "病名終了日や転帰日がある場合にのみ設定する",
-    foreignKey: "",
+    foreignKey: "いいえ",
     masterType: "",
     sampleData: "2010-01-01",
   },
@@ -157,41 +141,40 @@ const EXAMINATION_MOCK_DATA: TableDefRow[] = [
  */
 const MOCK_DATA: MetadataResponse = {
   overview: {
-    overviewText:
-      "本データベースは、全国の医療機関から収集した患者の臨床情報（傷病履歴、アレルギー、検査結果等）を統合的に管理・提供するプラットフォームです。\n研究機関や医療政策の立案における基礎データとして活用されることを目的としています。",
-    dataTypes: [{ id: "clinical", name: "臨床情報" }],
+    overviewText: TOP_OVERVIEW_TEMPLATE,
+    dataTypes: [{ id: "臨床情報", name: "臨床情報" }],
     startYear: "2020",
     latestYear: "2026",
     collectionFrequency: "年次",
     updateFrequencies: [
-      { target: "傷病情報", frequency: "月次" },
-      { target: "アレルギー情報", frequency: "月次" },
-      { target: "検査結果", frequency: "日次" },
+      { target: "項目1", frequency: "月次" },
+      { target: "項目2", frequency: "月次" },
+      { target: "項目3", frequency: "日次" },
     ],
     tables: [
       {
         id: "disease",
-        physicalName: "trn_disease",
-        logicalName: "傷病テーブル",
+        physicalName: "condtion_table",
+        logicalName: "傷病",
         overview:
           "患者の傷病履歴を管理するテーブル。受診時の診断名やICD-10コード、発症日などを保持します。",
-        unit: "患者",
+        unit: "レセプト",
       },
       {
         id: "allergy",
-        physicalName: "trn_allergy",
-        logicalName: "アレルギーテーブル",
+        physicalName: "allergyIntolerance_table",
+        logicalName: "薬剤・その他アレルギー等",
         overview:
           "患者のアレルギー情報（薬剤アレルギー、食物アレルギー等）を管理するテーブル。アレルゲンや重症度などを保持します。",
-        unit: "患者",
+        unit: "レセプト",
       },
       {
         id: "examination",
-        physicalName: "trn_examination",
-        logicalName: "検査結果テーブル",
+        physicalName: "observation_table",
+        logicalName: "感染症・検査",
         overview:
           "血液検査、尿検査などの各種検査結果を管理するテーブル。検査項目、基準値、結果値などを保持します。",
-        unit: "検査項目",
+        unit: "レセプト",
       },
     ],
     notesText: "留意事項を入力...",
@@ -199,9 +182,9 @@ const MOCK_DATA: MetadataResponse = {
     status: "draft",
   },
   tableDefs: {
-    disease: EXAMINATION_MOCK_DATA,
-    allergy: EXAMINATION_MOCK_DATA,
-    examination: EXAMINATION_MOCK_DATA,
+    condtion_table: EXAMINATION_MOCK_DATA,
+    allergyIntolerance_table: EXAMINATION_MOCK_DATA,
+    observation_table: EXAMINATION_MOCK_DATA,
   },
 };
 
@@ -213,7 +196,92 @@ const MOCK_DATA: MetadataResponse = {
  *
  * @returns メタデータのレスポンス
  */
-export async function fetchMetadata(): Promise<MetadataResponse> {
+export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
+  const getMockData = (type?: string): MetadataResponse => {
+    const data: MetadataResponse = JSON.parse(JSON.stringify(MOCK_DATA));
+    const isClinical = !type || type === "clinical" || type === "臨床情報";
+
+    if (type) {
+      data.overview.overviewText = CHILD_OVERVIEW_TEMPLATE;
+      if (!isClinical) {
+        data.overview.tables = [];
+        data.tableDefs = {};
+      }
+    }
+
+    if (typeof window !== "undefined") {
+      try {
+        const topSaved = sessionStorage.getItem("metadata_top");
+        if (topSaved) {
+          const parsedTop = JSON.parse(topSaved);
+          if (parsedTop.dataTypes && parsedTop.dataTypes.length > 0) {
+            data.overview.dataTypes = parsedTop.dataTypes;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse metadata_top from sessionStorage", e);
+      }
+
+      const storageKey = type ? `metadata_${type}` : "metadata_top";
+      const saved = sessionStorage.getItem(storageKey);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          const defaultTables = isClinical ? data.overview.tables : [];
+          const defaultTableDefs = isClinical ? data.tableDefs : {};
+          const tablesToUse = parsed.tables ?? defaultTables;
+
+          const rawTableDefs = parsed.tableDefs ?? defaultTableDefs;
+          const tableDefsToUse: Record<string, TableDefRow[]> = {
+            ...rawTableDefs,
+          };
+
+          for (const table of tablesToUse) {
+            if (
+              table.physicalName &&
+              (!tableDefsToUse[table.physicalName] ||
+                tableDefsToUse[table.physicalName].length === 0)
+            ) {
+              tableDefsToUse[table.physicalName] =
+                MOCK_DATA.tableDefs[table.physicalName] ||
+                EXAMINATION_MOCK_DATA;
+            }
+          }
+
+          data.overview = {
+            ...data.overview,
+            overviewText: parsed.overviewText ?? data.overview.overviewText,
+            dataTypes:
+              parsed.dataTypes && parsed.dataTypes.length > 0
+                ? parsed.dataTypes
+                : data.overview.dataTypes,
+            startYear: parsed.startYear ?? data.overview.startYear,
+            latestYear: parsed.latestYear ?? data.overview.latestYear,
+            updateFrequencies:
+              parsed.updateFrequencies ?? data.overview.updateFrequencies,
+            tables: tablesToUse,
+            notesText: parsed.notesText ?? data.overview.notesText,
+            keyInfoText: parsed.keyInfoText ?? data.overview.keyInfoText,
+          };
+          data.tableDefs = tableDefsToUse;
+        } catch (e) {
+          console.error("Failed to parse sessionStorage data", e);
+        }
+      }
+    }
+
+    if (
+      type &&
+      !data.overview.dataTypes.some((dt) => dt.id === type || dt.name === type)
+    ) {
+      data.overview.dataTypes = [
+        ...data.overview.dataTypes,
+        { id: type, name: type },
+      ];
+    }
+
+    return data;
+  };
   // API URLが設定されている場合はAPIから取得を試みる
   if (API_BASE_URL) {
     try {
@@ -240,7 +308,7 @@ export async function fetchMetadata(): Promise<MetadataResponse> {
         error,
       );
       // APIエラー時はモックデータにフォールバック
-      return MOCK_DATA;
+      return getMockData(type);
     }
   }
 
@@ -248,5 +316,33 @@ export async function fetchMetadata(): Promise<MetadataResponse> {
   console.info(
     "NEXT_PUBLIC_API_BASE_URL が未設定のため、モックデータを使用します。",
   );
-  return MOCK_DATA;
+  return getMockData(type);
+}
+
+/**
+ * メタデータを保存する
+ * 外部API通信などを行います。
+ */
+export async function saveMetadata(data: MetadataFormData) {
+  // 実際のプロダクトでは、ここでGoなどの外部APIにPOST/PUTリクエストを送信します。
+  // 例:
+  // const response = await fetch(`${API_BASE_URL || ""}/metadata`, {
+  //   method: "PUT",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(data),
+  // });
+  // if (!response.ok) throw new Error("保存に失敗しました");
+
+  console.info("外部APIへメタデータ保存リクエストを送信しました", {
+    dataType: data.dataType,
+    tablesCount: data.tables?.length,
+  });
+
+  // モックとして少しだけ待機（API通信のシミュレーション）
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // 成功したことを呼び出し元に返す
+  return { success: true };
 }

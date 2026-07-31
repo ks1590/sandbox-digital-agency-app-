@@ -1,14 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useRef, useState } from "react";
+import dayjs from "dayjs";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   DatePicker,
   DatePickerMonth,
   DatePickerYear,
 } from "@/components/form/DatePicker";
 import { Button } from "@/components/ui/Button";
-import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
+import { DataTable } from "@/components/ui/DataTable/DataTable";
 import {
   ModalDialog,
   ModalDialogActions,
@@ -17,58 +18,55 @@ import {
   ModalDialogHeader,
   ModalDialogHeading,
 } from "@/components/ui/ModalDialog";
+import { getColumns } from "./columns";
 import type { ExtractionRequest } from "./types";
-
-function formatTimestamp(isoStr: string): string {
-  if (!isoStr) return "";
-  const d = new Date(isoStr);
-  if (Number.isNaN(d.getTime())) return isoStr;
-  const y = d.getFullYear();
-  const mo = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  const h = String(d.getHours()).padStart(2, "0");
-  const min = String(d.getMinutes()).padStart(2, "0");
-  return `${y}-${mo}-${day} ${h}:${min}`;
-}
-
-function truncateInfo(json: string): string {
-  try {
-    const parsed = JSON.parse(json);
-    const entries = Object.entries(parsed);
-    if (entries.length === 0) return json;
-    const [firstKey, firstVal] = entries[0];
-    return `..."${firstKey}": ${JSON.stringify(firstVal)}...`;
-  } catch {
-    return json.length > 40 ? `${json.slice(0, 40)}...` : json;
-  }
-}
-
-function formatJsonSafe(json: string): string {
-  try {
-    return JSON.stringify(JSON.parse(json), null, 2);
-  } catch {
-    return json;
-  }
-}
+import { formatJsonSafe } from "./utils";
 
 export default function ExtractionStatusContent({
-  data: filteredData,
-  initialYear,
-  initialMonth,
+  data: allData,
 }: {
   data: ExtractionRequest[];
-  initialYear?: string;
-  initialMonth?: string;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const initialYear = searchParams.get("year") || "";
+  const initialMonth = searchParams.get("month") || "";
+
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [modalState, setModalState] = useState<{ title: string; content: string } | null>(null);
+  const [modalState, setModalState] = useState<{
+    title: string;
+    content: string;
+  } | null>(null);
 
-  const hasSearched = initialYear !== undefined || initialMonth !== undefined;
-  const displayData = hasSearched ? filteredData : [];
+  const hasSearched = initialYear !== "" || initialMonth !== "";
 
-  const [yearInput, setYearInput] = useState(initialYear || "");
-  const [monthInput, setMonthInput] = useState(initialMonth || "");
+  const displayData = useMemo(() => {
+    if (!hasSearched) return [];
+    let result = allData;
+    if (initialYear) {
+      result = result.filter((req) => {
+        const d = dayjs(req.receptionTimestamp);
+        return d.isValid() && d.year() === Number(initialYear);
+      });
+    }
+    if (initialMonth) {
+      result = result.filter((req) => {
+        const d = dayjs(req.receptionTimestamp);
+        // dayjs の month() は 0-indexed (0=1月) なので +1 して比較する
+        return d.isValid() && d.month() + 1 === Number(initialMonth);
+      });
+    }
+    return result;
+  }, [allData, hasSearched, initialYear, initialMonth]);
+
+  const [yearInput, setYearInput] = useState(initialYear);
+  const [monthInput, setMonthInput] = useState(initialMonth);
+
+  useEffect(() => {
+    setYearInput(initialYear);
+    setMonthInput(initialMonth);
+  }, [initialYear, initialMonth]);
 
   const handleOpenModal = useCallback((title: string, content: string) => {
     setModalState({ title, content });
@@ -89,116 +87,7 @@ export default function ExtractionStatusContent({
     router.push(`?${params.toString()}`);
   };
 
-  const columns: ColumnDef<ExtractionRequest>[] = useMemo(
-    () => [
-      {
-        key: "rowNumber",
-        label: "項番",
-        render: (_row, idx) => idx + 1,
-      },
-      { key: "requestId", label: "抽出リクエストID" },
-      {
-        key: "receptionId",
-        label: (
-          <>
-            抽出リクエスト
-            <br />
-            受付ID
-          </>
-        ),
-      },
-      { key: "dataCategory", label: "データ分類" },
-      {
-        key: "extractionDataInfo",
-        label: "抽出データ情報",
-        render: (row) => (
-          <button
-            type="button"
-            className="text-[#0017C1] underline hover:no-underline text-left"
-            onClick={() => handleOpenModal("抽出データ情報", row.extractionDataInfo)}
-          >
-            {truncateInfo(row.extractionDataInfo)}
-          </button>
-        ),
-      },
-      {
-        key: "extractionStatus",
-        label: (
-          <>
-            抽出
-            <br />
-            ステータス
-          </>
-        ),
-      },
-      {
-        key: "receptionTimestamp",
-        label: (
-          <>
-            受付時
-            <br />
-            タイムスタンプ
-          </>
-        ),
-        render: (row) => formatTimestamp(row.receptionTimestamp),
-      },
-      {
-        key: "receptionStatus",
-        label: (
-          <>
-            受付
-            <br />
-            ステータス
-          </>
-        ),
-      },
-      {
-        key: "completionTimestamp",
-        label: (
-          <>
-            抽出処理完了時
-            <br />
-            タイムスタンプ
-          </>
-        ),
-        render: (row) => formatTimestamp(row.completionTimestamp),
-      },
-      {
-        key: "resultStatus",
-        label: (
-          <>
-            抽出結果
-            <br />
-            ステータス
-          </>
-        ),
-        render: (row) => {
-          if (row.resultStatus === "異常終了" || row.resultStatus === "エラー") {
-            if (row.errorMessage) {
-              return (
-                <button
-                  type="button"
-                  className="text-[#0017C1] underline hover:no-underline text-left"
-                  onClick={() => handleOpenModal("エラー内容", row.errorMessage!)}
-                >
-                  エラー
-                </button>
-              );
-            }
-            return <span className="text-red-600">エラー</span>;
-          }
-          return row.resultStatus;
-        },
-      },
-      {
-        key: "processingTime",
-        label: "処理時間",
-        sortable: true,
-        sortValue: (row) => row.processingTimeSeconds,
-      },
-    ],
-    [handleOpenModal],
-  );
+  const columns = useMemo(() => getColumns(handleOpenModal), [handleOpenModal]);
 
   return (
     <>
@@ -228,6 +117,11 @@ export default function ExtractionStatusContent({
             <Button onClick={handleSearch} size="md" variant="solid-fill">
               検索
             </Button>
+            {hasSearched && displayData.length === 0 && (
+              <span className="text-red-600 text-sm font-bold ml-2">
+                該当データがありません。
+              </span>
+            )}
           </div>
         </div>
 
@@ -250,7 +144,11 @@ export default function ExtractionStatusContent({
         aria-labelledby="info-modal-title"
         className="m-auto"
       >
-        <ModalDialogContent className="!w-[40vw] !max-w-none !h-[90vh]">
+        <ModalDialogContent
+          className={`!w-[40vw] !max-w-none ${
+            modalState?.title === "エラー内容" ? "!h-[45vh]" : "!h-[90vh]"
+          }`}
+        >
           <ModalDialogHeader className="border-none px-6 pt-5 pb-2 shrink-0">
             <ModalDialogHeading
               id="info-modal-title"

@@ -1,9 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import LinkCard from "@/components/ui/LinkCard";
 import type { MetadataResponse } from "../../types";
+
+const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
+  ssr: false,
+});
+
 import type { MetadataFormData } from "../schema";
 
 /**
@@ -16,7 +22,7 @@ export default function MetadataContent({ data }: { data: MetadataResponse }) {
   // 今回はモックAPI環境のため、サーバー側にはデータが永続化されない。
   // そのため、画面リロード時や遷移時に更新内容を反映できるよう sessionData を優先する。
   useEffect(() => {
-    const saved = sessionStorage.getItem("metadata_clinical");
+    const saved = sessionStorage.getItem("metadata_top");
     if (saved) {
       try {
         setSessionData(JSON.parse(saved));
@@ -34,33 +40,30 @@ export default function MetadataContent({ data }: { data: MetadataResponse }) {
     <>
       {/* 概要セクション */}
       <section className="mb-10">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">概要</h3>
-        <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
-          {overviewText}
-        </p>
+        {overviewText ? (
+          <MarkdownEditor
+            key={`overview-${overviewText}`}
+            markdown={overviewText}
+            readOnly={true}
+          />
+        ) : (
+          <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
+            データがありません
+          </p>
+        )}
       </section>
 
       {/* データ種別セクション */}
       <section className="mb-10">
         <h3 className="text-xl font-bold text-gray-900 mb-4">データ種別</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="flex flex-wrap gap-6 py-4">
           {dataTypes.map((dt) => (
-            <LinkCard key={dt.id} href={`/metadata/${dt.id}`} title={dt.name} />
+            <LinkCard
+              key={dt.id}
+              href={`/metadata/detail?type=${encodeURIComponent(dt.name)}`}
+              title={dt.name}
+            />
           ))}
-        </div>
-      </section>
-
-      {/* キー情報セクション */}
-      <section className="mb-10">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">キー情報</h3>
-        <div className="p-6 border border-gray-300 rounded-lg bg-white min-h-[120px]">
-          {keyInfoText ? (
-            <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
-              {keyInfoText}
-            </p>
-          ) : (
-            <p className="text-sm text-gray-500 text-center">キー情報</p>
-          )}
         </div>
       </section>
     </>

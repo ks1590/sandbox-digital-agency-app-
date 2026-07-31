@@ -1,79 +1,113 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-
-const MOCK_API_BASE_URL = "http://localhost:8080";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { fetchDataProfile, MOCK_DATA } from "./api";
 
 describe("fetchDataProfile", () => {
   afterEach(() => {
-    vi.unstubAllEnvs();
     vi.restoreAllMocks();
-    vi.resetModules();
+    vi.unstubAllEnvs();
   });
 
-  it("API_BASE_URLが設定されていない場合、モックデータが返されること", async () => {
-    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "");
-    const { fetchDataProfile } = await import("./api");
+  describe("API_BASE_URL が未設定の場合", () => {
+    it("モックデータを返す", async () => {
+      const result = await fetchDataProfile();
 
-    const data = await fetchDataProfile();
-    expect(data.periodFrom).toBe("2026年4月");
-    expect(data.categories.length).toBe(3);
-  });
-
-  it("API_BASE_URLが設定されており、APIが成功した場合、APIのデータが返されること", async () => {
-    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", MOCK_API_BASE_URL);
-    const { fetchDataProfile } = await import("./api");
-
-    const mockResponse = {
-      periodFrom: "2024年1月",
-      periodTo: "2024年12月",
-      totalRows: 1000,
-      totalFiles: 50,
-      categories: [],
-    };
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => mockResponse,
+      expect(result).toEqual(MOCK_DATA);
     });
 
-    const data = await fetchDataProfile();
-    expect(global.fetch).toHaveBeenCalledWith(
-      `${MOCK_API_BASE_URL}/data-profile`,
-      expect.any(Object),
-    );
-    expect(data).toEqual(mockResponse);
-  });
+    it("モックデータは3カテゴリを含む", async () => {
+      const result = await fetchDataProfile();
 
-  it("API_BASE_URLが設定されているが、APIエラーになった場合、モックデータが返されること", async () => {
-    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", MOCK_API_BASE_URL);
-    const { fetchDataProfile } = await import("./api");
-
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 500,
-      statusText: "Internal Server Error",
+      expect(result.categories).toHaveLength(3);
+      expect(result.categories.map((c) => c.categoryId)).toEqual([
+        "disease",
+        "allergy",
+        "examination",
+      ]);
     });
 
-    const consoleErrorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    it("各カテゴリの行データが生成されている", async () => {
+      const result = await fetchDataProfile();
 
-    const data = await fetchDataProfile();
-    expect(data.periodFrom).toBe("2026年4月");
-    expect(consoleErrorSpy).toHaveBeenCalled();
+      for (const category of result.categories) {
+        expect(category.rows.length).toBeGreaterThan(0);
+        expect(category.rows[0]).toHaveProperty("physicalName");
+        expect(category.rows[0]).toHaveProperty("logicalName");
+      }
+    });
   });
 
-  it("API_BASE_URLが設定されているが、fetchが例外をスローした場合、モックデータが返されること", async () => {
-    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", MOCK_API_BASE_URL);
-    const { fetchDataProfile } = await import("./api");
+  describe("API_BASE_URL が設定されている場合", () => {
+    beforeEach(() => {
+      vi.resetModules();
+    });
 
-    global.fetch = vi.fn().mockRejectedValue(new Error("Network Error"));
+    it("API からデータを取得して返す", async () => {
+      vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.example.com");
+      const mockApiResponse = {
+        periodFrom: "2026年1月",
+        periodTo: "2026年3月",
+        totalRows: 200,
+        totalFiles: 20,
+        categories: [],
+      };
 
-    const consoleErrorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+      const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockApiResponse,
+      } as Response);
 
-    const data = await fetchDataProfile();
-    expect(data.periodFrom).toBe("2026年4月");
-    expect(consoleErrorSpy).toHaveBeenCalled();
+      // 環境変数設定後にモジュールを再読み込み
+      const { fetchDataProfile: fetchDataProfileWithUrl } = await import(
+        "./api"
+      );
+      const result = await fetchDataProfileWithUrl();
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        "https://api.example.com/data-profile",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      expect(result).toEqual(mockApiResponse);
+    });
+
+    it("API レスポンスが ok でない場合、エラーログを出力してモックデータにフォールバックする", async () => {
+      vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.example.com");
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+      vi.spyOn(global, "fetch").mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: "Internal Server Error",
+      } as Response);
+
+      const { fetchDataProfile: fetchDataProfileWithUrl } = await import(
+        "./api"
+      );
+      const result = await fetchDataProfileWithUrl();
+
+      expect(result).toEqual(MOCK_DATA);
+      expect(consoleSpy).toHaveBeenCalled();
+    });
+
+    it("fetch が例外を投げた場合、エラーログを出力してモックデータにフォールバックする", async () => {
+      vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.example.com");
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+      vi.spyOn(global, "fetch").mockRejectedValueOnce(
+        new Error("Network Failure"),
+      );
+
+      const { fetchDataProfile: fetchDataProfileWithUrl } = await import(
+        "./api"
+      );
+      const result = await fetchDataProfileWithUrl();
+
+      expect(result).toEqual(MOCK_DATA);
+      expect(consoleSpy).toHaveBeenCalled();
+    });
   });
 });

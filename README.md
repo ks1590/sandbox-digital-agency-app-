@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# sandbox-digital-agency-app
 
-## Getting Started
+デジタル庁デザインシステムに準拠したUI実装および機能検証を行うための Next.js 開発用サンドボックスアプリケーションです。
 
-First, run the development server:
+## 1. プロジェクト概要
+
+当プロジェクトは、最新の **Next.js (v16.2)** と **React 19** をベースにしたWebアプリケーションです。  
+デジタル庁のデザインシステムパッケージ (`@digital-go-jp/design-tokens` および `@digital-go-jp/tailwind-theme-plugin`) を導入し、行政・医療関連データの管理画面やポータルUIの構築パターンを検証・開発することを目的としています。
+
+---
+
+## 2. 機能要件 (主要機能)
+
+ログインしているユーザー（ロール）に応じて、ポータル画面からアクセス可能な機能が制御されます。
+
+* **ログイン機能 (`/login`)**
+  * ユーザーIDによる疑似ログインおよびローカルストレージ (`login-user-id`) での状態保持。
+  * ユーザーごとのメニュー表示制御（例: `test-userA`, `test-userB` 等）。
+* **月次抽出依頼検索 (`/extraction-status`)** (対象ユーザー: `test-userA`)
+  * データ抽出依頼のステータス一覧参照、検索、フィルタリングおよび詳細表示。
+* **メタデータ参照・登録 (`/metadata`)** (対象ユーザー: `test-userB`)
+  * 医療情報・臨床情報等のメタデータ一覧の閲覧・詳細表示・新規登録・編集。
+  * テーブル定義参照 (`/metadata/table-def`) や概要テンプレート（`CHILD_OVERVIEW_TEMPLATE` 等）の適用。
+  * Zod + React Hook Form による入力バリデーション。
+* **データプロファイル参照 (`/data-profile`)** (対象ユーザー: `test-userB`)
+  * 各種データプロファイルの参照および分析情報の表示。
+
+---
+
+## 3. 主な技術スタック
+
+* **フレームワーク**: Next.js (App Router v16.2), React 19, TypeScript
+* **UI / スタイリング**: Tailwind CSS (v4), `@digital-go-jp/design-tokens`, `@digital-go-jp/tailwind-theme-plugin`
+* **フォーム / バリデーション**: React Hook Form, Zod
+* **リッチテキスト / マークダウン**: `react-markdown`, `@mdxeditor/editor`, `remark-gfm`, `rehype-sanitize`
+* **コード品質・ツールチェーン**: Biome (Linter / Formatter)
+* **テスト**: Vitest, React Testing Library, Testing Library Jest DOM
+
+---
+
+## 4. セットアップ手順
+
+### 前提条件 (Prerequisites)
+* **Node.js**: `v20.x` 以上推奨
+* **パッケージマネージャー**: `pnpm` 推奨 (`npm` や `yarn` も利用可能)
+
+### パッケージのインストール
+リポジトリルートで以下のコマンドを実行し、依存パッケージをインストールします。
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 5. 起動・実行方法
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 開発用サーバーの起動
+開発モードでローカルサーバーを起動します。
 
-## Learn More
+```bash
+pnpm dev
+```
+起動後、ブラウザで [http://localhost:3000](http://localhost:3000) にアクセスしてください。
 
-To learn more about Next.js, take a look at the following resources:
+### プロダクションビルドと起動
+プロダクション環境用のビルドを作成し、実行します。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# ビルドの実行
+pnpm build
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# プロダクションサーバーの起動
+pnpm start
+```
 
-## Deploy on Vercel
+### コードチェック・フォーマット (Biome)
+```bash
+# リンターによるコードチェック
+pnpm lint
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 自動フォーマットの実行
+pnpm format
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### テストの実行 (Vitest)
+```bash
+# テストの実行 (ウォッチモード)
+pnpm test
+
+# テストの一括実行 (CI向け)
+pnpm test:run
+
+# カバレッジの計測
+pnpm test:coverage
+```
+
+---
+
+## 6. ディレクトリ構成
+
+```text
+.
+├── .agents/              # AIエージェント設定・カスタムSkills
+├── public/               # 静的アセットファイル
+├── src/
+│   ├── app/              # Next.js App Router ページ・ルーティング
+│   │   ├── data-profile/ # データプロファイル参照画面
+│   │   ├── extraction-status/ # 月次抽出依頼検索画面
+│   │   ├── login/        # ログイン画面
+│   │   ├── metadata/     # メタデータ参照・登録・編集画面
+│   │   ├── globals.css   # グローバルスタイル (Tailwind CSS設定)
+│   │   ├── layout.tsx    # ルートレイアウト
+│   │   └── page.tsx      # ポータル画面 (メインメニュー)
+│   └── components/       # 共通コンポーネント (UI, Layout等)
+├── biome.json            # Biome 設定ファイル
+├── next.config.ts        # Next.js 設定ファイル
+├── package.json          # 依存パッケージ・スクリプト定義
+├── tsconfig.json         # TypeScript 設定ファイル
+└── vitest.config.ts      # Vitest 設定ファイル
+```
+
+---
+
+## 7. AIエージェント用 Skills について
+
+このプロジェクトでは、AIエージェントの能力を拡張する「Skills」が `.agents/skills/` ディレクトリ配下に設定されています。
+
+### 利用可能な Skills
+* `typescript-expert`: TypeScriptの型プログラミングやパフォーマンス最適化に関する専門知識
+* `vercel-react-best-practices`: Vercel公式による React / Next.js のパフォーマンス最適化ガイドライン

@@ -1,0 +1,210 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import Header from "@/components/layout/Header";
+import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
+import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
+import { Button } from "@/components/ui/Button";
+import LinkCard from "@/components/ui/LinkCard";
+import MetadataEdit from "../_components/edit/MetadataEdit";
+import { useDataTypes } from "../_components/useDataTypes";
+import MetadataViewTabs from "../_components/view/MetadataViewTabs";
+import OverviewViewClient from "../_components/view/OverviewViewClient";
+import PublishButtonClient from "../_components/view/PublishButtonClient";
+import type { MetadataResponse } from "../types";
+
+export default function MetadataDetailPageClient({
+  data,
+  type,
+}: {
+  data: MetadataResponse;
+  type: string;
+}) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const tabParam = searchParams.get("tab") || "overview";
+  const isEditMode = searchParams.get("mode") === "edit";
+  const publishSuccess = searchParams.get("publish_success") === "true";
+  const publishError = searchParams.get("publish_error") === "true";
+  const { dataTypes, getDataTypeName } = useDataTypes(data.overview.dataTypes);
+  const options = dataTypes.some(
+    (dt) =>
+      dt.name === type || dt.id === type || dt.name === getDataTypeName(type),
+  )
+    ? dataTypes
+    : [
+        ...dataTypes,
+        {
+          id: type,
+          name: getDataTypeName(type) !== type ? getDataTypeName(type) : type,
+        },
+      ];
+  const currentSelectedValue =
+    options.find((dt) => dt.id === type || dt.name === type)?.name ||
+    getDataTypeName(type);
+
+  useEffect(() => {
+    if (publishSuccess) {
+      const timer = setTimeout(() => {
+        const newParams = new URLSearchParams(searchParams.toString());
+        newParams.delete("publish_success");
+        router.replace(`${pathname}?${newParams.toString()}`, {
+          scroll: false,
+        });
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [publishSuccess, searchParams, pathname, router]);
+
+  let defaultIndex = 0;
+  if (tabParam === "er") defaultIndex = 1;
+  else if (tabParam === "table-def") defaultIndex = 2;
+
+  if (isEditMode) {
+    return <MetadataEdit data={data} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col">
+      <Header />
+
+      <main className="page-bg flex-1">
+        {publishSuccess && (
+          <div className="page-container py-4">
+            <NotificationBanner
+              bannerStyle="standard"
+              type="success"
+              title="完了通知"
+            >
+              <NotificationBannerBody>
+                メタデータの公開処理が正常に完了しました。
+              </NotificationBannerBody>
+            </NotificationBanner>
+          </div>
+        )}
+
+        {publishError && (
+          <div className="page-container py-4">
+            <NotificationBanner
+              bannerStyle="standard"
+              type="error"
+              title="公開に失敗しました"
+            >
+              <NotificationBannerBody>
+                エラーが発生しました。再度お試しください。
+              </NotificationBannerBody>
+            </NotificationBanner>
+          </div>
+        )}
+
+        <div className="page-container">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-bold text-gray-900">メタデータ</h2>
+            <div className="flex items-center gap-4">
+              {data.overview.status === "draft" && <PublishButtonClient />}
+              <Button asChild variant="solid-fill" size="md">
+                <Link
+                  href={`/metadata/detail?type=${type}&mode=edit&tab=${tabParam}`}
+                >
+                  編集
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <label
+              htmlFor="viewDataType"
+              className="block text-xl font-bold text-gray-900 mb-4"
+            >
+              データ種別
+            </label>
+            <div className="relative w-1/2 md:w-1/4 lg:w-1/6">
+              <select
+                id="viewDataType"
+                value={currentSelectedValue}
+                onChange={(e) => {
+                  const newType = e.target.value;
+                  if (newType && newType !== currentSelectedValue) {
+                    const newParams = new URLSearchParams(
+                      searchParams.toString(),
+                    );
+                    newParams.set("type", newType);
+                    router.push(`${pathname}?${newParams.toString()}`);
+                  }
+                }}
+                className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
+              >
+                {options.map((dt) => (
+                  <option key={dt.id} value={dt.name}>
+                    {dt.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <svg
+                  className="h-4 w-4 fill-current"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-12">
+            <MetadataViewTabs
+              headingId="metadata-tabs-heading"
+              defaultIndex={defaultIndex}
+              items={[
+                {
+                  label: "概要",
+                  id: "tab-overview",
+                  content: <OverviewViewClient data={data} />,
+                },
+                {
+                  label: "ER図",
+                  id: "tab-er",
+                  content: (
+                    <div className="p-8 text-center text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
+                      ER図が表示されます
+                    </div>
+                  ),
+                },
+                {
+                  label: "テーブル定義",
+                  id: "tab-table-def",
+                  content: (
+                    <div className="flex flex-wrap gap-6 p-8">
+                      {data.overview.tables.map((table) => {
+                        if (!table.physicalName) return null;
+                        return (
+                          <LinkCard
+                            key={table.id || table.physicalName}
+                            href={`/metadata/table-def?tab=${table.physicalName}&from=${type}`}
+                            title={table.logicalName || table.physicalName}
+                          />
+                        );
+                      })}
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+
+          <div className="mt-8">
+            <Button asChild variant="outline" size="lg">
+              <Link href="/metadata">データベース全体に関する情報に戻る</Link>
+            </Button>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
