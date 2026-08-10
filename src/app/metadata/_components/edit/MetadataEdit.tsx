@@ -1,18 +1,31 @@
 "use client";
 
-import { FormProvider } from "react-hook-form";
+import { FormProvider, useFormContext } from "react-hook-form";
 import Header from "@/components/layout/Header";
 import { NotificationBanner } from "@/components/layout/NotificationBanner/NotificationBanner";
 import { NotificationBannerBody } from "@/components/layout/NotificationBanner/parts/Body";
 import Tab from "@/components/ui/Tab";
 import type { MetadataResponse } from "../../types";
+import type { MetadataFormData } from "../schema";
 import TableDefContent from "../table-def/TableDefContent";
+import DataTypeListEditor from "./DataTypeListEditor";
 import DataTypeSelect from "./DataTypeSelect";
 import EditFormFooter from "./EditFormFooter";
 import ErDiagramTabContent from "./ErDiagramTabContent";
 import OverviewTabContent from "./OverviewTabContent";
 import SubtabSection from "./SubtabSection";
 import { useMetadataForm } from "./useMetadataForm";
+
+function DataTypeSection() {
+  const { watch, setValue } = useFormContext<MetadataFormData>();
+  const dataTypes = watch("dataTypes") || [];
+  return (
+    <DataTypeListEditor
+      dataTypes={dataTypes}
+      onChange={(val) => setValue("dataTypes", val, { shouldDirty: true })}
+    />
+  );
+}
 
 export default function MetadataEdit({
   data: apiData,
@@ -33,6 +46,8 @@ export default function MetadataEdit({
     returnHref,
     returnText,
   } = useMetadataForm(apiData);
+
+  const { isDirty } = methods.formState;
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -71,7 +86,29 @@ export default function MetadataEdit({
 
                 {isTopPage ? (
                   <div className="mb-12">
-                    <OverviewTabContent isTopPage />
+                    <Tab
+                      headingId="register-tabs-top-heading"
+                      defaultIndex={defaultIndex}
+                      onChange={handleTabChange}
+                      disabled={isDirty}
+                      disabledReason={"編集中は切り替えできません。\n変更を仮登録またはキャンセルしてください。"}
+                      items={[
+                        {
+                          label: "DB概要",
+                          id: "tab-top-overview",
+                          content: <OverviewTabContent isTopPage />,
+                        },
+                        {
+                          label: "データ種別",
+                          id: "tab-top-datatype",
+                          content: (
+                            <div className="pt-6">
+                              <DataTypeSection />
+                            </div>
+                          ),
+                        },
+                      ]}
+                    />
                   </div>
                 ) : (
                   <div className="mb-12" hidden={!!subtabParam}>
@@ -79,6 +116,8 @@ export default function MetadataEdit({
                       headingId="register-tabs-heading"
                       defaultIndex={defaultIndex}
                       onChange={handleTabChange}
+                      disabled={isDirty}
+                      disabledReason={"編集中は切り替えできません。\n変更を仮登録またはキャンセルしてください。"}
                       items={[
                         {
                           label: "概要",

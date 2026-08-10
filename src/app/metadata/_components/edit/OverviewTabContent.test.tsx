@@ -40,34 +40,14 @@ describe("OverviewTabContent", () => {
     vi.clearAllMocks();
   });
 
-  it("トップページの場合はDataTypeListEditorを表示する", () => {
-    render(
-      <Wrapper>
-        <OverviewTabContent isTopPage={true} />
-      </Wrapper>,
-    );
-    expect(screen.getByTestId("datatype-list-editor")).toBeInTheDocument();
-  });
-
-  it("子ページの場合はDataTypeListEditorを表示しない", () => {
-    render(
-      <Wrapper>
-        <OverviewTabContent isTopPage={false} />
-      </Wrapper>,
-    );
-    expect(
-      screen.queryByTestId("datatype-list-editor"),
-    ).not.toBeInTheDocument();
-  });
-
-  it("MarkdownEditorがフォームのoverviewTextを表示する", () => {
+  it("MarkdownEditorがフォームのoverviewTextを表示する", async () => {
     render(
       <Wrapper>
         <OverviewTabContent isTopPage={true} />
       </Wrapper>,
     );
 
-    expect(screen.getByTestId("markdown-editor")).toHaveTextContent(
+    expect(await screen.findByTestId("markdown-editor")).toHaveTextContent(
       "Initial Overview",
     );
   });

@@ -54,7 +54,12 @@ const mockApiData: MetadataResponse = {
 
 describe("MetadataEdit", () => {
   const baseUseMetadataFormReturn = {
-    methods: { handleSubmit: vi.fn((fn) => fn) },
+    methods: {
+      handleSubmit: vi.fn((fn) => fn),
+      watch: vi.fn(() => []),
+      setValue: vi.fn(),
+      formState: { isDirty: false },
+    },
     isInitialized: true,
     notification: null,
     isTopPage: false,

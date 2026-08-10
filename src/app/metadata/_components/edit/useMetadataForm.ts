@@ -146,8 +146,12 @@ export function useMetadataForm(apiData: MetadataResponse) {
   }, []);
 
   let defaultIndex = 0;
-  if (tabParam === "er") defaultIndex = 1;
-  else if (tabParam === "table-def") defaultIndex = 2;
+  if (isTopPage) {
+    if (tabParam === "data-type") defaultIndex = 1;
+  } else {
+    if (tabParam === "er") defaultIndex = 1;
+    else if (tabParam === "table-def") defaultIndex = 2;
+  }
 
   const [notification] = useState<NotificationState>(null);
 
@@ -259,7 +263,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
   };
 
   const handleTabChange = (index: number) => {
-    const tabMap = ["overview", "er", "table-def"];
+    const tabMap = isTopPage ? ["overview", "data-type"] : ["overview", "er", "table-def"];
     const newTab = tabMap[index] || "overview";
 
     const params = new URLSearchParams(searchParams.toString());

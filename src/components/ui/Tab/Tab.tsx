@@ -29,6 +29,8 @@ export interface TabProps {
   defaultIndex?: number;
   position?: "top" | "bottom" | "left" | "right";
   onChange?: (index: number, label: string) => void;
+  disabled?: boolean;
+  disabledReason?: string;
 }
 
 export default function Tab({
@@ -37,6 +39,8 @@ export default function Tab({
   defaultIndex = 0,
   position,
   onChange,
+  disabled,
+  disabledReason,
 }: TabProps) {
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
   const autoId = useId();
@@ -61,21 +65,40 @@ export default function Tab({
       {...(dataPosition ? { "data-position": dataPosition } : {})}
     >
       <ul className="dads-tab__list" aria-labelledby={headingId}>
-        {items.map((item, index) => (
-          <li key={getPanelId(item, index)}>
-            <a
-              href={`#${getPanelId(item, index)}`}
-              className="dads-tab__tab"
-              aria-current={index === activeIndex ? "true" : undefined}
-              onClick={(e) => {
-                e.preventDefault();
-                handleTabClick(index);
-              }}
-            >
-              <span>{item.label}</span>
-            </a>
-          </li>
-        ))}
+        {items.map((item, index) => {
+          const isDisabled = disabled && index !== activeIndex;
+          const isFirst = index === 0;
+          // Use left-0 for the first tab to prevent left-side cutoff.
+          // For all other tabs, center the tooltip.
+          const tooltipPosClass = isFirst ? "left-0" : "left-1/2 -translate-x-1/2";
+          const arrowPosClass = isFirst ? "left-8" : "left-1/2 -translate-x-1/2";
+
+          return (
+            <li key={getPanelId(item, index)}>
+              <a
+                href={`#${getPanelId(item, index)}`}
+                className={`dads-tab__tab group relative ${isDisabled ? "cursor-not-allowed bg-gray-50" : ""}`}
+                aria-current={index === activeIndex ? "true" : undefined}
+                aria-disabled={disabled}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (isDisabled) return;
+                  handleTabClick(index);
+                }}
+              >
+                <span className={isDisabled ? "opacity-50" : ""}>{item.label}</span>
+                {isDisabled && disabledReason && (
+                  <div className={`absolute bottom-full mb-2 hidden group-hover:block z-50 w-[260px] ${tooltipPosClass}`}>
+                    <div className="bg-gray-800 text-white text-[15px] font-normal py-2 px-3 rounded shadow-lg whitespace-pre-wrap leading-relaxed text-left">
+                      {disabledReason}
+                    </div>
+                    <div className={`absolute top-full border-4 border-transparent border-t-gray-800 ${arrowPosClass}`}></div>
+                  </div>
+                )}
+              </a>
+            </li>
+          );
+        })}
       </ul>
 
       <div className="dads-tab__panels">

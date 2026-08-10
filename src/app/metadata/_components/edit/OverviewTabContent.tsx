@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { Controller, useFormContext } from "react-hook-form";
 import type { MetadataFormData } from "../schema";
-import DataTypeListEditor from "./DataTypeListEditor";
 
 const MarkdownEditor = dynamic(() => import("@/components/ui/MarkdownEditor"), {
   ssr: false,
@@ -97,14 +96,6 @@ export default function OverviewTabContent({
           )}
         />
       </section>
-
-      {/* データ種別エディタ（トップページのみ） */}
-      {isTopPage && (
-        <DataTypeListEditor
-          dataTypes={dataTypes}
-          onChange={(val) => setValue("dataTypes", val, { shouldDirty: true })}
-        />
-      )}
     </div>
   );
 }
