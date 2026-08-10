@@ -63,4 +63,37 @@ describe("ExtractionStatusContent", () => {
     fireEvent.change(yearInput, { target: { value: "abcd" } });
     expect(yearInput.value).toBe("");
   });
+
+  it("年の入力は4桁に制限されること", () => {
+    render(<ExtractionStatusContent data={mockData} />);
+    const yearInput = screen.getByPlaceholderText("YYYY") as HTMLInputElement;
+
+    // 5桁以上入力しようとしても4桁に切り捨てられる
+    fireEvent.change(yearInput, { target: { value: "12345" } });
+    expect(yearInput.value).toBe("1234");
+  });
+
+  it("月の入力は1〜12の範囲になるように制限されること", () => {
+    render(<ExtractionStatusContent data={mockData} />);
+    const monthInput = screen.getByPlaceholderText("M") as HTMLInputElement;
+
+    // 13以上を入力すると最初の桁(1)に丸められる
+    fireEvent.change(monthInput, { target: { value: "13" } });
+    expect(monthInput.value).toBe("1");
+
+    // 0や00を入力するとクリアされる
+    fireEvent.change(monthInput, { target: { value: "0" } });
+    expect(monthInput.value).toBe("");
+
+    fireEvent.change(monthInput, { target: { value: "00" } });
+    expect(monthInput.value).toBe("");
+
+    // 12はそのまま入力できる
+    fireEvent.change(monthInput, { target: { value: "12" } });
+    expect(monthInput.value).toBe("12");
+
+    // 3桁以上の入力は2桁目までで評価される（"123" -> "12"）
+    fireEvent.change(monthInput, { target: { value: "123" } });
+    expect(monthInput.value).toBe("12");
+  });
 });

@@ -103,9 +103,10 @@ export default function ExtractionStatusContent({
                     ref={yearRef}
                     value={yearInput}
                     onChange={(e) => {
-                      const val = e.target.value
+                      let val = e.target.value
                         .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
                         .replace(/\D/g, "");
+                      val = val.slice(0, 4);
                       if (e.target.value !== val) {
                         e.target.value = val;
                       }
@@ -117,9 +118,15 @@ export default function ExtractionStatusContent({
                     ref={monthRef}
                     value={monthInput}
                     onChange={(e) => {
-                      const val = e.target.value
+                      let val = e.target.value
                         .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
                         .replace(/\D/g, "");
+                      val = val.slice(0, 2);
+                      if (val === "0" || val === "00") {
+                        val = "";
+                      } else if (parseInt(val, 10) > 12) {
+                        val = val.slice(0, 1);
+                      }
                       if (e.target.value !== val) {
                         e.target.value = val;
                       }
