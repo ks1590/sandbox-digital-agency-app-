@@ -1,10 +1,10 @@
-import dayjs from "dayjs";
+import { format, isValid, parseISO } from "date-fns";
 
 export function formatTimestamp(isoStr: string): string {
   if (!isoStr) return "";
-  const d = dayjs(isoStr);
-  if (!d.isValid()) return isoStr;
-  return d.format("YYYY-MM-DD HH:mm");
+  const d = parseISO(isoStr);
+  if (!isValid(d)) return isoStr;
+  return format(d, "yyyy-MM-dd HH:mm");
 }
 
 export function truncateInfo(json: string): string {

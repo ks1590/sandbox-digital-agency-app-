@@ -1,6 +1,6 @@
 "use client";
 
-import dayjs from "dayjs";
+import { getMonth, getYear, isValid, parseISO } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -46,15 +46,15 @@ export default function ExtractionStatusContent({
     let result = allData;
     if (initialYear) {
       result = result.filter((req) => {
-        const d = dayjs(req.receptionTimestamp);
-        return d.isValid() && d.year() === Number(initialYear);
+        const d = parseISO(req.receptionTimestamp);
+        return isValid(d) && getYear(d) === Number(initialYear);
       });
     }
     if (initialMonth) {
       result = result.filter((req) => {
-        const d = dayjs(req.receptionTimestamp);
-        // dayjs の month() は 0-indexed (0=1月) なので +1 して比較する
-        return d.isValid() && d.month() + 1 === Number(initialMonth);
+        const d = parseISO(req.receptionTimestamp);
+        // date-fns の getMonth() も 0-indexed なので +1 して比較する
+        return isValid(d) && getMonth(d) + 1 === Number(initialMonth);
       });
     }
     return result;
