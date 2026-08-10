@@ -30,8 +30,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         // 認証トークンがない場合、ログイン画面へリダイレクト
         router.replace("/login");
       } else {
-        // ポータルトップ(/)は全員アクセス可能
-        if (pathname !== "/") {
+        // ポータルトップ(/)とテスト用エラー画面(/test-error)は全員アクセス可能
+        if (pathname !== "/" && pathname !== "/test-error") {
           // 権限チェック
           const userAllowedPaths =
             userId && allowedPaths[userId] ? allowedPaths[userId] : [];
