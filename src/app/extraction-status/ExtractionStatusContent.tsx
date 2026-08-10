@@ -102,19 +102,41 @@ export default function ExtractionStatusContent({
                   <DatePickerYear
                     ref={yearRef}
                     value={yearInput}
-                    onChange={(e) => setYearInput(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value
+                        .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
+                        .replace(/\D/g, "");
+                      if (e.target.value !== val) {
+                        e.target.value = val;
+                      }
+                      setYearInput(val);
+                    }}
                     placeholder="YYYY"
                   />
                   <DatePickerMonth
                     ref={monthRef}
                     value={monthInput}
-                    onChange={(e) => setMonthInput(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value
+                        .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
+                        .replace(/\D/g, "");
+                      if (e.target.value !== val) {
+                        e.target.value = val;
+                      }
+                      setMonthInput(val);
+                    }}
                     placeholder="M"
                   />
                 </>
               )}
             </DatePicker>
-            <Button onClick={handleSearch} size="md" variant="solid-fill">
+            <Button
+              onClick={handleSearch}
+              size="md"
+              variant="solid-fill"
+              disabled={!yearInput || !monthInput}
+              aria-disabled={!yearInput || !monthInput}
+            >
               検索
             </Button>
             {hasSearched && displayData.length === 0 && (
