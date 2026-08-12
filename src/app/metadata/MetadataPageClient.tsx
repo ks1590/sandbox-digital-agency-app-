@@ -24,6 +24,7 @@ export default function MetadataPageClient({
   const isEditMode = searchParams.get("mode") === "edit";
   const publishSuccess = searchParams.get("publish_success") === "true";
   const publishError = searchParams.get("publish_error") === "true";
+  const currentTab = searchParams.get("tab") || "overview";
 
   useEffect(() => {
     if (publishSuccess) {
@@ -81,7 +82,7 @@ export default function MetadataPageClient({
             <div className="flex items-center gap-4">
               {data.overview.status === "draft" && <PublishButtonClient />}
               <Button asChild variant="solid-fill" size="md">
-                <Link href="/metadata?mode=edit">編集</Link>
+                <Link href={`/metadata?mode=edit&tab=${currentTab}`}>編集</Link>
               </Button>
             </div>
           </div>

@@ -17,6 +17,17 @@ vi.mock("@/components/ui/MarkdownEditor", () => ({
   ),
 }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: vi.fn(() => ({
+    replace: vi.fn(),
+  })),
+  useSearchParams: vi.fn(() => ({
+    get: vi.fn(),
+    toString: vi.fn(() => ""),
+  })),
+  usePathname: vi.fn(() => "/metadata"),
+}));
+
 function createResponse(
   overrides: Partial<MetadataResponse["overview"]> = {},
 ): MetadataResponse {
@@ -66,12 +77,12 @@ describe("MetadataContent", () => {
   it("データ種別ごとに詳細ページへのリンクカードを表示する", () => {
     render(<MetadataContent data={createResponse()} />);
 
-    const clinicalLink = screen.getByRole("link", { name: "臨床情報" });
+    const clinicalLink = screen.getByRole("link", { name: "臨床情報", hidden: true });
     expect(clinicalLink).toHaveAttribute(
       "href",
       `/metadata/detail?type=${encodeURIComponent("臨床情報")}`,
     );
-    const documentLink = screen.getByRole("link", { name: "文書情報" });
+    const documentLink = screen.getByRole("link", { name: "文書情報", hidden: true });
     expect(documentLink).toHaveAttribute(
       "href",
       `/metadata/detail?type=${encodeURIComponent("文書情報")}`,
@@ -92,7 +103,7 @@ describe("MetadataContent", () => {
     const editor = await screen.findByTestId("markdown-editor");
     expect(editor).toHaveTextContent("編集済みの概要");
     expect(
-      screen.getByRole("link", { name: "編集済み種別" }),
+      screen.getByRole("link", { name: "編集済み種別", hidden: true }),
     ).toBeInTheDocument();
   });
 });

@@ -91,10 +91,12 @@ export default function MetadataEdit({
                       defaultIndex={defaultIndex}
                       onChange={handleTabChange}
                       disabled={isDirty}
-                      disabledReason={"編集中は切り替えできません。\n変更を仮登録またはキャンセルしてください。"}
+                      disabledReason={
+                        "編集中は切り替えできません。\n変更を仮登録またはキャンセルしてください。"
+                      }
                       items={[
                         {
-                          label: "DB概要",
+                          label: "概要",
                           id: "tab-top-overview",
                           content: <OverviewTabContent isTopPage />,
                         },
@@ -117,7 +119,9 @@ export default function MetadataEdit({
                       defaultIndex={defaultIndex}
                       onChange={handleTabChange}
                       disabled={isDirty}
-                      disabledReason={"編集中は切り替えできません。\n変更を仮登録またはキャンセルしてください。"}
+                      disabledReason={
+                        "編集中は切り替えできません。\n変更を仮登録またはキャンセルしてください。"
+                      }
                       items={[
                         {
                           label: "概要",
