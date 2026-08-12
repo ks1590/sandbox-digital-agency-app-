@@ -68,6 +68,11 @@ export default function TableDefinitionLinks() {
 
   const selectedPhysicalNames = getAllSelectedPhysicalNames();
 
+  const availableOptions = PHYSICAL_NAME_OPTIONS.filter(
+    (opt) => !selectedPhysicalNames.includes(opt)
+  );
+  const noAvailableOptions = availableOptions.length === 0;
+
   const handleAddTable = () => {
     append({
       id: String(Date.now()),
@@ -80,15 +85,25 @@ export default function TableDefinitionLinks() {
 
   return (
     <div className="w-full max-w-3xl">
-      <Button
-        type="button"
-        variant="outline"
-        size="md"
-        onClick={handleAddTable}
-        className="mb-4"
-      >
-        ＋ テーブル定義と紐づける
-      </Button>
+      <div className="relative inline-block group mb-4">
+        <Button
+          type="button"
+          variant="outline"
+          size="md"
+          onClick={handleAddTable}
+          aria-disabled={noAvailableOptions}
+        >
+          ＋ テーブル定義と紐づける
+        </Button>
+        {noAvailableOptions && (
+          <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block z-50 w-[max-content] max-w-[300px]">
+            <div className="bg-gray-800 text-white text-[15px] font-normal py-2 px-3 rounded shadow-lg whitespace-pre-wrap leading-relaxed text-left">
+              すべての物理名が選択済みの為、追加できません。
+            </div>
+            <div className="absolute top-full left-8 border-4 border-transparent border-t-gray-800"></div>
+          </div>
+        )}
+      </div>
 
       {fields.length > 0 && (
         <div className="space-y-4">
