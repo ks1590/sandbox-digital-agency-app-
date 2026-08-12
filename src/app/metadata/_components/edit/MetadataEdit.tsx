@@ -35,6 +35,7 @@ export default function MetadataEdit({
   const {
     methods,
     isInitialized,
+    isDirty,
     notification,
     isTopPage,
     subtabParam,
@@ -46,8 +47,6 @@ export default function MetadataEdit({
     returnHref,
     returnText,
   } = useMetadataForm(apiData);
-
-  const { isDirty } = methods.formState;
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -90,7 +89,7 @@ export default function MetadataEdit({
                       headingId="register-tabs-top-heading"
                       defaultIndex={defaultIndex}
                       onChange={handleTabChange}
-                      disabled={isDirty}
+                      disabled={true}
                       disabledReason={
                         "編集中は切り替えできません。\n変更を仮登録またはキャンセルしてください。"
                       }
@@ -118,7 +117,7 @@ export default function MetadataEdit({
                       headingId="register-tabs-heading"
                       defaultIndex={defaultIndex}
                       onChange={handleTabChange}
-                      disabled={isDirty}
+                      disabled={true}
                       disabledReason={
                         "編集中は切り替えできません。\n変更を仮登録またはキャンセルしてください。"
                       }

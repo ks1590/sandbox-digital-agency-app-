@@ -126,7 +126,7 @@ describe("useMetadataForm", () => {
   it("handleSubmit でトップページの場合は /metadata に遷移し、新規データ種別のID変換と初期データ作成を行う", async () => {
     vi.mocked(usePathname).mockReturnValue("/metadata");
     vi.mocked(useSearchParams).mockReturnValue(
-      new ReadonlyURLSearchParams(new URLSearchParams("")),
+      new ReadonlyURLSearchParams(new URLSearchParams("tab=data-type")),
     );
 
     const apiData = createApiData();
@@ -157,13 +157,13 @@ describe("useMetadataForm", () => {
     expect(childSaved).not.toBeNull();
     expect(JSON.parse(childSaved as string).dataType).toBe("New One");
 
-    expect(mockRouter.push).toHaveBeenCalledWith("/metadata");
+    expect(mockRouter.push).toHaveBeenCalledWith("/metadata?tab=data-type");
   });
 
   it("新規データ種別追加時に「臨床情報」のセッションデータが存在しない場合、空配列ではなく臨床情報のデフォルトテーブル情報で初期化されること", async () => {
     vi.mocked(usePathname).mockReturnValue("/metadata");
     vi.mocked(useSearchParams).mockReturnValue(
-      new ReadonlyURLSearchParams(new URLSearchParams("")),
+      new ReadonlyURLSearchParams(new URLSearchParams("tab=data-type")),
     );
 
     const apiData = createApiData({
@@ -296,6 +296,9 @@ describe("useMetadataForm", () => {
 
   it("トップページ保存時に削除されたデータ種別のセッションストレージがクリーンアップされること", async () => {
     vi.mocked(usePathname).mockReturnValue("/metadata");
+    vi.mocked(useSearchParams).mockReturnValue(
+      new ReadonlyURLSearchParams(new URLSearchParams("tab=data-type")),
+    );
     sessionStorage.setItem(
       "metadata_削除されたデータ種別",
       JSON.stringify({ dummy: true }),
@@ -321,6 +324,9 @@ describe("useMetadataForm", () => {
 
   it("新規データ種別を追加して保存した際、臨床情報以外のデータ種別の初期tablesとtableDefsが空で初期化されること", async () => {
     vi.mocked(usePathname).mockReturnValue("/metadata");
+    vi.mocked(useSearchParams).mockReturnValue(
+      new ReadonlyURLSearchParams(new URLSearchParams("tab=data-type")),
+    );
 
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));

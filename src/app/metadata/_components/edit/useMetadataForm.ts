@@ -101,13 +101,15 @@ export function useMetadataForm(apiData: MetadataResponse) {
     setIsInitialized(true);
   }, [apiData, methods, isTopPage, isInitialized, typeParam]);
 
-  // フォームの変更状態をrefで追跡し、beforeunload/popstateハンドラで参照する
+  // フォームの変更状態をrefとstateで追跡する
   const isDirtyRef = useRef(false);
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) return;
     const subscription = methods.watch(() => {
       isDirtyRef.current = true;
+      setIsDirty(true);
       const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
       sessionStorage.setItem(storageKey, JSON.stringify(methods.getValues()));
     });
@@ -157,97 +159,122 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
   const handleSubmit = async (data: MetadataFormData) => {
     let finalData = data;
+    const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
+    
+    let existingData: any = {};
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      try {
+        const stored = sessionStorage.getItem(storageKey);
+        if (stored) existingData = JSON.parse(stored);
+      } catch (e) {}
+    }
 
-    if (isTopPage && data.dataTypes) {
-      if (typeof window !== "undefined" && window.sessionStorage) {
-        const validNames = new Set(
-          data.dataTypes.map((dt) => dt.name).filter(Boolean),
-        );
-        const validIds = new Set(
-          data.dataTypes.map((dt) => dt.id).filter(Boolean),
-        );
+    if (isTopPage) {
+      if (tabParam === "overview") {
+        // 「概要」タブの保存（overviewText のみを抽出し、既存データとマージする想定）
+        finalData = {
+          ...existingData,
+          overviewText: data.overviewText,
+        };
+        // 本来は overview 専用の API を呼ぶ想定
+        await saveMetadata(finalData);
+      } else if (tabParam === "data-type") {
+        // 「データ種別」タブの保存（dataTypes のみを抽出し、既存データとマージする想定）
+        if (typeof window !== "undefined" && window.sessionStorage) {
+          const validNames = new Set(
+            data.dataTypes?.map((dt) => dt.name).filter(Boolean) || [],
+          );
+          const validIds = new Set(
+            data.dataTypes?.map((dt) => dt.id).filter(Boolean) || [],
+          );
 
-        const keysToRemove: string[] = [];
-        for (let i = 0; i < sessionStorage.length; i++) {
-          const key = sessionStorage.key(i);
-          if (key?.startsWith("metadata_") && key !== "metadata_top") {
-            const keyName = key.replace("metadata_", "");
-            if (!validNames.has(keyName) && !validIds.has(keyName)) {
-              keysToRemove.push(key);
+          const keysToRemove: string[] = [];
+          for (let i = 0; i < sessionStorage.length; i++) {
+            const key = sessionStorage.key(i);
+            if (key?.startsWith("metadata_") && key !== "metadata_top") {
+              const keyName = key.replace("metadata_", "");
+              if (!validNames.has(keyName) && !validIds.has(keyName)) {
+                keysToRemove.push(key);
+              }
+            }
+          }
+          keysToRemove.forEach((k) => {
+            sessionStorage.removeItem(k);
+          });
+        }
+
+        let updatedDataTypes = data.dataTypes || [];
+        if (updatedDataTypes.length > 0) {
+          updatedDataTypes = updatedDataTypes.map((dt) => ({
+            ...dt,
+            id: dt.name,
+          }));
+
+          for (const dt of updatedDataTypes) {
+            const targetId = dt.name;
+            const isClinical = targetId === "臨床情報" || targetId === "clinical";
+
+            // データ種別の初期データを作成・保存
+            const childStorageKey = `metadata_${targetId}`;
+            if (typeof window !== "undefined" && window.sessionStorage && !sessionStorage.getItem(childStorageKey)) {
+              const initialChildData = {
+                dataType: targetId,
+                overviewText: isClinical
+                  ? apiData.overview.overviewText
+                  : CHILD_OVERVIEW_TEMPLATE,
+                dataTypes: updatedDataTypes,
+                startYear: isClinical ? apiData.overview.startYear : "",
+                latestYear: isClinical ? apiData.overview.latestYear : "",
+                updateFrequencies: isClinical
+                  ? apiData.overview.updateFrequencies
+                  : [],
+                tables: isClinical ? apiData.overview.tables : [],
+                notesText: isClinical ? apiData.overview.notesText : "",
+                keyInfoText: isClinical ? apiData.overview.keyInfoText : "",
+                tableDefs: isClinical ? apiData.tableDefs : {},
+              };
+              sessionStorage.setItem(
+                childStorageKey,
+                JSON.stringify(initialChildData),
+              );
             }
           }
         }
-        keysToRemove.forEach((k) => {
-          sessionStorage.removeItem(k);
-        });
+
+        finalData = { ...existingData, dataTypes: updatedDataTypes };
+        // 本来は dataType 専用の API を呼ぶ想定
+        await saveMetadata(finalData);
+      } else {
+        await saveMetadata(finalData);
       }
-
-      if (data.dataTypes.length > 0) {
-        const updatedDataTypes = data.dataTypes.map((dt) => ({
-          ...dt,
-          id: dt.name,
-        }));
-
-        for (const dt of updatedDataTypes) {
-          const targetId = dt.name;
-          const isClinical = targetId === "臨床情報" || targetId === "clinical";
-
-          // データ種別の初期データを作成・保存
-          const childStorageKey = `metadata_${targetId}`;
-          if (!sessionStorage.getItem(childStorageKey)) {
-            const initialChildData = {
-              dataType: targetId,
-              overviewText: isClinical
-                ? apiData.overview.overviewText
-                : CHILD_OVERVIEW_TEMPLATE,
-              dataTypes: updatedDataTypes,
-              startYear: isClinical ? apiData.overview.startYear : "",
-              latestYear: isClinical ? apiData.overview.latestYear : "",
-              updateFrequencies: isClinical
-                ? apiData.overview.updateFrequencies
-                : [],
-              tables: isClinical ? apiData.overview.tables : [],
-              notesText: isClinical ? apiData.overview.notesText : "",
-              keyInfoText: isClinical ? apiData.overview.keyInfoText : "",
-              tableDefs: isClinical ? apiData.tableDefs : {},
-            };
-            sessionStorage.setItem(
-              childStorageKey,
-              JSON.stringify(initialChildData),
-            );
+    } else {
+      // 詳細ページ（トップページ以外）の保存処理
+      if (finalData.tables && finalData.tables.length > 0) {
+        const updatedTableDefs = { ...(finalData.tableDefs || {}) };
+        for (const t of finalData.tables) {
+          if (
+            t.physicalName &&
+            (!updatedTableDefs[t.physicalName] ||
+              updatedTableDefs[t.physicalName].length === 0)
+          ) {
+            updatedTableDefs[t.physicalName] =
+              apiData.tableDefs?.[t.physicalName] || EXAMINATION_MOCK_DATA;
           }
         }
-
-        finalData = { ...data, dataTypes: updatedDataTypes };
+        finalData = { ...finalData, tableDefs: updatedTableDefs };
       }
+      await saveMetadata(finalData);
     }
 
-    if (finalData.tables && finalData.tables.length > 0) {
-      const updatedTableDefs = { ...(finalData.tableDefs || {}) };
-      for (const t of finalData.tables) {
-        if (
-          t.physicalName &&
-          (!updatedTableDefs[t.physicalName] ||
-            updatedTableDefs[t.physicalName].length === 0)
-        ) {
-          updatedTableDefs[t.physicalName] =
-            apiData.tableDefs?.[t.physicalName] || EXAMINATION_MOCK_DATA;
-        }
-      }
-      finalData = { ...finalData, tableDefs: updatedTableDefs };
-    }
-
-    await saveMetadata(finalData);
-
-    // 今回はバックエンド（DB）が存在しないモック環境のため、
-    // 画面リロード時に編集内容が消えないようにセッションストレージにも保存しておく
-    const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
+    // セッションストレージに最新のデータを上書きして画面の状態を維持
     const serialized = JSON.stringify(finalData);
-    sessionStorage.setItem(storageKey, serialized);
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      sessionStorage.setItem(storageKey, serialized);
+    }
     initialStorageDataRef.current = serialized;
 
     if (isTopPage) {
-      router.push("/metadata");
+      router.push(`/metadata?tab=${tabParam}`);
     } else if (subtabParam) {
       router.push(
         `/metadata/table-def?tab=${subtabParam}&from=${typeParam || "臨床情報"}`,
@@ -300,6 +327,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
   return {
     methods,
     isInitialized,
+    isDirty,
     notification,
     isTopPage,
     subtabParam,
