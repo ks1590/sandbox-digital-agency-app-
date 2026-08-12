@@ -22,8 +22,8 @@ function createResponse(
 ): MetadataResponse {
   return {
     overview: {
-      overviewText: "## 概要",
-      dataTypes: [{ id: "clinical", name: "臨床情報" }],
+      databaseDataProductReadMe: "## 概要",
+      datatypeDataProductNames: [{ identifiler: "clinical", name: "臨床情報" }],
       startYear: "2020",
       latestYear: "2026",
       updateFrequencies: [],
@@ -54,7 +54,7 @@ describe("OverviewViewClient", () => {
   });
 
   it("概要テキストが空の場合は代替メッセージを表示する", () => {
-    render(<OverviewViewClient data={createResponse({ overviewText: "" })} />);
+    render(<OverviewViewClient data={createResponse({ databaseDataProductReadMe: "" })} />);
 
     expect(screen.getByText("データがありません")).toBeInTheDocument();
     expect(screen.queryByTestId("markdown-editor")).not.toBeInTheDocument();
@@ -63,7 +63,7 @@ describe("OverviewViewClient", () => {
   it("sessionStorage(metadata_clinical) に編集済みデータがあれば優先表示する", async () => {
     sessionStorage.setItem(
       "metadata_clinical",
-      JSON.stringify({ overviewText: "編集済みの概要" }),
+      JSON.stringify({ databaseDataProductReadMe: "編集済みの概要" }),
     );
 
     render(<OverviewViewClient data={createResponse()} />);

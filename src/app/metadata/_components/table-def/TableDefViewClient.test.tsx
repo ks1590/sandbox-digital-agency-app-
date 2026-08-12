@@ -24,8 +24,8 @@ function createResponse(
 ): MetadataResponse {
   return {
     overview: {
-      overviewText: "",
-      dataTypes: [],
+      databaseDataProductReadMe: "",
+      datatypeDataProductNames: [],
       startYear: "",
       latestYear: "",
       updateFrequencies: [],

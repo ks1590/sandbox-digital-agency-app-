@@ -29,14 +29,14 @@ describe("DataTypeSelect", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useDataTypes).mockReturnValue({
-      dataTypes: [
-        { id: "clinical", name: "臨床情報" },
-        { id: "genome", name: "ゲノム情報" },
+      datatypeDataProductNames: [
+        { identifiler: "clinical", name: "臨床情報" },
+        { identifiler: "genome", name: "ゲノム情報" },
       ],
-      getDataTypeName: (id: string) => {
-        if (id === "clinical") return "臨床情報";
-        if (id === "genome") return "ゲノム情報";
-        return id;
+      getDataTypeName: (identifiler: string) => {
+        if (identifiler === "clinical") return "臨床情報";
+        if (identifiler === "genome") return "ゲノム情報";
+        return identifiler;
       },
     });
   });

@@ -32,9 +32,9 @@ vi.mock("../_components/useDataTypes", () => ({
 
 const mockData: MetadataResponse = {
   overview: {
-    overviewText: "",
+    databaseDataProductReadMe: "",
     status: "draft",
-    dataTypes: [{ id: "clinical", name: "臨床データ" }],
+    datatypeDataProductNames: [{ identifiler: "clinical", name: "臨床データ" }],
     startYear: "2020",
     latestYear: "2024",
     updateFrequencies: [],

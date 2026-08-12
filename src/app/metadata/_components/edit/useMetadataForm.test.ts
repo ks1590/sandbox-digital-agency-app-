@@ -32,8 +32,8 @@ vi.mock("../../api", async () => {
 function createApiData(overrides = {}): MetadataResponse {
   return {
     overview: {
-      overviewText: "",
-      dataTypes: [],
+      databaseDataProductReadMe: "",
+      datatypeDataProductNames: [],
       startYear: "",
       latestYear: "",
       updateFrequencies: [],
@@ -83,7 +83,7 @@ describe("useMetadataForm", () => {
   });
 
   it("セッションストレージにデータがある場合はそれを復元する", () => {
-    const savedData = { dataType: "saved_type", overviewText: "saved text" };
+    const savedData = { dataType: "saved_type", databaseDataProductReadMe: "saved text" };
     sessionStorage.setItem("metadata_臨床情報", JSON.stringify(savedData));
 
     const apiData = createApiData();
@@ -91,7 +91,7 @@ describe("useMetadataForm", () => {
 
     expect(result.current.isInitialized).toBe(true);
     expect(result.current.methods.getValues("dataType")).toBe("saved_type");
-    expect(result.current.methods.getValues("overviewText")).toBe("saved text");
+    expect(result.current.methods.getValues("databaseDataProductReadMe")).toBe("saved text");
   });
 
   it("フォームの値が変更されるとセッションストレージに保存する", async () => {
@@ -99,13 +99,13 @@ describe("useMetadataForm", () => {
     const { result } = renderHook(() => useMetadataForm(apiData));
 
     act(() => {
-      result.current.methods.setValue("overviewText", "new text");
+      result.current.methods.setValue("databaseDataProductReadMe", "new text");
     });
 
     await waitFor(() => {
       const saved = sessionStorage.getItem("metadata_臨床情報");
       expect(saved).toBeTruthy();
-      expect(JSON.parse(saved as string).overviewText).toBe("new text");
+      expect(JSON.parse(saved as string).databaseDataProductReadMe).toBe("new text");
     });
   });
 
@@ -133,9 +133,9 @@ describe("useMetadataForm", () => {
     const { result } = renderHook(() => useMetadataForm(apiData));
 
     act(() => {
-      result.current.methods.setValue("dataTypes", [
-        { id: "type-existing", name: "Existing" },
-        { id: "new-type-12345", name: "New One" },
+      result.current.methods.setValue("datatypeDataProductNames", [
+        { identifiler: "type-existing", name: "Existing" },
+        { identifiler: "new-type-12345", name: "New One" },
       ]);
     });
 
@@ -147,9 +147,9 @@ describe("useMetadataForm", () => {
 
     // 既存・新規とも ID が名称に統一されていること
     const callArg = vi.mocked(saveMetadata).mock.calls[0][0];
-    expect(callArg.dataTypes).toEqual([
-      { id: "Existing", name: "Existing" },
-      { id: "New One", name: "New One" },
+    expect(callArg.datatypeDataProductNames).toEqual([
+      { identifiler: "Existing", name: "Existing" },
+      { identifiler: "New One", name: "New One" },
     ]);
 
     // 子要素のセッションストレージが初期化されていること
@@ -174,9 +174,9 @@ describe("useMetadataForm", () => {
     const { result } = renderHook(() => useMetadataForm(apiData));
 
     act(() => {
-      result.current.methods.setValue("dataTypes", [
-        { id: "臨床情報", name: "臨床情報" },
-        { id: "新データ種別", name: "新データ種別" },
+      result.current.methods.setValue("datatypeDataProductNames", [
+        { identifiler: "臨床情報", name: "臨床情報" },
+        { identifiler: "新データ種別", name: "新データ種別" },
       ]);
     });
 
@@ -222,7 +222,7 @@ describe("useMetadataForm", () => {
   });
 
   it("handleCancel で編集前に保存データがあった場合、編集前のデータを復元して適切な画面に戻る", () => {
-    const savedData = { dataType: "臨床情報", overviewText: "編集前のデータ" };
+    const savedData = { dataType: "臨床情報", databaseDataProductReadMe: "編集前のデータ" };
     sessionStorage.setItem("metadata_臨床情報", JSON.stringify(savedData));
 
     const apiData = createApiData();
@@ -230,7 +230,7 @@ describe("useMetadataForm", () => {
 
     // フォームで一時的に内容を変更
     act(() => {
-      result.current.methods.setValue("overviewText", "編集中の下書き");
+      result.current.methods.setValue("databaseDataProductReadMe", "編集中の下書き");
     });
 
     // キャンセル実行
@@ -241,27 +241,27 @@ describe("useMetadataForm", () => {
     // 編集前のデータが復元されていること
     const restored = sessionStorage.getItem("metadata_臨床情報");
     expect(restored).not.toBeNull();
-    expect(JSON.parse(restored as string).overviewText).toBe("編集前のデータ");
+    expect(JSON.parse(restored as string).databaseDataProductReadMe).toBe("編集前のデータ");
   });
 
-  it("トップページの場合、overviewTextにTOP_OVERVIEW_TEMPLATEの内容（キー情報など）が初期設定される", () => {
+  it("トップページの場合、databaseDataProductReadMeにTOP_OVERVIEW_TEMPLATEの内容（キー情報など）が初期設定される", () => {
     vi.mocked(usePathname).mockReturnValue("/metadata");
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));
 
-    const overviewText = result.current.methods.getValues("overviewText");
-    expect(overviewText).toContain("キー情報");
-    expect(overviewText).not.toContain("収集期間");
+    const databaseDataProductReadMe = result.current.methods.getValues("databaseDataProductReadMe");
+    expect(databaseDataProductReadMe).toContain("キー情報");
+    expect(databaseDataProductReadMe).not.toContain("収集期間");
   });
 
-  it("子ページの場合、overviewTextにCHILD_OVERVIEW_TEMPLATEの内容（収集期間など）が初期設定される", () => {
+  it("子ページの場合、databaseDataProductReadMeにCHILD_OVERVIEW_TEMPLATEの内容（収集期間など）が初期設定される", () => {
     vi.mocked(usePathname).mockReturnValue("/metadata/detail");
     const apiData = createApiData();
     const { result } = renderHook(() => useMetadataForm(apiData));
 
-    const overviewText = result.current.methods.getValues("overviewText");
-    expect(overviewText).toContain("収集期間");
-    expect(overviewText).not.toContain("キー情報");
+    const databaseDataProductReadMe = result.current.methods.getValues("databaseDataProductReadMe");
+    expect(databaseDataProductReadMe).toContain("収集期間");
+    expect(databaseDataProductReadMe).not.toContain("キー情報");
   });
 
   it("fromパラメータが存在する場合、その値に対応するセッションストレージからデータを復元する", () => {
@@ -277,7 +277,7 @@ describe("useMetadataForm", () => {
         dataType: "検診情報",
         tables: [
           {
-            id: "1",
+            identifiler: "1",
             physicalName: "observation_table",
             logicalName: "健診結果",
           },
@@ -290,7 +290,7 @@ describe("useMetadataForm", () => {
 
     const tables = result.current.methods.getValues("tables");
     expect(tables).toEqual([
-      { id: "1", physicalName: "observation_table", logicalName: "健診結果" },
+      { identifiler: "1", physicalName: "observation_table", logicalName: "健診結果" },
     ]);
   });
 
@@ -314,7 +314,7 @@ describe("useMetadataForm", () => {
     await act(async () => {
       await result.current.handleSubmit({
         dataType: "臨床情報",
-        dataTypes: [{ id: "残るデータ種別", name: "残るデータ種別" }],
+        datatypeDataProductNames: [{ identifiler: "残るデータ種別", name: "残るデータ種別" }],
       });
     });
 
@@ -334,9 +334,9 @@ describe("useMetadataForm", () => {
     await act(async () => {
       await result.current.handleSubmit({
         dataType: "臨床情報",
-        dataTypes: [
-          { id: "臨床情報", name: "臨床情報" },
-          { id: "新規データ種別", name: "新規データ種別" },
+        datatypeDataProductNames: [
+          { identifiler: "臨床情報", name: "臨床情報" },
+          { identifiler: "新規データ種別", name: "新規データ種別" },
         ],
       });
     });

@@ -33,8 +33,8 @@ export default function MetadataContent({ data }: { data: MetadataResponse }) {
     }
   }, []);
 
-  const overviewText = sessionData?.overviewText ?? data.overview.overviewText;
-  const dataTypes = sessionData?.dataTypes ?? data.overview.dataTypes;
+  const databaseDataProductReadMe = sessionData?.databaseDataProductReadMe ?? data.overview.databaseDataProductReadMe;
+  const datatypeDataProductNames = sessionData?.datatypeDataProductNames ?? data.overview.datatypeDataProductNames;
   const keyInfoText = sessionData?.keyInfoText ?? data.overview.keyInfoText;
 
   const searchParams = useSearchParams();
@@ -64,10 +64,10 @@ export default function MetadataContent({ data }: { data: MetadataResponse }) {
             id: "tab-view-top-overview",
             content: (
               <div className="pt-6">
-                {overviewText ? (
+                {databaseDataProductReadMe ? (
                   <MarkdownEditor
-                    key={`overview-${overviewText}`}
-                    markdown={overviewText}
+                    key={`overview-${databaseDataProductReadMe}`}
+                    markdown={databaseDataProductReadMe}
                     readOnly={true}
                   />
                 ) : (
@@ -84,9 +84,9 @@ export default function MetadataContent({ data }: { data: MetadataResponse }) {
             content: (
               <div className="pt-6">
                 <div className="flex flex-wrap gap-6 py-4">
-                  {dataTypes.map((dt) => (
+                  {datatypeDataProductNames.map((dt) => (
                     <LinkCard
-                      key={dt.id}
+                      key={dt.identifiler}
                       href={`/metadata/detail?type=${encodeURIComponent(dt.name)}`}
                       title={dt.name}
                     />

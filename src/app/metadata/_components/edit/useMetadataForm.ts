@@ -39,8 +39,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
     resolver: zodResolver(metadataSchema),
     defaultValues: {
       dataType: typeParam || "臨床情報",
-      overviewText: "",
-      dataTypes: apiData?.overview?.dataTypes || [],
+      databaseDataProductReadMe: "",
+      datatypeDataProductNames: apiData?.overview?.datatypeDataProductNames || [],
       startYear: "",
       latestYear: "",
       updateFrequencies: [],
@@ -67,8 +67,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
           const topSaved = sessionStorage.getItem("metadata_top");
           if (topSaved) {
             const parsedTop = JSON.parse(topSaved);
-            if (parsedTop.dataTypes && parsedTop.dataTypes.length > 0) {
-              parsed.dataTypes = parsedTop.dataTypes;
+            if (parsedTop.datatypeDataProductNames && parsedTop.datatypeDataProductNames.length > 0) {
+              parsed.datatypeDataProductNames = parsedTop.datatypeDataProductNames;
             }
           }
         } catch (e) {
@@ -88,8 +88,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
     methods.reset({
       dataType: typeParam || "臨床情報",
-      overviewText: apiData.overview.overviewText || OVERVIEW_TEMPLATE,
-      dataTypes: apiData.overview.dataTypes,
+      databaseDataProductReadMe: apiData.overview.databaseDataProductReadMe || OVERVIEW_TEMPLATE,
+      datatypeDataProductNames: apiData.overview.datatypeDataProductNames,
       startYear: apiData.overview.startYear,
       latestYear: apiData.overview.latestYear,
       updateFrequencies: apiData.overview.updateFrequencies,
@@ -171,55 +171,55 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
     if (isTopPage) {
       if (tabParam === "overview") {
-        // 「概要」タブの保存（overviewText のみを抽出し、既存データとマージする想定）
+        // 「概要」タブの保存（databaseDataProductReadMe のみを抽出し、既存データとマージする想定）
         finalData = {
           ...existingData,
-          overviewText: data.overviewText,
+          databaseDataProductReadMe: data.databaseDataProductReadMe,
         };
         // 本来は overview 専用の API を呼ぶ想定
         await saveMetadata(finalData);
       } else if (tabParam === "data-type") {
         // 将来のAPI実装に向けた差分JSONの生成とコンソール出力
-        let initialDataTypes = apiData?.overview?.dataTypes || [];
+        let initialDataTypes = apiData?.overview?.datatypeDataProductNames || [];
         if (initialStorageDataRef.current) {
           try {
             const parsed = JSON.parse(initialStorageDataRef.current);
-            if (parsed.dataTypes) {
-              initialDataTypes = parsed.dataTypes;
+            if (parsed.datatypeDataProductNames) {
+              initialDataTypes = parsed.datatypeDataProductNames;
             }
           } catch (e) {
             console.error("Failed to parse sessionStorage data", e);
           }
         }
-        const currentDataTypes = data.dataTypes || [];
+        const currentDataTypes = data.datatypeDataProductNames || [];
 
-        const initialMap = new Map(initialDataTypes.map((dt) => [dt.id, dt]));
-        const currentMap = new Map(currentDataTypes.map((dt) => [dt.id, dt]));
+        const initialMap = new Map(initialDataTypes.map((dt) => [dt.identifiler, dt]));
+        const currentMap = new Map(currentDataTypes.map((dt) => [dt.identifiler, dt]));
 
-        const creates = currentDataTypes.filter((dt) => !initialMap.has(dt.id));
+        const creates = currentDataTypes.filter((dt) => !initialMap.has(dt.identifiler));
         const updates = currentDataTypes.filter((dt) => {
-          const initial = initialMap.get(dt.id);
+          const initial = initialMap.get(dt.identifiler);
           return initial && initial.name !== dt.name;
         });
-        const deletes = initialDataTypes.filter((dt) => !currentMap.has(dt.id));
+        const deletes = initialDataTypes.filter((dt) => !currentMap.has(dt.identifiler));
 
         const payload = {
           create: creates.map((dt) => ({ name: dt.name })),
-          update: updates.map((dt) => ({ id: dt.id, name: dt.name })),
-          delete: deletes.map((dt) => ({ id: dt.id })),
+          update: updates.map((dt) => ({ id: dt.identifiler, name: dt.name })),
+          delete: deletes.map((dt) => ({ id: dt.identifiler })),
         };
 
         console.log("=== API Request Payload (DataTypes) ===");
         console.log(JSON.stringify(payload, null, 2));
         console.log("=======================================");
 
-        // 「データ種別」タブの保存（dataTypes のみを抽出し、既存データとマージする想定）
+        // 「データ種別」タブの保存（datatypeDataProductNames のみを抽出し、既存データとマージする想定）
         if (typeof window !== "undefined" && window.sessionStorage) {
           const validNames = new Set(
-            data.dataTypes?.map((dt) => dt.name).filter(Boolean) || [],
+            data.datatypeDataProductNames?.map((dt) => dt.name).filter(Boolean) || [],
           );
           const validIds = new Set(
-            data.dataTypes?.map((dt) => dt.id).filter(Boolean) || [],
+            data.datatypeDataProductNames?.map((dt) => dt.identifiler).filter(Boolean) || [],
           );
 
           const keysToRemove: string[] = [];
@@ -237,7 +237,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
           });
         }
 
-        const updatedDataTypes = data.dataTypes || [];
+        const updatedDataTypes = data.datatypeDataProductNames || [];
         if (updatedDataTypes.length > 0) {
           for (const dt of updatedDataTypes) {
             const targetId = dt.name;
@@ -253,10 +253,10 @@ export function useMetadataForm(apiData: MetadataResponse) {
             ) {
               const initialChildData = {
                 dataType: targetId,
-                overviewText: isClinical
-                  ? apiData.overview.overviewText
+                databaseDataProductReadMe: isClinical
+                  ? apiData.overview.databaseDataProductReadMe
                   : CHILD_OVERVIEW_TEMPLATE,
-                dataTypes: updatedDataTypes,
+                datatypeDataProductNames: updatedDataTypes,
                 startYear: isClinical ? apiData.overview.startYear : "",
                 latestYear: isClinical ? apiData.overview.latestYear : "",
                 updateFrequencies: isClinical
@@ -275,7 +275,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
           }
         }
 
-        finalData = { ...existingData, dataTypes: updatedDataTypes };
+        finalData = { ...existingData, datatypeDataProductNames: updatedDataTypes };
         // 本来は dataType 専用の API を呼ぶ想定
         await saveMetadata(finalData);
       } else {

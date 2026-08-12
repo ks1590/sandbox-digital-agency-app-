@@ -10,9 +10,9 @@ vi.mock("@/components/ui/MarkdownEditor", () => ({
 }));
 
 vi.mock("./DataTypeListEditor", () => ({
-  default: ({ dataTypes }: { dataTypes: any[] }) => (
+  default: ({ datatypeDataProductNames }: { datatypeDataProductNames: any[] }) => (
     <div data-testid="datatype-list-editor">
-      DataTypeListEditor - Items: {dataTypes?.length || 0}
+      DataTypeListEditor - Items: {datatypeDataProductNames?.length || 0}
     </div>
   ),
 }));
@@ -27,8 +27,8 @@ function Wrapper({
 }) {
   const methods = useForm({
     defaultValues: {
-      overviewText: "Initial Overview",
-      dataTypes: [{ id: "test", name: "Test Type" }],
+      databaseDataProductReadMe: "Initial Overview",
+      datatypeDataProductNames: [{ id: "test", name: "Test Type" }],
       ...defaultValues,
     },
   });
@@ -40,7 +40,7 @@ describe("OverviewTabContent", () => {
     vi.clearAllMocks();
   });
 
-  it("MarkdownEditorがフォームのoverviewTextを表示する", async () => {
+  it("MarkdownEditorがフォームのdatabaseDataProductReadMeを表示する", async () => {
     render(
       <Wrapper>
         <OverviewTabContent isTopPage={true} />

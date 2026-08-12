@@ -7,13 +7,13 @@ import type { MetadataFormData } from "../schema";
 import { inputClass } from "../styles";
 
 interface DataType {
-  id: string;
+  identifiler: string;
   name: string;
 }
 
 interface DataTypeListEditorProps {
-  dataTypes: DataType[];
-  onChange: (dataTypes: DataType[]) => void;
+  datatypeDataProductNames: DataType[];
+  onChange: (datatypeDataProductNames: DataType[]) => void;
 }
 
 /**
@@ -23,40 +23,43 @@ interface DataTypeListEditorProps {
  * 新規データ種別の追加も可能。
  */
 export default function DataTypeListEditor({
-  dataTypes,
+  datatypeDataProductNames,
   onChange,
 }: DataTypeListEditorProps) {
   const formContext = useFormContext<MetadataFormData>();
   const errors = formContext?.formState?.errors;
 
   const handleNameChange = (idx: number, name: string) => {
-    const newTypes = [...dataTypes];
+    const newTypes = [...datatypeDataProductNames];
     newTypes[idx] = { ...newTypes[idx], name };
     onChange(newTypes);
   };
 
   const handleRemove = (idx: number) => {
-    const target = dataTypes[idx];
+    const target = datatypeDataProductNames[idx];
     if (target && typeof window !== "undefined" && window.sessionStorage) {
       try {
         if (target.name) {
           sessionStorage.removeItem(`metadata_${target.name}`);
         }
-        if (target.id) {
-          sessionStorage.removeItem(`metadata_${target.id}`);
+        if (target.identifiler) {
+          sessionStorage.removeItem(`metadata_${target.identifiler}`);
         }
       } catch (e) {
         console.error("Failed to remove metadata from sessionStorage", e);
       }
     }
-    const newTypes = [...dataTypes];
+    const newTypes = [...datatypeDataProductNames];
     newTypes.splice(idx, 1);
     onChange(newTypes);
   };
 
   const handleAdd = () => {
     const newId = `new-type-${Date.now()}`;
-    onChange([...dataTypes, { id: newId, name: "" }]);
+    onChange([
+      ...datatypeDataProductNames,
+      { identifiler: newId, name: "" },
+    ]);
   };
 
   return (
@@ -71,14 +74,15 @@ export default function DataTypeListEditor({
       >
         ＋ データ種別を追加
       </Button>
-      {dataTypes.length > 0 && (
+      {datatypeDataProductNames.length > 0 && (
         <p className="text-sm font-bold mb-2">データ種別名</p>
       )}
       <div className="space-y-4">
-        {dataTypes.map((dt, idx) => {
-          const errorMessage = errors?.dataTypes?.[idx]?.name?.message;
+        {datatypeDataProductNames.map((dt, idx) => {
+          const errorMessage =
+            errors?.datatypeDataProductNames?.[idx]?.name?.message;
           return (
-            <div key={dt.id} className="flex flex-col gap-1">
+            <div key={dt.identifiler} className="flex flex-col gap-1">
               <div className="flex items-center gap-4">
                 <div className="w-[300px]">
                   <input

@@ -14,20 +14,20 @@ export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
   const searchParams = useSearchParams();
   const { register, watch } = useFormContext<MetadataFormData>();
   const currentDataType = watch("dataType");
-  const formDataTypes = watch("dataTypes");
-  const { dataTypes, getDataTypeName } = useDataTypes(formDataTypes);
+  const formDataTypes = watch("datatypeDataProductNames");
+  const { datatypeDataProductNames, getDataTypeName } = useDataTypes(formDataTypes);
 
-  const options = dataTypes.some(
+  const options = datatypeDataProductNames.some(
     (dt) =>
       dt.name === currentDataType ||
-      dt.id === currentDataType ||
+      dt.identifiler === currentDataType ||
       dt.name === getDataTypeName(currentDataType || ""),
   )
-    ? dataTypes
+    ? datatypeDataProductNames
     : [
-        ...dataTypes,
+        ...datatypeDataProductNames,
         {
-          id: currentDataType || "default",
+          identifiler: currentDataType || "default",
           name: currentDataType
             ? getDataTypeName(currentDataType) !== currentDataType
               ? getDataTypeName(currentDataType)
@@ -38,7 +38,7 @@ export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
 
   if (readonly) {
     const selectedOption = options.find(
-      (opt) => opt.id === currentDataType || opt.name === currentDataType,
+      (opt) => opt.identifiler === currentDataType || opt.name === currentDataType,
     );
     return (
       <div className="mb-8">
@@ -74,7 +74,7 @@ export default function DataTypeSelect({ readonly }: { readonly?: boolean }) {
           }}
         >
           {options.map((dt) => (
-            <option key={dt.id} value={dt.name}>
+            <option key={dt.identifiler} value={dt.name}>
               {dt.name}
             </option>
           ))}

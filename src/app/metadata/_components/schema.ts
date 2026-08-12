@@ -18,11 +18,11 @@ export type TableDefRowFormData = z.infer<typeof tableDefRowSchema>;
 export const metadataSchema = z.object({
   // Overview Tab
   dataType: z.string().optional(),
-  overviewText: z.string().optional(),
-  dataTypes: z
+  databaseDataProductReadMe: z.string().optional(),
+  datatypeDataProductNames: z
     .array(
       z.object({
-        id: z.string(),
+        identifiler: z.string(),
         name: z.string().trim().min(1, {
           message: "データ種別名を入力してください",
         }),

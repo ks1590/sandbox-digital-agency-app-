@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DataTypeListEditor from "./DataTypeListEditor";
@@ -11,8 +11,8 @@ vi.mock("next/navigation", () => ({
 describe("DataTypeListEditor", () => {
   const mockOnChange = vi.fn();
   const baseDataTypes = [
-    { id: "type-clinical", name: "Clinical" },
-    { id: "new-type-123", name: "New Type" },
+    { identifiler: "type-clinical", name: "Clinical" },
+    { identifiler: "new-type-123", name: "New Type" },
   ];
 
   beforeEach(() => {
@@ -21,7 +21,10 @@ describe("DataTypeListEditor", () => {
 
   it("データ種別リストが正しくレンダリングされる", () => {
     render(
-      <DataTypeListEditor dataTypes={baseDataTypes} onChange={mockOnChange} />,
+      <DataTypeListEditor
+        datatypeDataProductNames={baseDataTypes}
+        onChange={mockOnChange}
+      />,
     );
 
     expect(screen.getByText("データ種別")).toBeInTheDocument();
@@ -42,7 +45,10 @@ describe("DataTypeListEditor", () => {
 
   it("データ種別を追加できる", () => {
     render(
-      <DataTypeListEditor dataTypes={baseDataTypes} onChange={mockOnChange} />,
+      <DataTypeListEditor
+        datatypeDataProductNames={baseDataTypes}
+        onChange={mockOnChange}
+      />,
     );
 
     const addButton = screen.getByRole("button", {
@@ -61,7 +67,10 @@ describe("DataTypeListEditor", () => {
     const removeItemSpy = vi.spyOn(Storage.prototype, "removeItem");
 
     render(
-      <DataTypeListEditor dataTypes={baseDataTypes} onChange={mockOnChange} />,
+      <DataTypeListEditor
+        datatypeDataProductNames={baseDataTypes}
+        onChange={mockOnChange}
+      />,
     );
 
     const deleteButtons = screen.getAllByRole("button", { name: "削除" });
@@ -80,7 +89,10 @@ describe("DataTypeListEditor", () => {
 
   it("データ種別の名前を変更できる", () => {
     render(
-      <DataTypeListEditor dataTypes={baseDataTypes} onChange={mockOnChange} />,
+      <DataTypeListEditor
+        datatypeDataProductNames={baseDataTypes}
+        onChange={mockOnChange}
+      />,
     );
 
     const inputs = screen.getAllByRole("textbox");
@@ -95,11 +107,11 @@ describe("DataTypeListEditor", () => {
     const Wrapper = ({ children }: { children: React.ReactNode }) => {
       const methods = useForm({
         defaultValues: {
-          dataTypes: baseDataTypes,
+          datatypeDataProductNames: baseDataTypes,
         },
       });
       useEffect(() => {
-        methods.setError("dataTypes.0.name", {
+        methods.setError("datatypeDataProductNames.0.name", {
           type: "manual",
           message: "同じデータ種別名は登録できません",
         });
@@ -109,7 +121,10 @@ describe("DataTypeListEditor", () => {
 
     render(
       <Wrapper>
-        <DataTypeListEditor dataTypes={baseDataTypes} onChange={mockOnChange} />
+        <DataTypeListEditor
+          datatypeDataProductNames={baseDataTypes}
+          onChange={mockOnChange}
+        />
       </Wrapper>,
     );
 

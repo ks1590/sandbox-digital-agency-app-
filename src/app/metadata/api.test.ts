@@ -85,7 +85,7 @@ describe("api.ts", () => {
     it("保存処理をシミュレートし、success: true を返すこと", async () => {
       const mockData: MetadataFormData = {
         dataType: "clinical",
-        overviewText: "Test",
+        databaseDataProductReadMe: "Test",
         startYear: "2020",
         latestYear: "2024",
         collectionFrequency: "年次",

@@ -33,10 +33,10 @@ function createResponse(
 ): MetadataResponse {
   return {
     overview: {
-      overviewText: "## 概要テキスト",
-      dataTypes: [
-        { id: "臨床情報", name: "臨床情報" },
-        { id: "文書情報", name: "文書情報" },
+      databaseDataProductReadMe: "## 概要テキスト",
+      datatypeDataProductNames: [
+        { identifiler: "臨床情報", name: "臨床情報" },
+        { identifiler: "文書情報", name: "文書情報" },
       ],
       startYear: "2020",
       latestYear: "2026",
@@ -68,7 +68,7 @@ describe("MetadataContent", () => {
   });
 
   it("概要テキストが空の場合は代替メッセージを表示する", () => {
-    render(<MetadataContent data={createResponse({ overviewText: "" })} />);
+    render(<MetadataContent data={createResponse({ databaseDataProductReadMe: "" })} />);
 
     expect(screen.getByText("データがありません")).toBeInTheDocument();
     expect(screen.queryByTestId("markdown-editor")).not.toBeInTheDocument();
@@ -93,8 +93,8 @@ describe("MetadataContent", () => {
     sessionStorage.setItem(
       "metadata_top",
       JSON.stringify({
-        overviewText: "編集済みの概要",
-        dataTypes: [{ id: "edited", name: "編集済み種別" }],
+        databaseDataProductReadMe: "編集済みの概要",
+        datatypeDataProductNames: [{ identifiler: "edited", name: "編集済み種別" }],
       }),
     );
 

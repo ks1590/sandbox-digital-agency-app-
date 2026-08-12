@@ -40,8 +40,8 @@ vi.mock("@/components/layout/Header", () => ({
 
 const mockApiData: MetadataResponse = {
   overview: {
-    overviewText: "",
-    dataTypes: [],
+    databaseDataProductReadMe: "",
+    datatypeDataProductNames: [],
     startYear: "",
     latestYear: "",
     updateFrequencies: [],

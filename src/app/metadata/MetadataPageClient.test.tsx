@@ -24,9 +24,9 @@ vi.mock("./_components/view/PublishButtonClient", () => ({
 
 const mockData: MetadataResponse = {
   overview: {
-    overviewText: "",
+    databaseDataProductReadMe: "",
     status: "draft",
-    dataTypes: [],
+    datatypeDataProductNames: [],
     startYear: "2020",
     latestYear: "2024",
     updateFrequencies: [],

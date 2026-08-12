@@ -30,21 +30,21 @@ export default function MetadataDetailPageClient({
   const isEditMode = searchParams.get("mode") === "edit";
   const publishSuccess = searchParams.get("publish_success") === "true";
   const publishError = searchParams.get("publish_error") === "true";
-  const { dataTypes, getDataTypeName } = useDataTypes(data.overview.dataTypes);
-  const options = dataTypes.some(
+  const { datatypeDataProductNames, getDataTypeName } = useDataTypes(data.overview.datatypeDataProductNames);
+  const options = datatypeDataProductNames.some(
     (dt) =>
-      dt.name === type || dt.id === type || dt.name === getDataTypeName(type),
+      dt.name === type || dt.identifiler === type || dt.name === getDataTypeName(type),
   )
-    ? dataTypes
+    ? datatypeDataProductNames
     : [
-        ...dataTypes,
+        ...datatypeDataProductNames,
         {
-          id: type,
+          identifiler: type,
           name: getDataTypeName(type) !== type ? getDataTypeName(type) : type,
         },
       ];
   const currentSelectedValue =
-    options.find((dt) => dt.id === type || dt.name === type)?.name ||
+    options.find((dt) => dt.identifiler === type || dt.name === type)?.name ||
     getDataTypeName(type);
 
   useEffect(() => {
@@ -140,7 +140,7 @@ export default function MetadataDetailPageClient({
                 className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
               >
                 {options.map((dt) => (
-                  <option key={dt.id} value={dt.name}>
+                  <option key={dt.identifiler} value={dt.name}>
                     {dt.name}
                   </option>
                 ))}

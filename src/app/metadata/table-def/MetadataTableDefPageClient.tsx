@@ -48,7 +48,7 @@ export default function MetadataTableDefPageClient({
 
   const activeIndex = validTables.findIndex((t) => t.physicalName === tabParam);
   const defaultIndex = activeIndex !== -1 ? activeIndex : 0;
-  const { getDataTypeName } = useDataTypes(data.overview.dataTypes);
+  const { getDataTypeName } = useDataTypes(data.overview.datatypeDataProductNames);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">

@@ -10,8 +10,8 @@ describe("useDataTypes", () => {
   it("初期データ種別からIDに対応する名称を解決する", () => {
     const { result } = renderHook(() =>
       useDataTypes([
-        { id: "clinical", name: "臨床情報" },
-        { id: "document", name: "文書情報" },
+        { identifiler: "clinical", name: "臨床情報" },
+        { identifiler: "document", name: "文書情報" },
       ]),
     );
 
@@ -21,7 +21,7 @@ describe("useDataTypes", () => {
 
   it("未知のIDの場合はID文字列をそのまま返す", () => {
     const { result } = renderHook(() =>
-      useDataTypes([{ id: "clinical", name: "臨床情報" }]),
+      useDataTypes([{ identifiler: "clinical", name: "臨床情報" }]),
     );
 
     expect(result.current.getDataTypeName("unknown")).toBe("unknown");
@@ -36,11 +36,11 @@ describe("useDataTypes", () => {
   it("sessionStorage(metadata_top) の種別があれば上書きする", async () => {
     sessionStorage.setItem(
       "metadata_top",
-      JSON.stringify({ dataTypes: [{ id: "custom", name: "カスタム種別" }] }),
+      JSON.stringify({ datatypeDataProductNames: [{ identifiler: "custom", name: "カスタム種別" }] }),
     );
 
     const { result } = renderHook(() =>
-      useDataTypes([{ id: "clinical", name: "臨床情報" }]),
+      useDataTypes([{ identifiler: "clinical", name: "臨床情報" }]),
     );
 
     await waitFor(() => {
@@ -52,19 +52,19 @@ describe("useDataTypes", () => {
     sessionStorage.setItem(
       "metadata_top",
       JSON.stringify({
-        dataTypes: [
-          { id: "111", name: "111" },
-          { id: "222", name: "222" },
+        datatypeDataProductNames: [
+          { identifiler: "111", name: "111" },
+          { identifiler: "222", name: "222" },
         ],
       }),
     );
 
     const { result } = renderHook(() =>
-      useDataTypes([{ id: "111", name: "111" }]),
+      useDataTypes([{ identifiler: "111", name: "111" }]),
     );
 
     await waitFor(() => {
-      expect(result.current.dataTypes.length).toBe(2);
+      expect(result.current.datatypeDataProductNames.length).toBe(2);
       expect(result.current.getDataTypeName("222")).toBe("222");
     });
   });

@@ -36,8 +36,8 @@ export default function OverviewViewClient({
   }, [typeParam]);
 
   // sessionStorageに編集済みデータがあればそちらを優先、なければAPIデータを使用
-  const overviewText =
-    sessionData?.overviewText || apiData.overview.overviewText;
+  const databaseDataProductReadMe =
+    sessionData?.databaseDataProductReadMe || apiData.overview.databaseDataProductReadMe;
   const startYear = sessionData?.startYear || apiData.overview.startYear;
   const latestYear = sessionData?.latestYear || apiData.overview.latestYear;
   const collectionFrequency =
@@ -50,10 +50,10 @@ export default function OverviewViewClient({
   return (
     <div className="space-y-10 p-4 text-gray-900">
       <section>
-        {overviewText ? (
+        {databaseDataProductReadMe ? (
           <MarkdownEditor
-            key={overviewText}
-            markdown={overviewText}
+            key={databaseDataProductReadMe}
+            markdown={databaseDataProductReadMe}
             readOnly={true}
           />
         ) : (

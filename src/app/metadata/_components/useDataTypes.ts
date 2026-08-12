@@ -8,8 +8,8 @@ import type { DataTypeItem } from "../types";
  * データ種別の一覧を取得し、最新のデータ種別名を解決するためのフック
  */
 export function useDataTypes(initialDataTypes?: DataTypeItem[]) {
-  const [dataTypes, setDataTypes] = useState<DataTypeItem[]>(
-    initialDataTypes || [{ id: "臨床情報", name: "臨床情報" }],
+  const [datatypeDataProductNames, setDataTypes] = useState<DataTypeItem[]>(
+    initialDataTypes || [{ identifiler: "臨床情報", name: "臨床情報" }],
   );
 
   const serializedInitialDataTypes = JSON.stringify(initialDataTypes || []);
@@ -26,12 +26,12 @@ export function useDataTypes(initialDataTypes?: DataTypeItem[]) {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (
-          parsed.dataTypes &&
-          Array.isArray(parsed.dataTypes) &&
-          parsed.dataTypes.length > 0
+          parsed.datatypeDataProductNames &&
+          Array.isArray(parsed.datatypeDataProductNames) &&
+          parsed.datatypeDataProductNames.length > 0
         ) {
-          if (parsed.dataTypes.length >= baseList.length) {
-            baseList = parsed.dataTypes;
+          if (parsed.datatypeDataProductNames.length >= baseList.length) {
+            baseList = parsed.datatypeDataProductNames;
           }
         }
       }
@@ -46,11 +46,11 @@ export function useDataTypes(initialDataTypes?: DataTypeItem[]) {
 
   const getDataTypeName = (idOrName: string) => {
     if (idOrName === "clinical") return "臨床情報";
-    const found = dataTypes.find(
-      (dt) => dt.id === idOrName || dt.name === idOrName,
+    const found = datatypeDataProductNames.find(
+      (dt) => dt.identifiler === idOrName || dt.name === idOrName,
     );
     return found ? found.name : idOrName;
   };
 
-  return { dataTypes, getDataTypeName };
+  return { datatypeDataProductNames, getDataTypeName };
 }

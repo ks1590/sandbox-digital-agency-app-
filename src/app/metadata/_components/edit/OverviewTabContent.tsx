@@ -21,14 +21,14 @@ export default function OverviewTabContent({
 }: OverviewTabContentProps) {
   const { control, watch, setValue } = useFormContext<MetadataFormData>();
 
-  const dataTypes = watch("dataTypes") || [];
+  const datatypeDataProductNames = watch("datatypeDataProductNames") || [];
 
   return (
     <div className="space-y-10 py-6">
       {/* 概要 */}
       <section>
         <div className="flex items-center justify-end mb-2">
-          <label htmlFor="overviewText" className="sr-only">
+          <label htmlFor="databaseDataProductReadMe" className="sr-only">
             概要の説明
           </label>
           <div className="group relative flex items-center text-sm text-[#0017C1] font-bold cursor-pointer hover:underline">
@@ -89,7 +89,7 @@ export default function OverviewTabContent({
           </div>
         </div>
         <Controller
-          name="overviewText"
+          name="databaseDataProductReadMe"
           control={control}
           render={({ field: { onChange, value } }) => (
             <MarkdownEditor markdown={value || ""} onChange={onChange} />

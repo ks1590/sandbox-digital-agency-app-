@@ -141,8 +141,8 @@ export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
  */
 const MOCK_DATA: MetadataResponse = {
   overview: {
-    overviewText: TOP_OVERVIEW_TEMPLATE,
-    dataTypes: [{ id: "臨床情報", name: "臨床情報" }],
+    databaseDataProductReadMe: TOP_OVERVIEW_TEMPLATE,
+    datatypeDataProductNames: [{ identifiler: "臨床情報", name: "臨床情報" }],
     startYear: "2020",
     latestYear: "2026",
     collectionFrequency: "年次",
@@ -202,7 +202,7 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
     const isClinical = !type || type === "clinical" || type === "臨床情報";
 
     if (type) {
-      data.overview.overviewText = CHILD_OVERVIEW_TEMPLATE;
+      data.overview.databaseDataProductReadMe = CHILD_OVERVIEW_TEMPLATE;
       if (!isClinical) {
         data.overview.tables = [];
         data.tableDefs = {};
@@ -214,8 +214,8 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
         const topSaved = sessionStorage.getItem("metadata_top");
         if (topSaved) {
           const parsedTop = JSON.parse(topSaved);
-          if (parsedTop.dataTypes && parsedTop.dataTypes.length > 0) {
-            data.overview.dataTypes = parsedTop.dataTypes;
+          if (parsedTop.datatypeDataProductNames && parsedTop.datatypeDataProductNames.length > 0) {
+            data.overview.datatypeDataProductNames = parsedTop.datatypeDataProductNames;
           }
         }
       } catch (e) {
@@ -250,11 +250,11 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
 
           data.overview = {
             ...data.overview,
-            overviewText: parsed.overviewText ?? data.overview.overviewText,
-            dataTypes:
-              parsed.dataTypes && parsed.dataTypes.length > 0
-                ? parsed.dataTypes
-                : data.overview.dataTypes,
+            databaseDataProductReadMe: parsed.databaseDataProductReadMe ?? data.overview.databaseDataProductReadMe,
+            datatypeDataProductNames:
+              parsed.datatypeDataProductNames && parsed.datatypeDataProductNames.length > 0
+                ? parsed.datatypeDataProductNames
+                : data.overview.datatypeDataProductNames,
             startYear: parsed.startYear ?? data.overview.startYear,
             latestYear: parsed.latestYear ?? data.overview.latestYear,
             updateFrequencies:
@@ -272,11 +272,11 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
 
     if (
       type &&
-      !data.overview.dataTypes.some((dt) => dt.id === type || dt.name === type)
+      !data.overview.datatypeDataProductNames.some((dt) => dt.identifiler === type || dt.name === type)
     ) {
-      data.overview.dataTypes = [
-        ...data.overview.dataTypes,
-        { id: type, name: type },
+      data.overview.datatypeDataProductNames = [
+        ...data.overview.datatypeDataProductNames,
+        { identifiler: type, name: type },
       ];
     }
 
@@ -300,7 +300,18 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
         );
       }
 
-      const data = await response.json();
+      const rawData = await response.json();
+      
+      // APIのsnake_caseレスポンスをフロントエンドのcamelCaseにマッピングする
+      const data: MetadataResponse = {
+        ...rawData,
+        overview: {
+          ...rawData.overview,
+          databaseDataProductReadMe: rawData.database_data_product_read_me ?? rawData.overview?.database_data_product_read_me,
+          datatypeDataProductNames: rawData.datatype_data_product_names ?? rawData.overview?.datatype_data_product_names,
+        }
+      };
+      
       return data;
     } catch (error) {
       console.error(
@@ -324,6 +335,15 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
  * 外部API通信などを行います。
  */
 export async function saveMetadata(data: MetadataFormData) {
+  // キャメルケースからスネークケースへの変換
+  const apiPayload = {
+    ...data,
+    database_data_product_read_me: data.databaseDataProductReadMe,
+    datatype_data_product_names: data.datatypeDataProductNames,
+  };
+  delete (apiPayload as any).databaseDataProductReadMe;
+  delete (apiPayload as any).datatypeDataProductNames;
+
   // 実際のプロダクトでは、ここでGoなどの外部APIにPOST/PUTリクエストを送信します。
   // 例:
   // const response = await fetch(`${API_BASE_URL || ""}/metadata`, {
@@ -331,7 +351,7 @@ export async function saveMetadata(data: MetadataFormData) {
   //   headers: {
   //     "Content-Type": "application/json",
   //   },
-  //   body: JSON.stringify(data),
+  //   body: JSON.stringify(apiPayload),
   // });
   // if (!response.ok) throw new Error("保存に失敗しました");
 

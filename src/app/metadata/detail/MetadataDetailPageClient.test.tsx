@@ -25,9 +25,9 @@ vi.mock("../_components/view/PublishButtonClient", () => ({
 
 const mockData: MetadataResponse = {
   overview: {
-    overviewText: "",
+    databaseDataProductReadMe: "",
     status: "draft",
-    dataTypes: [{ id: "臨床データ", name: "臨床データ" }],
+    datatypeDataProductNames: [{ identifiler: "臨床データ", name: "臨床データ" }],
     startYear: "2020",
     latestYear: "2024",
     updateFrequencies: [],
@@ -150,9 +150,9 @@ describe("MetadataDetailPageClient", () => {
       ...mockData,
       overview: {
         ...mockData.overview,
-        dataTypes: [
-          { id: "臨床データ", name: "臨床データ" },
-          { id: "テストデータ", name: "テストデータ" },
+        datatypeDataProductNames: [
+          { identifiler: "臨床データ", name: "臨床データ" },
+          { identifiler: "テストデータ", name: "テストデータ" },
         ],
       },
     };

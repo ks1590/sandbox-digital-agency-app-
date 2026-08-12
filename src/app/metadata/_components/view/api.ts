@@ -143,8 +143,8 @@ export const EXAMINATION_MOCK_DATA: TableDefRow[] = [
  */
 const MOCK_DATA: MetadataResponse = {
   overview: {
-    overviewText: TOP_OVERVIEW_TEMPLATE,
-    dataTypes: [{ id: "臨床情報", name: "臨床情報" }],
+    databaseDataProductReadMe: TOP_OVERVIEW_TEMPLATE,
+    datatypeDataProductNames: [{ identifiler: "臨床情報", name: "臨床情報" }],
     startYear: "2020",
     latestYear: "2026",
     collectionFrequency: "年次",
@@ -204,7 +204,7 @@ export async function fetchMetadata(type?: string): Promise<MetadataResponse> {
     if (type) {
       data.overview = {
         ...data.overview,
-        overviewText: CHILD_OVERVIEW_TEMPLATE,
+        databaseDataProductReadMe: CHILD_OVERVIEW_TEMPLATE,
       };
 
       if (type !== "clinical" && type !== "臨床情報") {

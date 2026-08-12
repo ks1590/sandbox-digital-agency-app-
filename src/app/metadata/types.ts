@@ -29,7 +29,7 @@ export interface TableInfo {
  */
 export interface DataTypeItem {
   /** データ種別ID（例: "clinical", "document"） */
-  id: string;
+  identifiler: string;
   /** 表示名（例: "臨床情報"） */
   name: string;
 }
@@ -62,9 +62,9 @@ export type TableDefCategory = Record<string, TableDefRow[]>;
  */
 export interface MetadataOverview {
   /** 概要テキスト */
-  overviewText: string;
+  databaseDataProductReadMe: string;
   /** データ種別一覧 */
-  dataTypes: DataTypeItem[];
+  datatypeDataProductNames: DataTypeItem[];
   /** 収集開始年度 */
   startYear: string;
   /** 最新の提供可能年度 */

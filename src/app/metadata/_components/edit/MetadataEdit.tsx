@@ -18,11 +18,14 @@ import { useMetadataForm } from "./useMetadataForm";
 
 function DataTypeSection() {
   const { watch, setValue } = useFormContext<MetadataFormData>();
-  const dataTypes = watch("dataTypes") || [];
+  const datatypeDataProductNames =
+    watch("datatypeDataProductNames") || [];
   return (
     <DataTypeListEditor
-      dataTypes={dataTypes}
-      onChange={(val) => setValue("dataTypes", val, { shouldDirty: true })}
+      datatypeDataProductNames={datatypeDataProductNames}
+      onChange={(val) =>
+        setValue("datatypeDataProductNames", val, { shouldDirty: true })
+      }
     />
   );
 }
