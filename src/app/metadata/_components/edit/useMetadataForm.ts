@@ -196,9 +196,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
         const initialMap = new Map(initialDataTypes.map((dt) => [dt.id, dt]));
         const currentMap = new Map(currentDataTypes.map((dt) => [dt.id, dt]));
 
-        const creates = currentDataTypes.filter(
-          (dt) => !initialMap.has(dt.id) || dt.id.startsWith("new-type-"),
-        );
+        const creates = currentDataTypes.filter((dt) => !initialMap.has(dt.id));
         const updates = currentDataTypes.filter((dt) => {
           const initial = initialMap.get(dt.id);
           return initial && initial.name !== dt.name;
