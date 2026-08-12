@@ -179,6 +179,32 @@ export function useMetadataForm(apiData: MetadataResponse) {
         // 本来は overview 専用の API を呼ぶ想定
         await saveMetadata(finalData);
       } else if (tabParam === "data-type") {
+        // 将来のAPI実装に向けた差分JSONの生成とコンソール出力
+        const initialDataTypes = apiData?.overview?.dataTypes || [];
+        const currentDataTypes = data.dataTypes || [];
+
+        const initialMap = new Map(initialDataTypes.map((dt) => [dt.id, dt]));
+        const currentMap = new Map(currentDataTypes.map((dt) => [dt.id, dt]));
+
+        const creates = currentDataTypes.filter(
+          (dt) => !initialMap.has(dt.id) || dt.id.startsWith("new-type-")
+        );
+        const updates = currentDataTypes.filter((dt) => {
+          const initial = initialMap.get(dt.id);
+          return initial && initial.name !== dt.name;
+        });
+        const deletes = initialDataTypes.filter((dt) => !currentMap.has(dt.id));
+
+        const payload = {
+          create: creates.map((dt) => ({ name: dt.name })),
+          update: updates.map((dt) => ({ id: dt.id, name: dt.name })),
+          delete: deletes.map((dt) => ({ id: dt.id })),
+        };
+
+        console.log("=== API Request Payload (DataTypes) ===");
+        console.log(JSON.stringify(payload, null, 2));
+        console.log("=======================================");
+
         // 「データ種別」タブの保存（dataTypes のみを抽出し、既存データとマージする想定）
         if (typeof window !== "undefined" && window.sessionStorage) {
           const validNames = new Set(
