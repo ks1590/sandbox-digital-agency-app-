@@ -81,7 +81,7 @@ export default function MetadataEdit({
                 onSubmit={methods.handleSubmit(handleSubmit)}
                 className="text-gray-900"
               >
-                {!isTopPage && <DataTypeSelect readonly={!!subtabParam} />}
+                {!isTopPage && <DataTypeSelect readonly />}
 
                 {isTopPage ? (
                   <div className="mb-12">
