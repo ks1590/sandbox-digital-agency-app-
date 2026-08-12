@@ -160,7 +160,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
   const handleSubmit = async (data: MetadataFormData) => {
     let finalData = data;
     const storageKey = isTopPage ? "metadata_top" : `metadata_${typeParam}`;
-    
+
     let existingData: any = {};
     if (typeof window !== "undefined" && window.sessionStorage) {
       try {
@@ -180,14 +180,24 @@ export function useMetadataForm(apiData: MetadataResponse) {
         await saveMetadata(finalData);
       } else if (tabParam === "data-type") {
         // 将来のAPI実装に向けた差分JSONの生成とコンソール出力
-        const initialDataTypes = apiData?.overview?.dataTypes || [];
+        let initialDataTypes = apiData?.overview?.dataTypes || [];
+        if (initialStorageDataRef.current) {
+          try {
+            const parsed = JSON.parse(initialStorageDataRef.current);
+            if (parsed.dataTypes) {
+              initialDataTypes = parsed.dataTypes;
+            }
+          } catch (e) {
+            console.error("Failed to parse sessionStorage data", e);
+          }
+        }
         const currentDataTypes = data.dataTypes || [];
 
         const initialMap = new Map(initialDataTypes.map((dt) => [dt.id, dt]));
         const currentMap = new Map(currentDataTypes.map((dt) => [dt.id, dt]));
 
         const creates = currentDataTypes.filter(
-          (dt) => !initialMap.has(dt.id) || dt.id.startsWith("new-type-")
+          (dt) => !initialMap.has(dt.id) || dt.id.startsWith("new-type-"),
         );
         const updates = currentDataTypes.filter((dt) => {
           const initial = initialMap.get(dt.id);
@@ -229,20 +239,20 @@ export function useMetadataForm(apiData: MetadataResponse) {
           });
         }
 
-        let updatedDataTypes = data.dataTypes || [];
+        const updatedDataTypes = data.dataTypes || [];
         if (updatedDataTypes.length > 0) {
-          updatedDataTypes = updatedDataTypes.map((dt) => ({
-            ...dt,
-            id: dt.name,
-          }));
-
           for (const dt of updatedDataTypes) {
             const targetId = dt.name;
-            const isClinical = targetId === "臨床情報" || targetId === "clinical";
+            const isClinical =
+              targetId === "臨床情報" || targetId === "clinical";
 
             // データ種別の初期データを作成・保存
             const childStorageKey = `metadata_${targetId}`;
-            if (typeof window !== "undefined" && window.sessionStorage && !sessionStorage.getItem(childStorageKey)) {
+            if (
+              typeof window !== "undefined" &&
+              window.sessionStorage &&
+              !sessionStorage.getItem(childStorageKey)
+            ) {
               const initialChildData = {
                 dataType: targetId,
                 overviewText: isClinical
@@ -316,7 +326,9 @@ export function useMetadataForm(apiData: MetadataResponse) {
   };
 
   const handleTabChange = (index: number) => {
-    const tabMap = isTopPage ? ["overview", "data-type"] : ["overview", "er", "table-def"];
+    const tabMap = isTopPage
+      ? ["overview", "data-type"]
+      : ["overview", "er", "table-def"];
     const newTab = tabMap[index] || "overview";
 
     const params = new URLSearchParams(searchParams.toString());
