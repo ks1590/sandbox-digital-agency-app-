@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/Button";
 
 interface TextPopoverProps {
   text: string;
@@ -88,7 +87,7 @@ export default function TextPopover({
   }, [isOpen]);
 
   const className =
-    "cursor-default outline-none text-left block truncate max-w-full";
+    "cursor-default outline-none text-left block truncate max-w-full text-gray-900";
 
   if (!isOverflowing) {
     return (
@@ -103,19 +102,17 @@ export default function TextPopover({
 
   return (
     <>
-      <Button
+      <button
         type="button"
-        variant="text"
-        size="xs"
         ref={elementRef as React.RefObject<HTMLButtonElement>}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onFocus={handleMouseEnter}
         onBlur={handleMouseLeave}
-        className="!p-0 !min-w-0 !min-h-0 !font-normal !no-underline cursor-default outline-none text-left block truncate max-w-full text-inherit hover:!bg-transparent"
+        className={`${className} focus-visible:outline-solid focus-visible:outline-4 focus-visible:outline-black focus-visible:outline-offset-[calc(2/16*1rem)] focus-visible:ring-[calc(2/16*1rem)] focus-visible:ring-yellow-300 w-full bg-transparent border-none p-0 m-0`}
       >
         {text}
-      </Button>
+      </button>
 
       {isOpen && (
         <div
