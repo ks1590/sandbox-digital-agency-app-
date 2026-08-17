@@ -2,33 +2,21 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { Button } from "@/components/ui/Button/Button";
 
-export default function ErrorPage({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+export default function NotFoundPage() {
   const router = useRouter();
-
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 py-16">
       <div className="bg-white p-8 rounded-12 border border-solid-gray-200 shadow-sm max-w-xl w-full text-center">
         <h1 className="text-2xl font-bold mb-4 text-error-1">
-          システムエラーが発生しました
+          ページが見つかりません
         </h1>
         <p className="text-solid-gray-600 mb-8 leading-relaxed">
-          申し訳ありませんが、システムで予期せぬエラーが発生しました。
+          お探しのページは削除されたか、URLが変更された可能性があります。
           <br />
-          システム管理者にお問い合わせください。
+          正しいURLを入力するか、トップページに戻ってください。
         </p>
         <div className="flex justify-center gap-4">
           <Button variant="outline" size="md" onClick={() => router.back()}>
