@@ -42,6 +42,28 @@ describe("ModalDialog コンポーネント", () => {
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
+    it("closeOnBackdropClickがfalseの場合、背景をクリックしてもcloseメソッドが呼ばれないこと", () => {
+      const handleClick = vi.fn();
+      render(
+        <ModalDialog
+          data-testid="dialog"
+          onClick={handleClick}
+          closeOnBackdropClick={false}
+        >
+          <div data-testid="inner">内容</div>
+        </ModalDialog>,
+      );
+      const dialog = screen.getByTestId("dialog") as HTMLDialogElement;
+
+      dialog.close = vi.fn();
+
+      // ダイアログ自体（バックドロップ）をクリック
+      fireEvent.click(dialog);
+
+      expect(dialog.close).not.toHaveBeenCalled();
+      expect(handleClick).toHaveBeenCalledTimes(1);
+    });
+
     it("内部の要素をクリックした場合は、stopPropagationで伝播が止まるか、e.targetが異なるためcloseされないこと", () => {
       const handleClick = vi.fn();
       render(

@@ -1,23 +1,64 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
-// import {
-//   ModalDialog,
-//   ModalDialogBody,
-//   ModalDialogContent,
-// } from "@/components/ui/ModalDialog";
+import {
+  ModalDialog,
+  ModalDialogActions,
+  ModalDialogBody,
+  ModalDialogContent,
+  ModalDialogHeader,
+  ModalDialogHeading,
+} from "@/components/ui/ModalDialog";
+import {
+  getMetadataChanges,
+  type MetadataChangeItem,
+} from "./getMetadataChanges";
+
+// sessionStorage からメタデータ編集用のキーをすべて削除する関数
+const clearMetadataStorage = () => {
+  if (typeof window === "undefined" || !window.sessionStorage) return;
+  const keysToRemove: string[] = [];
+  for (let i = 0; i < sessionStorage.length; i++) {
+    const key = sessionStorage.key(i);
+    if (key?.startsWith("metadata_")) {
+      keysToRemove.push(key);
+    }
+  }
+  keysToRemove.forEach((k) => {
+    sessionStorage.removeItem(k);
+  });
+};
 
 export default function PublishButtonClient() {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const [changeItems, setChangeItems] = useState<MetadataChangeItem[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const isPublishSuccess = searchParams.get("publish_success") === "true";
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (isPublishSuccess) {
+      clearMetadataStorage();
+      setChangeItems([]);
+    } else {
+      const changes = getMetadataChanges();
+      setChangeItems(changes);
+    }
+  }, [searchParams, isPublishSuccess]);
+
   const handleOpen = () => {
-    dialogRef.current?.showModal();
+    const changes = getMetadataChanges();
+    setChangeItems(changes);
+    if (changes.length > 0) {
+      dialogRef.current?.showModal();
+    }
   };
 
   const handleClose = () => {
@@ -31,6 +72,8 @@ export default function PublishButtonClient() {
     const params = new URLSearchParams(searchParams.toString());
 
     if (isSuccess) {
+      clearMetadataStorage();
+      setChangeItems([]);
       params.set("publish_success", "true");
       params.delete("publish_error");
     } else {
@@ -41,24 +84,58 @@ export default function PublishButtonClient() {
     handleClose();
   };
 
+  // マウント前または変更がない場合は公開ボタンを表示しない
+  if (!isMounted || changeItems.length === 0) {
+    return null;
+  }
+
   return (
     <>
       <Button
         type="button"
         variant="solid-fill"
         size="md"
-        // onClick={handleOpen} sagemakerの挙動を検証の上、実装検討
+        onClick={handleOpen} // sagemakerの挙動を検証の上、実装検討
         className="!bg-green-600 hover:!bg-green-700 active:!bg-green-800"
       >
         公開
       </Button>
 
-      {/* <ModalDialog ref={dialogRef} className="m-auto">
-        <ModalDialogContent>
-          <ModalDialogBody className="text-center pt-8 font-bold text-lg">
-            このメタデータを公開します。よろしいですか？
+      <ModalDialog
+        ref={dialogRef}
+        className="m-auto !w-[90vw] !max-w-2xl"
+        closeOnBackdropClick={false}
+      >
+        <ModalDialogContent className="!max-w-none w-full">
+          <ModalDialogHeader>
+            <ModalDialogHeading className="text-center text-lg font-bold">
+              このメタデータを公開します。 よろしいですか？
+            </ModalDialogHeading>
+          </ModalDialogHeader>
+
+          <ModalDialogBody className="space-y-4">
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-2">
+                変更内容の確認
+              </p>
+
+              <div
+                className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg bg-gray-50 divide-y divide-gray-200"
+                data-testid="publish-change-list"
+              >
+                {changeItems.map((item) => (
+                  <div
+                    key={`${item.category}-${item.field}-${item.text}`}
+                    className="p-3 text-sm text-gray-900 leading-relaxed"
+                  >
+                    {item.text || item.detail || item.field}
+                  </div>
+                ))}
+              </div>
+            </div>
           </ModalDialogBody>
-          <div className="flex justify-center gap-4 w-full p-6">
+
+          <ModalDialogActions className="justify-center gap-4">
             <Button
               type="button"
               variant="outline"
@@ -75,9 +152,9 @@ export default function PublishButtonClient() {
             >
               公開する
             </Button>
-          </div>
+          </ModalDialogActions>
         </ModalDialogContent>
-      </ModalDialog> */}
+      </ModalDialog>
     </>
   );
 }

@@ -40,7 +40,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
     defaultValues: {
       dataType: typeParam || "臨床情報",
       databaseDataProductReadMe: "",
-      datatypeDataProductNames: apiData?.overview?.datatypeDataProductNames || [],
+      datatypeDataProductNames:
+        apiData?.overview?.datatypeDataProductNames || [],
       startYear: "",
       latestYear: "",
       updateFrequencies: [],
@@ -67,8 +68,12 @@ export function useMetadataForm(apiData: MetadataResponse) {
           const topSaved = sessionStorage.getItem("metadata_top");
           if (topSaved) {
             const parsedTop = JSON.parse(topSaved);
-            if (parsedTop.datatypeDataProductNames && parsedTop.datatypeDataProductNames.length > 0) {
-              parsed.datatypeDataProductNames = parsedTop.datatypeDataProductNames;
+            if (
+              parsedTop.datatypeDataProductNames &&
+              parsedTop.datatypeDataProductNames.length > 0
+            ) {
+              parsed.datatypeDataProductNames =
+                parsedTop.datatypeDataProductNames;
             }
           }
         } catch (e) {
@@ -88,7 +93,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
 
     methods.reset({
       dataType: typeParam || "臨床情報",
-      databaseDataProductReadMe: apiData.overview.databaseDataProductReadMe || OVERVIEW_TEMPLATE,
+      databaseDataProductReadMe:
+        apiData.overview.databaseDataProductReadMe || OVERVIEW_TEMPLATE,
       datatypeDataProductNames: apiData.overview.datatypeDataProductNames,
       startYear: apiData.overview.startYear,
       latestYear: apiData.overview.latestYear,
@@ -180,7 +186,8 @@ export function useMetadataForm(apiData: MetadataResponse) {
         await saveMetadata(finalData);
       } else if (tabParam === "data-type") {
         // 将来のAPI実装に向けた差分JSONの生成とコンソール出力
-        let initialDataTypes = apiData?.overview?.datatypeDataProductNames || [];
+        let initialDataTypes =
+          apiData?.overview?.datatypeDataProductNames || [];
         if (initialStorageDataRef.current) {
           try {
             const parsed = JSON.parse(initialStorageDataRef.current);
@@ -193,15 +200,23 @@ export function useMetadataForm(apiData: MetadataResponse) {
         }
         const currentDataTypes = data.datatypeDataProductNames || [];
 
-        const initialMap = new Map(initialDataTypes.map((dt) => [dt.identifiler, dt]));
-        const currentMap = new Map(currentDataTypes.map((dt) => [dt.identifiler, dt]));
+        const initialMap = new Map(
+          initialDataTypes.map((dt) => [dt.identifiler, dt]),
+        );
+        const currentMap = new Map(
+          currentDataTypes.map((dt) => [dt.identifiler, dt]),
+        );
 
-        const creates = currentDataTypes.filter((dt) => !initialMap.has(dt.identifiler));
+        const creates = currentDataTypes.filter(
+          (dt) => !initialMap.has(dt.identifiler),
+        );
         const updates = currentDataTypes.filter((dt) => {
           const initial = initialMap.get(dt.identifiler);
           return initial && initial.name !== dt.name;
         });
-        const deletes = initialDataTypes.filter((dt) => !currentMap.has(dt.identifiler));
+        const deletes = initialDataTypes.filter(
+          (dt) => !currentMap.has(dt.identifiler),
+        );
 
         const payload = {
           create: creates.map((dt) => ({ name: dt.name })),
@@ -216,10 +231,14 @@ export function useMetadataForm(apiData: MetadataResponse) {
         // 「データ種別」タブの保存（datatypeDataProductNames のみを抽出し、既存データとマージする想定）
         if (typeof window !== "undefined" && window.sessionStorage) {
           const validNames = new Set(
-            data.datatypeDataProductNames?.map((dt) => dt.name).filter(Boolean) || [],
+            data.datatypeDataProductNames
+              ?.map((dt) => dt.name)
+              .filter(Boolean) || [],
           );
           const validIds = new Set(
-            data.datatypeDataProductNames?.map((dt) => dt.identifiler).filter(Boolean) || [],
+            data.datatypeDataProductNames
+              ?.map((dt) => dt.identifiler)
+              .filter(Boolean) || [],
           );
 
           const keysToRemove: string[] = [];
@@ -253,9 +272,7 @@ export function useMetadataForm(apiData: MetadataResponse) {
             ) {
               const initialChildData = {
                 dataType: targetId,
-                databaseDataProductReadMe: isClinical
-                  ? apiData.overview.databaseDataProductReadMe
-                  : CHILD_OVERVIEW_TEMPLATE,
+                databaseDataProductReadMe: CHILD_OVERVIEW_TEMPLATE,
                 datatypeDataProductNames: updatedDataTypes,
                 startYear: isClinical ? apiData.overview.startYear : "",
                 latestYear: isClinical ? apiData.overview.latestYear : "",
@@ -275,7 +292,10 @@ export function useMetadataForm(apiData: MetadataResponse) {
           }
         }
 
-        finalData = { ...existingData, datatypeDataProductNames: updatedDataTypes };
+        finalData = {
+          ...existingData,
+          datatypeDataProductNames: updatedDataTypes,
+        };
         // 本来は dataType 専用の API を呼ぶ想定
         await saveMetadata(finalData);
       } else {

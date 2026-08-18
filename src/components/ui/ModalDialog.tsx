@@ -1,29 +1,45 @@
 import type React from "react";
 import { forwardRef } from "react";
 
-export const ModalDialog = forwardRef<
-  HTMLDialogElement,
-  React.ComponentProps<"dialog">
->(({ children, className = "", onClick, ...props }, ref) => {
-  return (
-    // 背景（バックドロップ）クリックでモーダルを閉じるための処理です。
-    // Escapeキーでの閉じる処理は <dialog> 要素がネイティブでサポートしているため、カスタムのキーボードイベントは不要です。
-    // biome-ignore lint/a11y/useKeyWithClickEvents: <dialog> natively handles Escape key for closing, so a custom keyboard handler is unnecessary for the backdrop click
-    <dialog
-      ref={ref}
-      className={`bg-transparent p-0 backdrop:bg-black/50 overflow-visible ${className}`}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          e.currentTarget.close();
-        }
-        onClick?.(e);
-      }}
-      {...props}
-    >
-      {children}
-    </dialog>
-  );
-});
+export interface ModalDialogProps extends React.ComponentProps<"dialog"> {
+  /**
+   * 背景（バックドロップ）クリック時にモーダルを閉じるかどうか
+   * @default true
+   */
+  closeOnBackdropClick?: boolean;
+}
+
+export const ModalDialog = forwardRef<HTMLDialogElement, ModalDialogProps>(
+  (
+    {
+      children,
+      className = "",
+      onClick,
+      closeOnBackdropClick = true,
+      ...props
+    },
+    ref,
+  ) => {
+    return (
+      // 背景（バックドロップ）クリックでモーダルを閉じるための処理です。
+      // Escapeキーでの閉じる処理は <dialog> 要素がネイティブでサポートしているため、カスタムのキーボードイベントは不要です。
+      // biome-ignore lint/a11y/useKeyWithClickEvents: <dialog> natively handles Escape key for closing, so a custom keyboard handler is unnecessary for the backdrop click
+      <dialog
+        ref={ref}
+        className={`bg-transparent p-0 backdrop:bg-black/50 overflow-visible ${className}`}
+        onClick={(e) => {
+          if (closeOnBackdropClick && e.target === e.currentTarget) {
+            e.currentTarget.close();
+          }
+          onClick?.(e);
+        }}
+        {...props}
+      >
+        {children}
+      </dialog>
+    );
+  },
+);
 ModalDialog.displayName = "ModalDialog";
 
 export const ModalDialogContent = ({
