@@ -17,7 +17,6 @@ import {
   MDXEditor,
   type MDXEditorMethods,
   type MDXEditorProps,
-  markdownShortcutPlugin,
   quotePlugin,
   tablePlugin,
   thematicBreakPlugin,
@@ -72,6 +71,14 @@ const translationDict: Record<string, string> = {
   "Open in new tab": "新しいタブで開く",
   "Block type": "段落/見出し",
   "Heading {{level}}": "見出し {{level}}",
+  "Select code block language": "コードブロックの言語を選択",
+  "codeBlock.selectLanguage": "コードブロックの言語を選択",
+  "Delete code block": "コードブロックを削除",
+  "codeblock.delete": "コードブロックを削除",
+  "Code block language": "コードブロックの言語",
+  "codeBlock.language": "コードブロックの言語",
+  Language: "言語",
+  "codeBlock.inlineLanguage": "言語",
 };
 
 const jaTranslation = (
@@ -79,7 +86,8 @@ const jaTranslation = (
   defaultValue: string,
   interpolations?: Record<string, any>,
 ) => {
-  let translated = translationDict[defaultValue] || defaultValue;
+  let translated =
+    translationDict[key] || translationDict[defaultValue] || defaultValue;
   if (interpolations) {
     for (const [k, v] of Object.entries(interpolations)) {
       translated = translated.replace(new RegExp(`{{${k}}}`, "g"), String(v));
@@ -157,14 +165,16 @@ export default forwardRef<MDXEditorMethods, MDXEditorProps>(
             listsPlugin(),
             quotePlugin(),
             thematicBreakPlugin(),
-            markdownShortcutPlugin(),
             linkPlugin(),
             linkDialogPlugin(),
             tablePlugin(),
-            codeBlockPlugin({ codeBlockEditorDescriptors: [] }),
+            codeBlockPlugin({
+              codeBlockEditorDescriptors: [],
+              defaultCodeBlockLanguage: "mermaid",
+            }),
             codeMirrorPlugin({
               codeBlockLanguages: {
-                "": "コードブロック",
+                mermaid: "mermaid",
               },
             }),
             ...(props.plugins || []),
