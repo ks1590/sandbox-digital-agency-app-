@@ -32,7 +32,7 @@ describe("PublishButtonClient", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("変更がある状態で公開ボタンを表示し、クリックすると一文形式で変更内容を表示する", () => {
+  it("変更がある状態で公開ボタンを表示し、クリックするとデータ種別ごとに変更内容を表示する", () => {
     sessionStorage.setItem(
       "metadata_top",
       JSON.stringify({
@@ -53,7 +53,14 @@ describe("PublishButtonClient", () => {
 
     fireEvent.click(openButton);
 
-    expect(screen.getByTestId("publish-change-list")).toBeInTheDocument();
+    const changeList = screen.getByTestId("publish-change-list");
+    expect(changeList).toBeInTheDocument();
+
+    // データ種別名が表示されていること
+    expect(screen.getByText("データベース")).toBeInTheDocument();
+    expect(screen.getByText("臨床情報")).toBeInTheDocument();
+
+    // それぞれの変更内容が表示されていること
     expect(
       screen.getByText("データベース全体に関する情報を編集しました"),
     ).toBeInTheDocument();

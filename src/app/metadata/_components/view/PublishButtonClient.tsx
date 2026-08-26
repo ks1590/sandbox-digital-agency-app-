@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import {
   ModalDialog,
@@ -51,7 +51,7 @@ export default function PublishButtonClient() {
       const changes = getMetadataChanges();
       setChangeItems(changes);
     }
-  }, [searchParams, isPublishSuccess]);
+  }, [isPublishSuccess]);
 
   const handleOpen = () => {
     const changes = getMetadataChanges();
@@ -83,6 +83,22 @@ export default function PublishButtonClient() {
     router.push(`${pathname}?${params.toString()}`);
     handleClose();
   };
+
+  // 変更項目をデータ種別（category）ごとにグループ化
+  const groupedChanges = useMemo(() => {
+    return changeItems.reduce<
+      { category: string; items: MetadataChangeItem[] }[]
+    >((acc, item) => {
+      const category = item.category || "その他";
+      let group = acc.find((g) => g.category === category);
+      if (!group) {
+        group = { category, items: [] };
+        acc.push(group);
+      }
+      group.items.push(item);
+      return acc;
+    }, []);
+  }, [changeItems]);
 
   // マウント前または変更がない場合は公開ボタンを表示しない
   if (!isMounted || changeItems.length === 0) {
@@ -123,12 +139,21 @@ export default function PublishButtonClient() {
                 className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg bg-gray-50 divide-y divide-gray-200"
                 data-testid="publish-change-list"
               >
-                {changeItems.map((item) => (
-                  <div
-                    key={`${item.category}-${item.field}-${item.text}`}
-                    className="p-3 text-sm text-gray-900 leading-relaxed"
-                  >
-                    {item.text || item.detail || item.field}
+                {groupedChanges.map((group) => (
+                  <div key={group.category} className="p-3 space-y-1.5">
+                    <div className="font-bold text-sm text-gray-900">
+                      {group.category}
+                    </div>
+                    <ul className="pl-4 space-y-1 text-sm text-gray-800 list-disc list-outside">
+                      {group.items.map((item) => (
+                        <li
+                          key={`${item.category}-${item.field}-${item.text || item.detail || ""}`}
+                          className="leading-relaxed"
+                        >
+                          {item.text || item.detail || item.field}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>

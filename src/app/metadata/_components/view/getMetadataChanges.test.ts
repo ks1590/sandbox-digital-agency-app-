@@ -29,17 +29,17 @@ describe("getMetadataChanges", () => {
     expect(changes).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          category: "トップ",
+          category: "データベース",
           field: "データベース全体に関する情報",
           text: "データベース全体に関する情報を編集しました",
         }),
         expect.objectContaining({
-          category: "トップ",
+          category: "データベース",
           field: "データ種別",
           text: "データ種別「臨床情報」から「臨床情報（更新）」へ名称変更しました",
         }),
         expect.objectContaining({
-          category: "トップ",
+          category: "データベース",
           field: "データ種別",
           text: "データ種別「新規種別」を追加しました",
         }),
@@ -206,12 +206,12 @@ describe("getMetadataChanges", () => {
     // トップの概要編集、データ種別「1234」の追加、テーブル削除のみが検出されること
     expect(changes).toEqual([
       expect.objectContaining({
-        category: "トップ",
+        category: "データベース",
         field: "データベース全体に関する情報",
         text: "データベース全体に関する情報を編集しました",
       }),
       expect.objectContaining({
-        category: "トップ",
+        category: "データベース",
         field: "データ種別",
         text: "データ種別「1234」を追加しました",
       }),

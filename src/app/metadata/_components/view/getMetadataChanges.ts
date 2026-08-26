@@ -6,7 +6,7 @@ import {
 import type { MetadataOverview, TableDefRow, TableInfo } from "../../types";
 
 export interface MetadataChangeItem {
-  /** 対象カテゴリ（例: "トップ", "臨床情報", "新規データ種別名" 等） */
+  /** 対象カテゴリ（例: "データベース", "臨床情報", "新規データ種別名" 等） */
   category: string;
   /** 変更フィールド名（例: "データベース全体に関する情報", "データ種別に関する情報", "収集開始年度" 等） */
   field: string;
@@ -112,7 +112,7 @@ export function getMetadataChanges(storage?: Storage): MetadataChangeItem[] {
   if (topSavedRaw) {
     try {
       const topSaved = JSON.parse(topSavedRaw);
-      const category = "トップ";
+      const category = "データベース";
 
       // 概要テキスト（トップ画面は「データベース全体に関する情報」）
       if (
@@ -405,11 +405,12 @@ export function getMetadataChanges(storage?: Storage): MetadataChangeItem[] {
               text: `テーブル一覧に「${t.logicalName || t.physicalName || "新規テーブル"}」を追加しました`,
             });
           } else {
-            const initT = initTableMap.get(t.physicalName)!;
+            const initT = initTableMap.get(t.physicalName);
             if (
-              initT.logicalName !== t.logicalName ||
-              initT.overview !== t.overview ||
-              initT.unit !== t.unit
+              initT &&
+              (initT.logicalName !== t.logicalName ||
+                initT.overview !== t.overview ||
+                initT.unit !== t.unit)
             ) {
               changes.push({
                 category,
