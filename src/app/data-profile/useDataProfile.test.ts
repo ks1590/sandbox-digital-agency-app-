@@ -18,9 +18,7 @@ describe("useDataProfile", () => {
   });
 
   it("初期状態は loading であり、データ取得成功後に success とデータが設定される", async () => {
-    vi.spyOn(apiModule, "fetchDataProfile").mockResolvedValueOnce(
-      mockResponse,
-    );
+    vi.spyOn(apiModule, "fetchDataProfile").mockResolvedValueOnce(mockResponse);
 
     const { result } = renderHook(() => useDataProfile());
 

@@ -1,4 +1,8 @@
 import { EXAMINATION_MOCK_DATA } from "../metadata/api";
+import {
+  DATA_PROFILE_PERIOD_END,
+  DATA_PROFILE_PERIOD_START,
+} from "./constants";
 import type { DataProfileResponse, DataProfileRow } from "./types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -21,8 +25,8 @@ function generateMockRows(): DataProfileRow[] {
 
 // モックデータ。APIが未接続の場合に使用する
 export const MOCK_DATA: DataProfileResponse = {
-  periodFrom: "2026年4月",
-  periodTo: "2026年6月",
+  periodFrom: DATA_PROFILE_PERIOD_START,
+  periodTo: DATA_PROFILE_PERIOD_END,
   totalRows: 500,
   totalFiles: 100,
   categories: [

@@ -46,8 +46,15 @@ function createResponse(
 }
 
 describe("DataProfileContent", () => {
-  it("集計対象期間を表示する", () => {
-    render(<DataProfileContent data={createResponse()} />);
+  it("固定の集計対象期間を表示する", () => {
+    render(
+      <DataProfileContent
+        data={createResponse({
+          periodFrom: "2020年1月",
+          periodTo: "2020年12月",
+        })}
+      />,
+    );
 
     expect(screen.getByText("2026年4月", { exact: false })).toBeInTheDocument();
     expect(screen.getByText("2026年6月", { exact: false })).toBeInTheDocument();

@@ -2,6 +2,10 @@
 
 import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import Tab from "@/components/ui/Tab";
+import {
+  DATA_PROFILE_PERIOD_END,
+  DATA_PROFILE_PERIOD_START,
+} from "./constants";
 import type {
   DataProfileCategory,
   DataProfileResponse,
@@ -49,8 +53,9 @@ export default function DataProfileContent({
       <div className="mb-8">
         <h3 className="text-sm font-bold text-gray-900 mb-2">集計対象期間</h3>
         <p className="text-base text-gray-900 font-bold">
-          {data.periodFrom}
-          <span className="mx-2 font-normal">から</span> {data.periodTo}
+          {DATA_PROFILE_PERIOD_START}
+          <span className="mx-2 font-normal">から</span>{" "}
+          {DATA_PROFILE_PERIOD_END}
         </p>
       </div>
 

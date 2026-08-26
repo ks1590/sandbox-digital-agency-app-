@@ -76,7 +76,9 @@ describe("fetchDataProfile", () => {
 
     it("API レスポンスが ok でない場合、エラーログを出力してモックデータにフォールバックする", async () => {
       vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.example.com");
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       vi.spyOn(global, "fetch").mockResolvedValueOnce({
         ok: false,
@@ -95,7 +97,9 @@ describe("fetchDataProfile", () => {
 
     it("fetch が例外を投げた場合、エラーログを出力してモックデータにフォールバックする", async () => {
       vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.example.com");
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       vi.spyOn(global, "fetch").mockRejectedValueOnce(
         new Error("Network Failure"),
