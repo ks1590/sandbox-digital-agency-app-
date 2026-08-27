@@ -43,3 +43,14 @@ export interface DataProfileResponse {
   /** カテゴリ別データプロファイル */
   categories: DataProfileCategory[];
 }
+
+/**
+ * データ種別の選択肢定義
+ */
+export interface DataTypeOption {
+  /** データ種別識別子 */
+  id: string;
+  /** データ種別表示名 */
+  name: string;
+}
+

@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { type ColumnDef, DataTable } from "@/components/ui/DataTable/DataTable";
 import Tab from "@/components/ui/Tab";
+import { MOCK_DATA_BY_TYPE } from "./api";
 import {
+  DATA_PROFILE_DATA_TYPES,
   DATA_PROFILE_PERIOD_END,
   DATA_PROFILE_PERIOD_START,
 } from "./constants";
@@ -44,10 +47,18 @@ function DataProfileGrid({ rows }: { rows: DataProfileRow[] }) {
 }
 
 export default function DataProfileContent({
-  data,
+  data: initialData,
 }: {
   data: DataProfileResponse;
 }) {
+  const [selectedDataType, setSelectedDataType] = useState<string>("clinical");
+
+  // 選択されたデータ種別に応じたデータを取得（未指定または見つからない場合は初期データにフォールバック）
+  const currentData =
+    selectedDataType === "clinical"
+      ? initialData || MOCK_DATA_BY_TYPE.clinical
+      : MOCK_DATA_BY_TYPE[selectedDataType] || initialData;
+
   return (
     <>
       <div className="mb-8">
@@ -59,14 +70,47 @@ export default function DataProfileContent({
         </p>
       </div>
 
+      <div className="mb-8">
+        <label
+          htmlFor="dataProfileDataType"
+          className="block text-xl font-bold text-gray-900 mb-4"
+        >
+          データ種別
+        </label>
+        <div className="relative w-1/2 md:w-1/4 lg:w-1/6">
+          <select
+            id="dataProfileDataType"
+            className="w-full appearance-none rounded-[8px] border border-solid-gray-600 bg-white px-4 py-3 pr-10 text-base text-gray-900 focus:outline-solid focus:outline-4 focus:outline-black focus:outline-offset-[calc(2/16*1rem)] focus:ring-[calc(2/16*1rem)] focus:ring-yellow-300"
+            value={selectedDataType}
+            onChange={(e) => setSelectedDataType(e.target.value)}
+          >
+            {DATA_PROFILE_DATA_TYPES.map((dt) => (
+              <option key={dt.id} value={dt.id}>
+                {dt.name}
+              </option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+            <svg
+              className="h-4 w-4 fill-current"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
       <div className="flex gap-8 mb-4 text-base font-bold text-gray-900">
-        <p>合計行数：{data.totalRows.toLocaleString()}件</p>
-        <p>合計ファイル数：{data.totalFiles.toLocaleString()}件</p>
+        <p>合計行数：{currentData.totalRows.toLocaleString()}件</p>
+        <p>合計ファイル数：{currentData.totalFiles.toLocaleString()}件</p>
       </div>
 
       <Tab
+        key={selectedDataType}
         headingId="data-profile-tabs-heading"
-        items={data.categories.map((category: DataProfileCategory) => ({
+        items={currentData.categories.map((category: DataProfileCategory) => ({
           label: category.label,
           id: `tab-${category.categoryId}`,
           content: <DataProfileGrid rows={category.rows} />,
@@ -75,3 +119,4 @@ export default function DataProfileContent({
     </>
   );
 }
+

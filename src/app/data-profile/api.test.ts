@@ -34,6 +34,24 @@ describe("fetchDataProfile", () => {
         expect(category.rows[0]).toHaveProperty("logicalName");
       }
     });
+
+    it("dataType引数を指定した場合、対応するデータ種別のモックデータを返す", async () => {
+      const resultReceipt = await fetchDataProfile("receipt");
+      expect(resultReceipt.totalRows).toBe(1200);
+      expect(resultReceipt.categories.map((c) => c.label)).toEqual([
+        "医科レセプト",
+        "DPCレセプト",
+        "調剤レセプト",
+      ]);
+
+      const resultCheckup = await fetchDataProfile("checkup");
+      expect(resultCheckup.totalRows).toBe(350);
+      expect(resultCheckup.categories.map((c) => c.label)).toEqual([
+        "基本問診",
+        "身体測定・血圧",
+        "血液・尿検査",
+      ]);
+    });
   });
 
   describe("API_BASE_URL が設定されている場合", () => {
@@ -73,6 +91,39 @@ describe("fetchDataProfile", () => {
       );
       expect(result).toEqual(mockApiResponse);
     });
+
+    it("dataType引数を渡した場合、クエリパラメータを付与してfetchを呼ぶ", async () => {
+      vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.example.com");
+      const mockApiResponse = {
+        periodFrom: "2026年1月",
+        periodTo: "2026年3月",
+        totalRows: 200,
+        totalFiles: 20,
+        categories: [],
+      };
+
+      const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockApiResponse,
+      } as Response);
+
+      const { fetchDataProfile: fetchDataProfileWithUrl } = await import(
+        "./api"
+      );
+      const result = await fetchDataProfileWithUrl("receipt");
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        "https://api.example.com/data-profile?type=receipt",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      expect(result).toEqual(mockApiResponse);
+    });
+
 
     it("API レスポンスが ok でない場合、エラーログを出力してモックデータにフォールバックする", async () => {
       vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://api.example.com");
